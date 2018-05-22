@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 
+            提交数据
+            1.表单提交  
+                action : address
+                method : GET/POST...
+                -> 刷新整个页面，交互不好
+
+            2.Ajax -> 一种不用刷新整个页面便可与同源服务器通讯的办法    
+     -->
+    <!--    ajax的事件是： 
+            ajaxComplete(callback) 
+            ajaxError(callback) 
+            ajaxSend(callback) 
+            ajaxStart(callback) 
+            ajaxStop(callback) 
+            ajaxSuccess(callback)
+
+            Ajax (受同源策略的限制，只能获取同源的服务器资源)
+            1.过程
+                ->  1)  浏览器
+
+                    2)  创建ajax对象(xhr),兼容IE
+
+                       ->   var xhr = null;
+                            if(window.XMLHttpRequest){
+                                xhr = new XMLHttpRequest(); 
+                            }else{
+                                xhr = new ActiveXObject('Microsoft.XMLHttp');
+                            }
+
+                    3)  规定发送请求的方式，路径和是否异步(true异步, false同步)
+
+                        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded'); -> POST时添加
+                        xhr.open('GET', url + '?' + data, true); -> GET
+                        xhr.open('POST', url, true); -> POST
+
+                    4)  向服务器发送请求
+
+                        xhr.send(data); -> POST
+                        xhr.send(); -> GET
+
+                    5)  判断请求的状态
+                        xhr.onreadystatechange = function(){    -> 状态改变的事件触发器
+                            if(xhr.readyState == 4){            -> 请求的状态
+                                if(xhr.status == 200){          -> 服务器返回的数据
+                                    callback(JSON.parse(xhr.responseText));     -> xhr.responseText获取ajax返回的数据内容
+                                }            
+                            }
+                        }
+
+                    6)  xhr.readyState : 对象状态（integer），状态值
+                                        0 = 未初始化，未调用send()方法
+                                        1 = 读取中，已调用send()，正在发送请求
+                                        2 = 已读取，send方法执行完成，接收到全部响应内容
+                                        3 = 交互中，正在解析响应内容
+                                        4 = 完成，响应内容解析完成
+
+                    7)  xhr.status : 服务器返回的状态码
+                                        404 = “文件未找到”
+                                        200 = “成功” 
+                                        500 = “服务器内部错误” 
+                                        304 = “资源未被修改”
+      -->
+    <!-- 
+            同源策略(浏览器的安全策略)：
+            浏览器有一个很重要的概念——同源策略(Same-Origin Policy) -> src不受同源策略限制
+
+            所谓同源是指，域名，协议，端口相同。不同源的客户端脚本(javascript、ActionScript)在没明确授权的情况下，不能读写对方的资源。
+            
+            简单的来说，浏览器不允许包含在腾讯页面的脚本访问阿里巴巴页面的数据资源，会受到同源策略的限制
+
+            1.  协议://域名:端口号
+                -> 
+                    协议 -> http 、 https
+                    域名 -> www.***.***
+                    端口号 -> 默认的端口号可以不写，否则要写上
+                            http默认端口号为 80 
+                            https默认端口号为 443
+                
+                只有协议、域名、端口号都一样才能读取页面资源
+
+            2.  域名解析
+                1)  ->  域名是倒着解析的，从右往左
+                        .com 顶级域名
+
+                        baidu.com （一）二级域名 
+
+                        zhidao.baidu.com  （二）三级域名
+
+                        www 二级域名前缀  表示万维网维护的
+                        www.baidu.com  属于特殊的三级域名
+
+                        zhidao.baidu.com 属于 百度自己维护的网络地址
+
+                2)  带www的域名可以绑定a记录和c记录，裸域名只能绑定a记录
+                    www.baidu.com -> a记录
+                        baidu.com -> c记录(小名)
+
+            3.  TCP三次握手（连接）
+                四次挥手（断开连接）
+
+            4.  报文
+
+                1)请求报文
+                    请求行 
+                        -> 请求方法(GET/POST/DELETE/HEAD/OPTION) 请求资源(URL) 请求协议版本(HTTP/1.1)
+                    请求头
+                        -> http://tools.jb51.net/table/http_header
+                    请求主体
+                        -> 表单提交数据如：name=sunday&age=18
+                2)响应报文
+                    响应行
+                        -> 响应协议版本号(HTTP/1.1) 响应状态码(200) 响应状态文字(OK)
+                    响应头
+                        -> http://tools.jb51.net/table/http_header
+                    响应主体
+                        -> 返回的数据
+
+                常见的http状态码：
+                    成功状态码
+                        200 服务器成功返回内容
+                        301/2 临时/永久重定向
+                        304 资源未被修改过 (HTTP Request中添加if-None-Match:匹配etags,如果它修改了,不取缓存)
+                    失败状态码
+                        404 请求内容不存在
+                        500 服务器暂时不可用
+                        503 服务器内部错误
+
+            5. GET 与 POST 的区别
+                1)GET的请求内容放在URL后边，POST可以放到主体中
+                2)GET数据传递的长度受限制（因为浏览器中地址栏的输入长度有限），POST也有限制（content-length,为了服务器的安全与稳定），但比GET多得多
+                3)POST比GET安全，GET的数据直接显示在浏览器地址栏，POST在请求主体中
+
+            6. 状态码：304 -> 缓存
+
+                浏览器缓存机制（http）
+                304 上次缓存的资源没有改变 -> 浏览器如何知道是否直接取缓存的内容？
+
+                请求头：
+                if-None-Match: 匹配etag  如果它修改了 不取缓存
+                If-Modified-Since：将先前服务器端发过来的最后修改时间戳发送回去
+
+                响应头：
+                etag ->标记图片资源
+                last-Modified (服务器最后修改的时间)和 etag 配合使用
+
+                ETags和If-None-Match的工作原理是在HTTP Response中添加ETags信息
+                当客户端再次请求该资源时，将在HTTP Request中加入If-None-Match信息（ETags的值）
+                如果服务器验证资源的ETags没有改变（该资源没有改变），将返回一个304状态；否则，服务器将返回200状态，并返回该资源和新的ETags
+
+            7. referer  获取网页跳转源地址
+     -->
+    <!-- 
+            解决跨域的几种方法
+                1.Flash （不做讨论）
+
+                2.服务器代理中转
+                    浏览器 -> 想获取不同源的服务器B的数据
+                    浏览器 -> 先请求自己的服务器A，通过服务器A与服务器B连接，间接获取服务器B的数据
+                3.Jsonp
+
+                4.document.domain(针对基础域名相同的情况)
+                    bj.58.com -> tj.58.com  
+                    脚本里添加：document.domain = '58.com'
+
+            * Jsonp原理(GET请求)
+            1.Web页面上用<script> 引入 js文件时则不受同源策略限制
+            （不仅如此，我们还发现凡是拥有"src"这个属性的标签都拥有跨域的能力，比如<script>、<img>、<iframe>）
+
+            2.于是我们把数据放到服务器上，并且数据为json形式（因为js可以轻松处理json数据）
+
+            3.因为我们无法监控通过<script>的src属性是否把数据获取完成，所以我们需要做一个处理。
+
+            4.实现定义好处理跨域获取数据的回调函数，如 function doJSON（data）{}。
+
+            5.用src获取数据的时候添加一个参数 url?cb=doJSON ，服务端会根据参数cb的值返回对应的内容
+              此内容为以cb对应的值doJSON为函数真实要传递的数据为函数的参数的一串字符 如 doJSON(data)
+
+                -> 
+                    js脚本
+                    var oScript = document.createElement('script');
+                    oScript.src = 'demo.php?cb=doJSON';
+                    document.head.appendChild(oScript);
+                    function doJSON(data){
+                        console.log(data);
+                    }
+
+                    服务器脚本
+                    ...
+                    doJSON(...);
+
+            总结：      
+                1)动态生成script标签
+                2)请求（src），把callback函数名放进请求url中
+                3)在callback函数中操作服务端返回的数据
+      -->
+      <!-- 
+            记录用户常用信息
+                1.request-head中承载用户信息的http请求首部
+                    1)form -> e-mail
+                    2)user-agent -> 浏览器
+                    3)referer -> 网页跳转的源地址
+                2.IP地址 -> 不稳定，只能标识机器
+                3.用户登录 
+                4.胖URL -> 在url中添加用于标识的随机字段,窗口存在有效
+                5.cookie
+
+            cookie:
+            1.Cookie是由服务器端生成, 发送给User-Agent(一般是浏览器), 服务器告诉浏览器设置一下cookie
+            2.浏览器会将Cookie以key/value的形式保存到某个目录下的 '文本文件' 内，下次请求同一网站时就发送该Cookie给服务器(前提是浏览器设置为启用cookie)
+            3.Cookie就是一个小型文件（浏览器对cookie的内存大小是有限制的 -> 用来记录一些信息）
+
+            原理：
+            1.客户端首次向服务器请求页面（请求报文）
+            2.服务器响应，并返回对应的数据（响应报文响应头里服务器会设置一个set-cookie，值为一个唯一标识）
+            3.客户端收到带有set-cookie的响应报文，将set-cookie中的唯一标识以key/value保存到某个目录下的 '文本文件' 内
+            4.客户端再次访问同一网站时，会在请求报文请求头中加入cookie(值为上一次收到响应报文set-cookie里的唯一标识)，一同发送给服务器
+            5.服务器收到请求报文后如果检测到有cookie，就会对比cookie中的唯一标识，然后把与该唯一标识对应的数据返回客户端
+
+
+            1.客户端首次访问服务端
+            2.服务端在响应报文报文头中设置一个set-cookie，连同数据一起放回客户端
+            3.客户端收到set-cookie的响应头后会将set-cookie的值以key/value的形式保存
+            4.客户端再次访问同一网址时，把cookie加入到请求报文头中，一同发送给服务端
+            5.服务端在收到有cookie的请求报文后，对比cookie的值，返回相应的数据
+            
+            设置/修改cookie值: 只能一个一个设置，相同路径和域下同一个key只能有一个值
+                -> document.cookie = 'key=value;...';
+
+            设置/修改cookie保质期(expires 精确时间/max-age 秒为单位):
+                ->  精确时间(setDate()/getDate())
+                    var oDate = new Date();
+                    oDate.setDate(oDate.getDate() +/- *); 
+                    document.cookie = 'key=value;expires=' + oDate;
+
+                    document.cookie = 'key=value;max-age=100';
+                        -> 这个cookie只存在100秒
+
+            设置/修改cookie路径 ：path -> 里面路径可以获取外面路径的cookie，外面路径不能获取里面路径的cookie
+                -> document.cookie('key=value;path=/');
+
+            删除cookie： 
+                ->  时间在保质期的过去时就会删除cookie(设置保质期为负数)
+                    document.cookie = 'key=value;max-age=-1';
+
+
+       -->
+       <!-- 
+            iframe : 内联框架（dom元素），引入一个外部页面，不破坏原来页面结构
+
+            过多的iframe会阻塞页面加载，最好是动态加载 (异步加载，监听方法与loadScript一样，IE非IE)
+
+            1.  获取iframe里的window：（受同源策略的限制,异步获取）
+                    非IE
+                    *1)  var oIframe = document.getElementsByTagName('iframe')[0]; -> 异步获取
+                            var iframeWindow = oIframe.contentWindow;
+                    
+                    2)  var oIframe = document.getElementsByTagName('iframe')[0];
+                        var iframeWindow = window.frames[name]
+                    
+                    IE
+                        1)document.iframes[name].contentWindow
+                        2)document.iframes[i].contentWindow
+
+            2.  子页面获取父级窗口的数据
+                    window.parent.*     父级窗口
+                    window.top.*    顶级窗口
+
+            3.  iframe跨域
+                1)  location.hash -> 父级窗口通过锚点#传递数据,子级窗口利用定时器实时监测 (已经不用，浪费资源)
+                        ->  父窗口
+                            var oIframe = document.getElementsByTagName('iframe')[0]
+                                oSrc = oIframe.src;
+                                age = 0,
+                            document.onclick = function () {
+                                age++;
+                                oIframe.src = oSrc + '#' + age;
+                            }
+
+                            子窗口
+                            var lastHash = location.hash;
+                            setInterval(function () {
+                                if (location.hash != lastHash) {
+                                    console.log(location.hash.slice(1));
+                                    lastHash = location.hash;
+                                }
+                            },100);
+
+                2)  document.domain = '58.com'; -> 主域名相同，子域名不同
+
+                3)  window.name  -> 定义在窗口，更换页面也不会改变window.name 的值,用于获取子窗口的数据
+
+                        ->  父窗口
+                            var oIframe = document.getElementsByTagName('iframe')[0],
+                                flag = true;
+
+                            oIframe.onload = function () {
+                                if (flag) {
+                                    flag = false;
+                                    oIframe.src = '与父窗口同源的url文件';              -> 父窗口与子窗口受同源策略限制，无法直接获取子窗口的数据，要使用一个同源的窗口间接获取
+                                }else {
+                                    console.log(oIframe.contentWindow.name);
+                                }
+                                
+                            }
+
+                            子窗口
+                            var age = 18;
+                            window.name = age;
+
+        -->
+</body>
+
+</html>

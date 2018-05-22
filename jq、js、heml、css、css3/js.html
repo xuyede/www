@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        //8
+        /*     
+            js七种数据类型：Sting  Object  null  undefined  Array  Boolean  Number
+            js五种基本类型：String Boolean Number null undefined
+            typeof六种返回格式：'string'  'number'  'object'  'function'  'boolean'  'undefined'    
+            javascript内置对象：Number, Object, Function, String, Boolean, Array, RegExp, Math, Date, Error, Arguments
+            
+            异步编程：
+            回调函数，这是异步编程最基本的方法。
+            事件监听，另一种思路是采用事件驱动模式。任务的执行不取决于代码的顺序，而取决于某个事件是否发生。
+            发布/订阅，上一节的"事件"，完全可以理解成"信号"。
+            Promises对象，Promises 对象是CommonJS 工作组提出的一种规范，目的是为异步编程提供统一接口。
+        */
+        //4.8
+        //递归
+        //1.找规律 2.找出口
+        //阶乘 n！ = n * (n-1)!
+        /*
+            function mul(n) {
+                if (n == 1 || n == 0) {
+                    return 1;
+                }
+                return n * mul(n - 1);
+            }
+        */
+
+        // 斐波那契数列
+        // 第一第二位数为1， 其他的为前两位数相加
+        // fb(n) = fb(n - 1) + fb(n - 2);
+
+        /*   
+            function fb(n) {
+                if (n == 1 || n == 2) {
+                    return 1;
+                }
+                return fb(n - 1) + fb(n - 2);
+            };
+        */
+
+        /*
+            2.  foo函数是在fn函数外部定义的，所以foo的作用域链为
+                foo defined --> foo.[[scope]] --> 0 : GO
+                foo doing   --> foo.[[scope]] --> 0 : fooAO
+                                                  1 : GO
+                                        
+                var z = 10;
+                function foo() {
+                    console.log(z);
+                }
+                function fn(a) {
+                    var z = 20;
+                    a();
+                }
+                fn(foo);
+        */
+
+        //3.  
+        /*
+            console.log(window.a);
+            a = 10;
+            var a = 10;
+            b = 21;
+            console.log(window.b);
+            function c() {
+                console.log(window.b);
+                var a = b = 123;
+                console.log(window.a);
+            }
+            c();
+        */
+
+        /*
+            function c() {
+                var b = 123;
+            }
+            c();
+            console.log(window.b);
+        */
+
+        // 预编译， 发生在函数执行的前一刻
+        // 1: 创建AO对象
+        // 2: 把形参、 变量声明放进AO对象， 赋值为undefined
+        // 3: 实参， 形参值统一
+        // 4: 把函数声明放进AO对象， 赋值为函数体
+        //      注意--> 如果函数在判断语句中，则赋值为undefined，函数声明不与实参冲突且判断语句为真时再赋值为函数体
+
+        /*
+            var a = 100;
+            function demo() {
+                if (a) {
+                    function b(){}    -->if语句里不允许写入函数func,为undefined
+                }
+                console.log(b);
+                var b;
+                var a;
+            }
+            demo();
+        */
+        //百度笔试题(预编译)
+        /*
+            var x = 1,y = z = 0;
+            function add(n) {
+                return n = n + 1;
+            }
+            y = add(x);
+            function add(n) {
+                return n = n + 3;
+            }
+            z = add(x);
+            console.log(x, y, z);
+        */
+        /*
+            var a = function(x, y) {
+                x = 6;
+                y = 8;
+                console.log(x * y);
+            };
+            console.log(typeof(a) + ':' + a);
+            console.log(a(3, 4));      
+        */
+
+        //*逻辑运算符的隐式转换：
+        //undefined、null、NaN、0、空字符串、false 会被转换为false，其余都为true
+        /*
+            var str = false + 1;
+            document.write(str);
+            var str = false == 1;
+            document.write(str);
+            if (typeof(a) && (-true) + (-undefined) + '') {
+                console.log('123');
+            }
+        */
+
+        // 作用域链： [[scope]]
+        /*
+            function a() {              
+                function b() {
+                    function c() {}
+                    }
+                    c();
+                }
+                b();
+            }
+            a();
+        */
+        // a defined-- > a.[[scope]]-- > 0: GO
+
+        // a doing  -- > a.[[scope]]-- > 0: aAO
+        //                               1: GO
+
+        // b defined-- > b.[[scope]]-- > 0: aAO
+        //                               1: GO
+
+        // b doing  -- > b.[[scope]]-- > 0: bAO
+        //                               1: aAO
+        //                               2: GO
+
+        // c defined-- > c.[[scope]]-- > 0: bAO
+        //                               1: aAO
+        //                               2: GO
+
+        // c doing  -- > c.[[scope]]-- > 0: cAO
+        //                               1: bAO
+        //                               2: aAO
+        //                               3: GO
+
+        // 闭包： 内部的函数被保存到外部， 一定生成闭包
+        // a函数执行完之前通过return把b函数保存到了a函数外部， 当a
+        // 函数执行完后切断与aAO的连接， 但是b函数中， 依旧还保存着a函数
+        // 的aAO， 所以b函数能对a函数之前的aAO进行操作
+        /*
+            function a() {
+                function b() {
+                    var bbb = 234;
+                    console.log(aaa);
+                }
+                var aaa = 123;
+                return b;
+            }
+            var glob = 100;
+            var demo = a();
+            demo();
+        */
+
+        /*
+            function a() {
+                function b() {
+                    var bbb = 67;
+                    aaa--;
+                    console.log(aaa);
+                }
+                var aaa = 123;
+                return b;
+            }
+            var demo = a();
+            demo();
+            var str = a();
+            demo();
+            str();
+        */
+
+        /*
+            function a() {
+                var num = 100;
+                function b() {
+                    num++;
+                    console.log(num);
+                }
+                function c() {
+                    num--;
+                    console.log(num);
+                }
+                return [b, c];
+            }
+            var myArr = a();
+            myArr[0]();
+            myArr[1]();
+        */
+
+        // a defined-- > a.[[scope]]-- > 0: GO
+        // a doing  -- > a.[[scope]]-- > 0: aAO
+        //                               1: GO
+        // b defined-- > b.[[scope]]-- > 0: aAO
+        //                               1: GO
+        // c defined-- > c.[[scope]]-- > 0: aAO
+        //                               1: GO
+        // a done   -- > a.[[scope]]-- > 0: GO *
+        // b, c闭包， 独立了
+        // b doing  -- > b.[[scope]]-- > 0: bAO
+        //                               1: aAO *
+        //                               2: GO
+        // c doing  -- > c.[[scope]]-- > 0: cAO
+        //                               1: aAO *
+        //                               2: GO
+
+
+        // 充当存储器 并行的闭包函数共用一个上级作用域
+        /*
+            function eater() {
+                var food = "apple";
+                var obj = {
+                    eat: function() {
+                        if (food != '') {
+                            console.log('im eating ' + food);
+                            food = '';
+                        } else {
+                            console.log('nothing to eat');
+                        }
+                    },
+                    push: function(myfood) {
+                        food = myfood;
+                    }
+                }
+                return obj;
+            }
+            var arr = eater();
+            arr.eat();
+            arr.eat();
+            arr.push('banana');
+            arr.eat();
+        */
+
+        //4.9
+        // *立即执行函数(执行一次，针对初始化功能的函数)
+        // 是什么？ 声明一个匿名函数， 马上调用这个匿名函数
+        // 有什么用： 创建一个独立的作用域
+        // (立即执行函数的执行上下文可以传给立即执行函数里面的函数)
+
+        // 函数表达式执行完函数体后放弃函数引用，回到声明状态
+        // var test = function() {
+        //     console.log('a');
+        // }();          -->test 为 undefined
+
+        // +function test() {
+        //     console.log('a');
+        // }();
+
+        // 1 && function test() {
+        //     console.log('a');
+        // }();
+
+
+        //     (function() {'我是立即执行函数'}());   建议第一种
+        //     (function() {'我是立即执行函数'})();
+
+        // var num = (function(a, b, c) {
+        //     return a + b + c;
+        // }(1, 2, 3));
+        // console.log(num);
+
+        //1.
+        /*
+            function test() {
+                var arr = [];
+                for (var k = 0; k < 10; k++) {
+                    (function(j) {
+                        arr[j] = function() {
+                            console.log(j);
+                        }
+                    }(k));
+                }
+                return arr;
+            }
+            var myArr = test();
+            for (var i = 0; i < 10; i++) {
+                myArr[i]();
+            }
+        */
+
+        //阿里 闭包、立即执行函数试题
+        /* 
+            function a() {
+                var Aul = document.getElementsByTagName('li');
+                for (var k = 0; k < Aul.length; k++) {
+                    (function(i) {
+                        Aul[i].onclick = function() {
+                            console.log(i);
+                        };
+                    }(k));
+                }
+            }
+            a();
+        */
+
+        //闭包的理解程度
+        /*
+            function fun(n, o) {
+                console.log(o);
+                return {
+                    fun: function(m) {
+                        return fun(m, n);
+                    }
+                };
+            }
+            var a = fun(0);
+            a.fun(1);
+            a.fun(2);
+            a.fun(3);
+            var b = fun(0).fun(1).fun(2).fun(3);
+            var c = fun(0).fun(1);
+            c.fun(2);
+            c.fun(3);
+        */
+
+        //真题
+        /*
+            function test(target) {
+                var count,
+                    len;
+                    count = len = target.length;
+                for (var k = 0; k < len; k++) {
+                    if (target.charCodeAt(k) > 255) {
+                        count++;
+                    } 
+                }
+                console.log(count);
+            }
+            var temp = window.prompt('输入一个字符串');
+            test(temp);
+        */
+
+        /*
+            if (function a() {}) {
+                console.log(typeof a);      -->undefined  , 函数变成表达式后，函数名失去意义
+            }
+        */
+
+        /*
+            微店笔试( ,运算符)  
+                --> ,运算符，先把计算前面的，再计算后面的，最后把后面的内容返回(不需要计算则直接返回)
+            var f = (
+                function g(){
+                    return '1';
+                },
+                function f(){
+                    return 2;
+                }
+            )();
+
+            console.log(typeof f);
+        
+        */
+
+        //4.10
+        /*
+            typeof()： 返回一个字符串
+            undefined function boolean string number object
+            object : null [] {}  
+                --> Object.prototype.toString.call([]/{}) 区分数组、对象
+                
+            Number(null/[]) --> 0   其他非数字基本都是NaN
+            parseInt() 转换成整数，true，null，undefined...都为NaN
+            boolean :undefined、null、NaN、0、空字符串、false会被转换为false，其余都为true
+            toString() : undefined null这两个没有
+            NaN 不等于任何东西
+            undefined == null
+            '' == '0' --> false
+            原始值：null, undefined, string, number, boolean
+        */
+
+        //4.14
+        // 对象{属性名 ：属性值}
+        // object = {
+        //     a : 1,
+        //     b : 2
+        // }
+
+        //查看属性值 --> object.a / object['a'] 推荐
+
+        /*
+                *区分数组和对象 var obj = [] || {};
+                    1. obj.constructor  查看原型是啥
+                    2. obj instanceof Array 
+                    3. obj.toString()   --> 常用
+                    
+                    Object.prototype.toString.call([])  --> [object Array]
+                    Object.prototype.toString.call({})  --> [object Object]
+
+
+                for in 循环遍历对象
+
+                1.obj.hasOwnProperty(prop)  --> 去除原型
+                2.A instanceof B    --> A的原型链上 有没有 B的原型
+                
+                for(var prop in obj){
+                    if(obj.hasOwnProperty(prop)){
+                        console.log(obj[prop])     -->不能用 obj.prop 来获取
+                    }
+                }    
+
+        */
+        //查看没定义的属性名返回undefined
+        //删除对象属性 delete Object.type;
+        /*
+            重点:当一个对象通过[]来访问对象属性时(a[b])
+                []中的表达式将会被求值并被转换成一个字
+                符串,调用它的toString方法
+            var a = {};
+            var b = {
+                key: 'b'
+            };
+            var c = {
+                key: 'c'
+            };
+            a[b] = 123;         --> a[b.toString()] = 123;
+            a[c] = 456;         --> a[c.toString()] = 456; 都为[object Object]
+            console.log(a[b]);
+        */
+        /*
+            //百度试题
+            var a = {
+                n: 1
+            };
+            var b = a;
+            a.x = a = {
+                n: 2
+            };
+            console.log(a.x);   -->undefined
+            console.log(b.x);   -->{n : 2}
+        */
+
+        /*
+            var a = {name : 123};
+            var b = a;
+            a = {name : 321};
+                --> b.name = 123  a.name = 321
+                    *var b = a --> a和b共用一个空间
+                    a = {name : 321} --> a换了一个地址，b还是原来的地址
+        */
+
+        //*构造函数(new出来的)
+        // 内部原理
+        //1.在头部隐式增加 var this = Object.create(Func.prototype);
+        //2.执行this.xxx = xxx
+        //3.在函数末尾隐式返回 return this
+
+        // 原始值是没有属性和属性值的！
+        // var num = new Number(4); var str = new string('asd');
+        // num为数字对象，可以有属性、属性值，但num当数字使用后
+        // 就会失去对象的特征
+
+        //*包装类
+        /*    // 原始值是没有属性和属性值的！
+            var num = 4;
+            num.len = 3;
+                --> num为原始值，没有属性和属性值，但计算机善良
+                    自动给你加上 new Number(4).len = 3; 所以不报错
+                    但是计算机转头给你把这个对象delete了
+            console.log(num.len);
+                --> 计算机自动给你 new Number(4).len，但是这个对象
+                    和之前那个是不同的两个，所以没有值，打印undefined
+                    然后计算机delete这个对象
+
+            
+        */
+
+        //arguments 实参数组与实参是相映射的(只有实参形参相等时才一一映射)
+        //改一个数值等于改两个
+
+        //*原型、原型链(构造函数new的时候把原型的引用拿走)
+        // 原型是function对象的一个属性，是构造函数构造出的对象的共同祖先。原型也是对象
+        // 
+        //  __proto__ 与 prototype 的关系
+        //  function Person(){}
+        //  var person = new Person();
+        //      --> person.__proto__  ===  Person.prototype (都可以读写操作)
+
+        /*
+            Parent.prototype.name = 'hehe';  
+            function Parent(){}
+            var parent = new Parent();
+            var parent1 = new Parent();
+            console.log(parant.name);    -->  hehe   
+            console.log(parant1.name);    -->  hehe  
+                --> *Parent.prototype为parent, patent1的共同祖先
+        */
+
+        //应用:提取共有属性放到原型中，减少代码冗余
+
+        //constructor --> 返回属于对象自己的构造函数，可以手动更改
+        /*
+            function Car() {}
+            function Parent() {}
+            Car.prototype = {
+                constructor : Parent
+            }; 
+            var car = new Car();
+            console.log(car.constructor);  
+                -->原来function Car(){} ,改了之后变成function Parent(){}
+        */
+
+        //4.15
+        //构造函数寻遍自己的属性没找到目标属性后，接着遍历 __proto__ 
+        //                    
+        // var this = {                 -->Object.create(Func.prototype)
+        //     __proto__ : ...
+        // };
+
+        /*
+            Person.prototype.name = 'will';
+            function Person(){
+                // var this = { __proto__ : ...}  
+                    -->__proto__、Object.prototype指向同一空间
+            }
+            var person = new Person();
+                -->person被new出来的时候已经有了pototype的引用，
+                   下面再修改prototype的空间，不会影响这个对象的prototype，
+                   但是如果在对象在new出来之前就更改prototype的空间，
+                   则new出来的对象的prototype也会随之改变
+            Person.prototype = {
+                name : 'virgo'          -->Person.prototype换了一个空间
+            }
+            console.log(person.name);   -->'will'
+                -->person访问的是Person.prototype更改空间前的值    
+        */
+
+        //一般所说，所有的对象都继承自Object.prototype      特例：使用Object.create(null)
+        //Object.create(原型/null)      -->  *null:创建的对象里面没有原型,没有继承
+        /*
+                var obj = {
+                    name : 'will',
+                    age : 13
+                };
+                var obj1 = Object.create(obj);  
+                    -->obj对象的内容作为obj1对象的原型
+        */
+
+
+        //  call()/apply()  改变this指向
+        //  区别：传参列表不同
+        //  -->call(obj, 参数1, 参数2，...)；
+        //  -->apply(obj, arguments)；
+
+        //  call()借用别人的函数构造自己的功能
+        /*    
+            function Person (name, age){
+                this.name = name;
+                this.age = age;
+            }
+            var obj = {};
+            Person.call(obj, 'will', 22);
+                --> obj = {name : 'will', age : 22};
+        */
+
+        /*
+            call()的实际应用(用别人写好的函数实现自己的功能，减少代码冗余)
+            function Person(name, age, sex) {
+                this.name = name;
+                this.age = age;
+                this.sex = sex;
+            }
+            function Student(name, age, sex, tel, grade) {
+                //var this = {}     -->构造函数实例化时隐形创建一个this对象
+                Person.call(this, name, age, sex);
+                this.tel = tel;
+                this.grade = grade;
+            }
+            var student = new Student('will', 12, 'male', 123, 2015);
+        */
+        /*
+             bind的模拟实现
+            1.改变函数体this指向    
+                --> func(a1, a2, ...)
+                    var newFunc = func.bind(*, a1, a2, ...);
+            
+            2.bind()与call()/aply()的差别
+                -->bind()返回一个准备好的新的函数，call()/apply()是直接执行函数体
+            3.bind()的传参
+                -->func.bind(obj, a1, a2, ...);
+                    func的参数可以通过bind函数传参(a1,a2,...),好多个
+
+            4.bind()的内部操作原理
+                Function.prototype.myBind = function(context) {
+                    var target = context || window,
+                        self = this,
+                        arg = [].slice.call(arguments, 1),
+                        temp = function() {},
+                        Func = function() {
+                            var _arg = [].slice.call(arguments, 0);
+                            //console.log(this); --> Func
+                            return self.apply(this instanceof temp ? self : target, arg.concat(_arg));
+                        };
+                    temp.prototype = this.prototype;
+                    Func.prototype = new temp();
+                    return Func;
+                }
+
+        */
+
+        //继承
+        //圣杯模式
+        /*
+            Father.prototype.name = 'sunday';
+            function Father(){
+                age = 12;
+            }
+            function Son(){}
+            function Temp(){}
+            Temp.prorotype = Father.prototype;
+            Son.prototype = new Temp();
+                    -->创建一个空白构造函数作为中间层共享Father的原型，
+                        Son的原型再实例化Temp函数
+            var son = new Son();
+
+
+            封装成函数                Son     Father
+            var  inherit = function(Origin, Target){  -->Origin继承Target的原型
+                var Temp = function(){};
+                Temp.prototype = Target.prototype;
+                Origin.prototype = new Temp();
+                Origin.prototype.constructor = Origin;  -->把自己属于哪个构造函数归类
+                Origin.prototype.uber = Target.prototype.constructor;   -->保留真正的继承自谁
+            };
+
+            雅虎封装继承方法：
+            var inherit = (function(){
+                var Temp = function(){};        -->私有化变量,外部访问不到，但里面可以使用
+                return function (Origin, Target){
+                    Temp.prototype = Target.prototype;
+                    Origin.prototype = new Temp();
+                    Origin.prototype.constructor = Origin; 
+                    Origin.prototype.uber = Target;
+                };
+            }());
+        */
+
+        /*
+            闭包+立即执行函数,独立的作用域，好处多多
+            
+            var init = (function() {    
+                var name = 'abc',       -->变量私有化，外部访问不到
+                    age = 12;
+                function callName() {
+                    console.log(name);
+                }
+                function callAge() {
+                    console.log(age);
+                }
+                return function() {
+                    callName();
+                    callAge();
+                }
+            }());
+            init();
+        */
+
+        //call(), 闭包, 立即执行函数, 继承, 总结：
+        /*
+            var init = (function() {
+                function start() {
+                    function Human(name, age, sex) {
+                        this.name = name;
+                        this.age = age;
+                        this.sex = sex;
+                    }
+                    function Father(name, age, sex) {
+                        Human.call(this, name, age, sex);
+                    }
+                    Father.prototype.lastName = 'sunday';
+                    function Son(name, age, sex, tel, grade) {
+                        Human.call(this, name, age, sex);
+                        this.tel = tel;
+                        this.grade = grade;
+                    }
+                    var inherit = (function() {
+                        var Temp = function() {};
+                        return function(Origin, Target) {
+                            Temp.prototype = Target.prototype;
+                            Origin.prototype = new Temp();
+                            Origin.prototype.constructor = Origin;
+                            Origin.prototype.uber = Target;
+                        };
+                    }());
+                    inherit(Son, Father);
+                    var son = new Son('will', 10, 'male', 123120498, 2017);
+                    var father = new Father('virgo', 40, 'male');
+                    console.log(son);
+                };
+                return function() {
+                    start()
+                };
+            }());
+        */
+
+        //4.16
+        //  *this
+        //1.函数预编译： this --> window
+        //2.全局作用域： this --> window
+        //3.call/apply: 改变this指向
+        //4.obj.fun():  谁调用fun(),fun()里面的this指向谁
+
+        //arguments.callee -->指向自身函数引用
+
+
+        /*
+            var name = '222';
+            var a = {
+                name: '111',
+                say: function() { 
+                    console.log(this.name)
+                }
+            }
+            var fun = a.say;
+            fun()
+            a.say()
+            var b = {
+                name: '333',
+                say: function(fun) {
+                    fun();     -->没有被谁调用，走预编译，this --> window
+                }
+            }
+            b.say(a.say);
+            b.say = a.say;
+            b.say();
+  --------------------------------------------------------
+            var name = 'will';
+            var obj = {
+                name: 'virgo',
+                sayName: function() {
+                    console.log('this.name = ' + this.name);
+                },
+                callback: function() {
+                    var that = this;
+                    return function() {
+                        console.log('this.name = ' + this.name);
+                        var sayName = that.sayName;
+                        that.sayName();
+                        sayName();
+                    }
+                }
+            }
+            obj.callback()();
+  --------------------------------------------------------
+            var foo = 123;
+            function demo(){
+                this.foo = 234;
+                console.log(foo);
+            }     
+            demo();       
+        */
+
+        /*
+            toString() 区分数组， 对象
+            Object.prototype.toString.call([]);
+            Object.prototype.toString.call({});
+        */
+
+        /*
+            深度克隆( 理解 )
+            function clone(Origin, Target) {
+                var Target = Target || {},
+                    toStr = Object.prototype.toString,
+                    isArr = '[object Array]';
+                for (var k in Origin) {
+                    if (Origin.hasOwnProperty(k)) {
+                        if (Origin[k] !== null && typeof(Origin[k]) == 'object') {
+                            Target[k] = toStr.call(Origin[k]) === isArr ? [] : {};
+                            clone(Origin[k], Target[k]);
+                        } else {
+                            Target[k] = Origin[k];
+                        }
+                    }
+                }
+            }
+        */
+
+        //数组
+        /*
+            var arr = new Array(x)  -->传一个参数表示创建一个x位的空数组
+            var arr = [];
+            arr[2] = 'abc';
+            console.log(arr);
+                    -->undefined undefined abc
+            
+            //数组去重，原型链上操作(我自己写的)
+            Array.prototype.unique = function() {
+                var temp = {},
+                    b = [],
+                    len = this.length;
+                for (var i = 0; i < len; i++) {
+                    temp[this[i]] = this[i];
+                }
+                for (var k in temp) {
+                    b.push(temp[k]);
+                }
+                return b;
+            }
+
+            //数组去重，原型链上操作(参考)
+            Array.prototype.unique = function() {
+                var temp = {},
+                    b = [],
+                    len = this.length;
+                for (var i = 0; i < len; i++) {
+                    if(!temp[this[i]]){
+                        temp[this[i]] = 'abc';
+                        b.push(this[i]);
+                    }
+                }
+                return b;
+            }
+        
+        */
+        /*
+            数组的方法(改变原数组)
+                --> push() 在数组最后添加
+                    unshift() 在数组前面添加
+
+                    Array.prototype.push = function(){
+                        for(var k in arguments){
+                            this[this.length] = argument[k];
+                        }
+                        return this.length;
+                    }
+                    
+                --> pop() 把数组最后一位剪切
+                    shift() 把最前一位剪切
+                --> reverse() 逆转数组顺序并返回
+                
+                --> splice(a,b,c) 剪切/指定位置添加数据 -->位置看光标位置
+                        a 从第a开始切(从0开始)
+                        b 切去了b位长度
+                        c 在切口处添加新数据(切口处看光标位置)
+                    
+                    *定位插入
+                    var arr = [1,2,3,5]
+                    arr.splice(3,0,4)   -->arr[1,2,3,4,5]
+                    
+                    *清空数组
+                        splice(0, arr.length);
+                               
+                --> sort(function(a,b){         &&操作相似，两数相减，大于零后面的数上去，小于零前面的数
+                        return a - b; // 升序
+                        return b - a; // 降序
+                    }) 
+
+                    sort(function(a, b){
+                        return Math.random() - 0.5; //打乱顺序
+                    })
+          
+            数组的方法(不改变原数组,要用一个变量去装)    
+                --> concat  arr.concat(arr1) 拼接数组
+                --> var arr = [1,2,3,4]
+                    slice()     截取全部，应用于类数组的内容截取到数组中
+                    slice(a)    从a位开始截取后面的全部       -->var newArr = arr.slice(1)  [2,3,4]   
+                    slice(a, b) (0开始)从a位开始截取，截取到b位前    -->var newArr = arr.slice(1,3) [2,3]  
+
+                --> join('*')   把数组按照'*'来连接，返回一个字符串
+                    split('*')  把字符串按照'*'来拆分，返回一个数组
+
+        */
+
+        /*
+            *类数组(是对象，可以当数组来用)
+            var obj = {
+                '0' : 'a',
+                '1' : 'b',
+                '2' : 'c',
+                length : 3,
+                push : Array.prototype.push,
+                splice : Array.prototype.splice,
+                name : 'will',
+                age : 12
+            }
+                -->类数组,属性要为索引属性(数字)，必须有length属性，最好加上push
+                
+                --> push方法有类似的操作
+                    Array.prototype.push = function(target){
+                        this[this.length] = target;
+                        this.length++;
+                    }
+
+            //阿里试题
+            var obj = {
+                '2' : 'a',
+                '3' : 'b',
+                length : 2,
+                push : Array.prototype.push
+            }
+            obj.push('c');
+            obj.push('d');
+            console.log(obj);
+        */
+
+        //4.17
+        /*
+            try/catch  -->  在try里面的代码发生错误，不会执行错误后的try里面的代码
+
+            try{
+                console.log('a')
+                console.log(b)
+                console.log('c')    -->不执行
+            }catch(e){
+                    //-->error  error.message error.name --> error{} --> e
+                console.log(e.name + ':' + e.message)
+            }
+            console.log('d')
+
+            错误信息：  普遍6种
+            1.EvalError : eval()的使用与定义不一致
+            2.RangeError : 数值越界
+            3.ReferenceError : 非法或不能识别的引用数值
+            4.SyntaxError : 发生语法解析错误
+            5.TypeError : 操作数类型错误
+            6.URIError : URI处理函数使用不当
+        */
+
+        /*
+            //es5严格模式   
+                -->开启严格模式 :  加上 'use strict';
+                    全局
+                    局部(推荐) : 将整个脚本文件放在一个立即执行函数之中
+                        (function (){
+                            'use strict';
+                                ...
+                        }())
+            
+            1.with() arguments.callee() func.caller() 不能使用
+            2.全局变量赋值前必须声明
+            3.预编译，局部this必须赋值(不赋值为undefined)，不再指向window
+            4.拒绝重复参数名和属性名(对象)
+            5.arguments不再追踪参数的变化(实参改变，arguments对应的不改变)
+            6.不允许在非函数的代码块内声明函数(if/else/switch/for...)
+              代码不报错，但不能使用(func is not defined)
+            7.eval语句本身作为一个作用域，它所生成的变量只能用于eval内部
+            8.不能删除变量，只能删除属性
+
+        */
+
+
+        //4.18
+        /*      
+                --> DOM
+            一、找元素
+                1.直接查找
+                    1)document.getElementById('')   --> 一般不用，id作为主体标识
+                常用2)docuemnt.getElementsByTagName('')   -->[0]
+                    3)document.getelementsByClassName('')   -->[0]  *ie8和ie8以下的浏览器不支持
+                    4)document.querySelector('')    -->css选择器 (div > span strong.demo)
+                                                    *ie7和ie7以下的浏览器没有，不是实时的，不适用
+                2.间接查找
+                    节点(所有节点：文本、注释、元素....)
+                    *1）parentNode   -->父节点
+                    2）childNodes   -->子节点们(包括所有节点)
+        
+                    *元素节点
+                    1）parentElement    -->父元素节点(ie9之前不兼容)
+               常用 2）children     -->当前元素的元素子节点(返回一个数组)
+                    3）firstElementChild    -->当前元素第一个元素子节点(ie9之前不兼容)
+                    4) lastElementChild     -->当前元素最后一个元素子节点(ie9之前不兼容)
+               常用 5) nextElementSibling   -->后一个兄弟元素节点(ie9之前不兼容)
+               常用 6) previousElementSibling   -->前一个兄弟元素节点(ie9之前不兼容)
+        
+                3.获取节点类型(nodeType)
+                    1)元素节点  --  1
+                    2)属性节点  --  2
+                    3)文本节点  --  3
+                    4)注释节点  --  8
+                    5)document  --  9 
+                    6)DocumentFragment  --  11(文档碎片)
+                    
+                    function retElementChild(node) {
+                        var temp = {
+                                length: 0,
+                                push: Array.prototype.push,
+                                splice: Array.prototype.splice
+                            },
+                            child = node.childNodes,
+                            len = child.length;
+                        for (var i = 0; i < len; i++) {
+                            if (child[i].nodeType === 1) {
+                                temp.push(child[i]);
+                            }
+                        }
+                        return temp;
+                    }
+
+            DOM继承树
+            document --> HTMLDocument.prototype --> Document.prototype
+                
+            1.  getElementById 
+                        --> 定义在Document.prototype
+                getElementsByTagName 
+                        --> 定义在Document.prototype和Element.prototype上
+                            var oDiv = document.getElementsByTagName('div')[0];
+                            var oSpan = oDiv.getElementsByTagName('span')[0];
+                document.documentElement    --> html
+                document.body   --> body
+                document.head   --> head
+
+            二 、增加元素节点(文本节点：document.createTextNode())
+                1.创建：document.createElement()
+                2.添加：element.appendChild(obj) -->剪切操作
+                        div.insertBefore(a, b) ,insert a before b
+
+            三 、删除
+                1.父节点.removeChild(子节点)    剪切操作，可以拿容器接收
+                        注意:循环剪切一个父节点里的子节点，for循环中，用两个变量
+                             i，j，i为0不变，作为父节点的index，j为循环条件
+                2.子节点.remove()
+            
+            四 、替换
+                replaceChild(new, origin);
+
+            *innerHTML -> 重绘页面的一部分
+                显示/改变obj里面的全部内容
+            *innerText
+                显示obj里面的文本内容
+
+            
+            元素节点的操作方法(行间属性)
+            1.setAttribute(a, b)    -->a 属性名  b 属性值   (可自定义属性名) ie不支持
+            2.getAttribute(a)       -->a 属性名
+            3.element.removeAttribute('prop')   -->删除行间属性(可以删除style)
+        */
+
+        //4.19
+        /*
+            日期对象 Date()
+            1.时间戳
+            obj.getTime()   -->1970年1月1号至今的毫秒          
+            
+        */
+
+        /*
+            定时器  -->指向window，一般直接用
+            1.
+                setInterval(function(){}, 20);    
+                clearInterval();
+                    --> 有微小误差
+
+            2.
+                setTimeout(function(){}, 1000);   -->1000毫秒后执行，执行一次
+                clearTimeout();
+
+                执行时，调用web api的setTimeout，时间段后再把func放进就绪队列，
+                等栈空闲时，栈队列的event loop把就绪队列的任务放回栈执行
+
+
+            3.  //可以传参  -->时间后加参数，setTimeout两个参数，setInterval可以多个参数
+                setTimeout(function(y, z){
+
+                }, 200, y, z)     -->最低4毫秒
+                setInterval(function(y, z){
+
+                }, 200, y, z)
+
+        */
+
+        /*
+            数组
+            1.  forEach()   --> 在原数组操作
+                var arr = [10, 20, 30];
+                forEach(function(ele, index, self){
+                    console.log(ele, index, self)
+                }, obj)
+
+                //原型链forEach操作原理
+                Array.prototype.myForEach = function(func, context){
+                    for(var i = 0; i < this.length; i++){
+                        func.call(context, this[i], i, this)
+                    }
+                }
+                
+                第一个参数：
+                    ele:元素值(必要)
+                    index:元素值索引
+                    self:数组本身
+                第二个参数：
+                    改变数组this指向
+                    
+                    
+
+            2.  filter()    -->筛选元素
+                -->创建新数组，新数组的元素为通过检查指定数组中符合条件的所有元素
+
+                var arr = [
+                    {name : 'one', age : 1}, 
+                    {name : 'two', age : 2}, 
+                    {name : 'three', age : 3},
+                    {name : 'four', age : 4}
+                ];
+                
+                var newArr = arr.filter(function(ele, index, self){
+                    retuen ele.age > 2;
+                }, {name : 'filter'})
+
+                //原型链filter操作原理
+                Array.prototype.myFilter = function(func, context){
+                    var newArr = [];
+                    for (var i = 0; i < this.length; i++) {
+                        func.call(context, this[i], i, this) ? newArr.push(this[i]) : newArr.push();
+                    }
+                    return newArr;
+                }
+
+                第一个参数(返回true、false，若true则抛进新数组)：
+                    ele:元素值
+                    index:元素值索引
+                    self:数组本身
+                第二个参数：
+                    改变数组this指向
+                
+            3.  map()   -->与forEach相似，区别:形成新数组
+
+                var arr = [10, 20, 30];
+                
+                // 返回新数组
+                var newArr = arr.map(function(ele, index, self){
+                    return ele * ele;
+                }, {name : map})
+
+                //原型链map操作原理
+                Array.prototype.myMap = function(func, context){
+                    var newArr = [];
+                    for (var i = 0; i < this.length; i++) {
+                        newArr.push(func.call(context, this[i], i, this));
+                    }
+                    return newArr;
+                }
+
+            4. every()  
+                -->返回一个boolean，有一个为false即返回false，不执行后面的
+               some()
+                -->返回一个boolean，有一个为true即返回true，不执行后面的
+
+                var arr = [10, 20, 30, 40, 50];
+
+                var falg = arr.every(function(ele, index, self){
+                    return ele > 25;
+                })
+
+                //原型链上every的操作原理
+                Array.prototype.myEvery = function(func, context){
+                    for (var i = 0; i < this.length; i++) {
+                        if(!func.call(context, this[i], i, this)){
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
+                //原型链上some的操作原理
+                Array.prototype.mySome = functionn(func, context){
+                    for (var i = 0; i < this.length; i++) {
+                        if(func.call(context, this[i], i, this)){
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                
+
+            5.reduce()      -->一定要把接力棒抛出，否则一次循环后baton为undefined
+            
+                --> 接收一个函数作为累加器，数组中的每个值（左->右），最终计算为一个值
+
+                //原型链上reduce的操作原理
+                Array.prorotype.myReduce = function(func, initialVal, context){
+                    for (var i = 0; i < this.length; i++) {
+                        initialVal = func.call(context, initialVal, this[i], i, this);
+                    }
+                    return initialVal;
+                }
+                
+                //eg
+                var arr = 'key1=value1 ,key2=value2 ,key3=value3';
+
+                var cookie = arr.split(' ,').myReduce(function(baton, curVal) {
+                    var temp = curVal.split('=');
+                    baton[temp[0]] = temp[1];
+                    return baton;
+                }, {}, {
+                    name: 'myReduce'
+                })
+                
+                var obj = arr.reduce(function(baton, curVal){
+                    ...
+                }, initialVal);
+                baton: -->如果initialVal有值，则baton第一次为initialVal；
+                       -->如果initialVal没有值，则baton第一次为数组的第一个值，
+                          数组从第二位开始循环
+                curVal: ele
+                index: index
+                self: self
+                initialVal: 接力棒，每次
+        */
+
+
+        //4.21
+        /*
+            1.获取滚动条移动距离
+
+                ie9以上
+                    window.pageYOffset/pageXOffset 
+                ie9以下(相加)
+                    document.body.scrollTop/scrollLeft + document.documentElement.scrollTop/scrollLeft
+            
+                封装方法：
+                    function getScrollOffset(){
+                        if(window.pageXOffset){
+                            return{
+                                x : window.pageXOffset,
+                                y : window.pageYOffset
+                            }
+                        }else{
+                            return{
+                                y : document.body.scrollTop + document.documentElement.scrollTop,
+                                x : document.body.scrollLeft + document.documentElement.scrollLeft
+                            }
+                        }
+                    }
+
+            2.获取可视区窗口（html文档）
+                function getViewportOffset() {
+                    if (window.innerWidth) {
+                        return {
+                            w1: window.innerWidth,
+                            h1: window.innerHeight
+                        }
+                    } else {
+                        if (document.compatMode === 'BackCompat') {
+                            return {
+                                w2: document.body.clientWidth,
+                                h2: document.body.clientHeight
+                            }
+                        } else {
+                            return {
+                                w3: document.documentElement.clientWidth,
+                                h3: document.documentElement.clientHeight
+                            }
+                        }
+                    }
+                }
+
+            3.获取元素的尺寸(元素可视区尺寸border内，不包括margin)
+                div.offsetWidth
+                div.offsetheight
+
+            4.获取元素位置(忽略自身是否有定位)
+                -->相对于最近有定位父级的距离，
+                   没有则到document.documentElement的距离
+                div.offsetLeft
+                div.offsetTop
+               
+            5.让滚动条运动
+                scrollTo(a, b) --> (x位置， y位置)不累加    -->定位
+                scrollBy(a, b) --> (x位置， y位置)可累加    -->自动阅读
+            
+        */
+
+        //4.22
+        /*
+            一、对css的间接操作
+
+                1.对css的写操作
+                    element.style.prop = '...';     -->行间样式表
+                    保留字前加css  eg：cssFloat
+            
+                2.对css的读操作
+                    IE9以上
+                    window.getComputedStyle(element, null)[prop]
+                    IE9以下
+                    element.currentStyle[prop]  -->IE9以下
+
+                    封装函数getStyle()
+                  
+                *修改伪元素
+                设置两个或多个 class::伪元素，通过修改class来改变伪元素的样式
+                *获取伪元素的值(只读)
+                window.getComputedStyle(element, 'after')[prop]
+
+                *通过改变class来改变元素的状态
+
+            二、事件
+                1.element.onclick = function(){}
+                    -->一个element同一事件只能绑定一个处理程序
+                       this指向element本身
+
+                2.element.addEventListener('事件类型'， 函数处理， false);
+                    
+                    ------> 如果功能封装在对象中操作的话，函数要拿一个变量接收再写进addEventListener中
+
+                    -->事件类型： onclick --> click
+                    -->函数处理最好为有引用的函数，方便能被解除绑定
+                    -->可以为一个事件绑定多个处理程序,同一事件类型按顺序同一时间执行监听
+                       this指向element本身
+
+                3.element.attachEvent('onclick'， 函数处理)
+                    -->ie独有，this指向window
+
+                封装函数：addEvent(element, eventType, handle)
+
+                function addEvent(element, eventType, handle) {
+                    if (element.addEventListener) {
+                        element.addEventListener(eventType, handle, false);
+                    } else if (element.attachEvent) {
+                        element.attachEvent('on' + eventType, function() {
+                            handle.call(this);
+                        })
+                    } else {
+                        element['on' + eventType] = handle;
+                    }
+                }
+                addEvent(div, 'click', handle);
+                function handle() {
+                    console.log(123);
+                }
+        */
+        /*
+        //4.23
+            一、解除绑定事件(若函数处理为匿名函数，则无法解除绑定)  
+                1.element.onclick = null;
+
+                2.element.removeEventListener(事件类型， 函数处理， false);
+
+                3.element.detachEvent('on' + 事件类型，函数处理)
+        
+            二、事件处理模型(捕获 -> 事件处理 -> 冒泡)
+                1.冒泡  -->element.addEventListener(eventType, handle, false)
+                    结构上(非视觉上)嵌套的元素，会存在事件冒泡的功能，即同一事件，
+                    自子元素冒泡向父元素 (自底向上)
+                        -->点击的元素为事件执行(按执行顺序执行)                    
+                
+                    *focus、blur、change、submit、reset、select没有事件冒泡
+                
+                2.捕获(Google Chrome)
+                        -->element.addEventListener(eventType, handle, true)
+                    结构上(非视觉上)嵌套的元素，会存在事件捕获的功能，即同一事件，
+                    自父元素捕获至子元素 (自顶向下)
+                        -->点击的元素为事件执行(按执行顺序执行)
+                
+                3.取消冒泡(在子元素添加取消冒泡事件)
+                    1)event.stopPropagation();
+                    2)event.cancelBubble = true;
+
+                    封装函数：stopBubble(event)
+                    function stopBubble(e){
+                        if(e.stopPropagation){
+                            e.stopPropagation();
+                        }else{
+                            e.cancelBubble = true;
+                        }
+                    }
+                    
+                4.阻止默认事件(右键菜单，a标签，表单)
+                    1)return false;     -->行间绑定事件
+                    2)event.preventDefault();   -->i9以下不兼容
+                    3)event.returnValue = false;    -->兼容IE
+
+                    封装函数：cancelHandler(event)
+                    function cancelHandler(e){
+                        if(e.preventDefault){
+                            e.preventDefault();
+                        }else{
+                            e.returnValue = false;
+                        }
+                    }
+
+                    a标签取消默认事件
+                    1)  addEvent(a, 'click', function(e){
+                            cancelHandler(e);
+                        });
+                    2)  <a href="javascript:void(false)">demo</a>
+                
+                5.事件对象
+                    1)var event = e || window.event;
+                    
+                    2)事件源对象
+                        event.srcElement    IE chrome
+                        event.target        FF chrome
+
+                        var target = event.target || event.srcElement;
+
+                    *事件委托(一个大的容器，里面有若干相似的小东西，获取里面小东西的属性)
+                        element.onclick = function(e){
+                            var event = e || window.event;
+                            var target = event.target || event.srcElement;
+                        }
+
+        */
+        //4.24
+        /*
+            *无阻塞的脚本加载(异步，不会影响html、css，并行加载)
+            
+            1. <script>标签的 defer 属性(能外能内)    -->只能IE9以下
+                <script type="text/javascript" src="file1.js" defer></ script>
+                -->DOM解析完成时才执行（DOMtree加载完）
+
+                aysnc属性 (加载完立即执行)  -->只能加载外部脚本,IE9以上
+                <script type="text/javascript" src="file1.js" aysnc></ script>
+
+            2. 动态脚本元素     -->调用内部函数在callback函数里执行(或者在onload/onreadystatechange)
+                1)DOM生成 script 标签，并插入到 head 标签中
+                    --> 
+                        var script = document.createElement('script');
+                        script.type = 'text/javascript';
+                        script.src = 'file1.js';            -> 请求
+                        document.head.appendChild(script);
+                2)监听 script 是否加载完成并完成准备,请求前监听
+                    
+                    --> // 除了IE以外的主流浏览器
+                        var script = document.createElement('script');
+                        script.type = 'text/javascript';
+
+                        script.onload = function(){
+                            console.log('Script loaded!');
+                        };
+                        
+                        script.src = 'file1.js';
+                        document.head.appendChild(script);
+
+                    -->// IE浏览器
+                        var script = document.createElement('script');
+                        script.type = 'text/javascript';
+
+                        script.onreadystatechange = function(){
+                            if(script.readyState == 'loaded' || script.raedyState == 'complete'){
+                                script.onreadystatechange = null;
+                                console.log('Script loaded!');    
+                            }
+                        };
+
+                        script.src = 'files1.js';
+                        document.head.appendChild(script);
+
+                    --> 封装函数
+
+                        function loadScript(url, callback){
+                            var script = document.createElement('script');
+                            script.type = 'text/javascript';
+
+                            if(script.readyState){
+                                //IE
+                                script.onreadystatechange = function(){
+                                    if(script.readyState == 'loaded' || script.readyState == 'complete'){
+                                        script.onreadystatechange = null;
+                                        callback();    
+                                    }
+                                };
+                            }else{
+                                //Chrome FF SF
+                                script.onload = function(){
+                                    callback();
+                                };
+                            }
+
+                            script.src = url;
+                            document.head.appendChild(script);
+                        }
+
+                3) 顺序加载多个脚本
+                        loadScript('file1.js', function(){
+                            loadScript('file2.js', function(){
+                                loadScript('file3.js', function(){
+                                    console.log('All script loaded!');
+                                });
+                            });
+                        });
+                
+            3.XMLHttpRequest脚本（不能从CDN下载，局限性大）
+                -->
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'file1.js', true);
+                    xhr.onreadystatechange = function(){
+                        if (xhr.readState == 4) {
+                            if (xhr.status >= 200 && xhr.status < 300 || xhr.status == 304) {
+                                var script = document.createElement('script');
+                                script.type = 'text/javascript';
+                                script.text = xhr.responseText;
+                                document.body.appendChild(script);
+                            }
+                        }
+                    };
+                    xhr.send(null);
+        */
+        /*
+            *鼠标事件
+                1.onmousedown onmousemove onmouseup
+                    1) 先mousedown再mouseup最后click
+
+                    2) 解决mousedown和click的冲突
+                        用时间戳判断，大概小于300毫秒为点击
+                        
+                    3) 判断鼠标左右键(button)   --> click只能监听鼠标左键
+                        document.onmousedown = function(e){
+                            if(e.button == 2){
+                                console.log('right');
+                            }else if(e.button == 0){
+                                console.log('left');
+                            }
+                        };
+
+                2.onmouseover(onmouseenter 不支持冒泡) onmouseout (onmouseleave 不支持冒泡)
+                
+            *键盘事件
+                1.onkeypress    -->String.fromCharCode()转换为对应的字符
+                2.onkeydown onkeyup
+                    keydown > keypress > keyup
+                
+                *onkeypress 和 onkeydown 区别
+                    1)keypress有charCode(ascii码)，keydown 为0
+                    2)keydown可以响应任意键盘按键，keypress只能响应字符类按键(ascii码里面的)
+                    
+                字符类并区别大小写用keypress
+                操作按键用keydown
+
+            *其他
+            oninput(输入框内容有变化时触发) onchange(聚焦和失去焦点是有改变才触发) 
+            onfocus(聚焦) onblur(失去聚焦)
+            onscroll(滚动条滚动时触发)
+        */
+        //4.26
+        /*
+            *json   
+                --> 本质上为一个对象
+                    格式 - 属性名为字符串形式
+                    json{
+                        'name' : 'will',
+                        'age' : 20
+                    } 
+
+                JSON.parse(str)   string -> json  
+                    -->把后端发来的数据转变成一个前端识别的对象(返回一个对象) 
+
+                str = JSON.stringify(json)    json -> string
+                    -->把前端的对象变成一个可以让后端识别的形式(返回一个字符串)
+
+        */
+        /*
+             *时间线
+             1.首先创建一个Document对象，开始解析Web页面
+                 期间document.readyState = 'loading'
+             2.异步加载js外脚本，里面禁止使用document.write()
+             3.文档解析完成(DOMtree完成) document.readyState = 'interactive'
+         */
+        /*
+                1.转义字符 '\'  -->后面的字符变成文本
+                    \n 换行
+                    \t tab
+                    \r 行结束
+                2.字符串换行，在每行后面加上一个转义字符
+
+                一、正则表达式(RegExp)  -->贪婪匹配，一般
+                    1.字面量(常用)
+                        var reg = /abc/i;
+                        var str = 'abcd';
+                        reg.test(str);  --> true
+                            test()判断str是否有符合reg的格式
+                    2.构造函数方法
+                        var reg = new RegExp('abc', 'i');
+                        var str = 'abcd';
+                        reg.test(str);  --> true
+                    3.修饰符
+                        1) i : 忽视字母大小写
+                        2) m : 执行多行匹配
+                            一个字符串中有 \n ，多行匹配
+                        3) g : 全局匹配
+                            var reg = /ab/;
+                            var str = 'ababababa';
+                            str.match(reg); --> ['ab', 'ab', 'ab', 'ab']
+                                返回一个数组，包含str中符合reg的全部字符串
+                                不加修饰符g则返回一个符合要求的字符串  --> 'ab'
+                                若没找到返回null
+                    4.表达式 []
+                        一个表达式代表检验一位，里面的内容为区间
+                        var reg = /[0-9][0-9][0-9]/;
+                        var str = 's123ccc';
+                        reg.test(str);  --> true
+                        str.match(reg);  --> '123'
+
+                        1)[0-9A-z] 0-9 a-z A-Z
+                        2)^在表达式中表示 非(!)
+                            [^a] 除了a都行
+                        3)(abc|fgh)
+                            -->匹配abc 或 fgh
+                    5.元字符(可以写入表达式)
+                        1)\w === [0-9A-z_]  \W === [^\w]
+                        2)\d === [0-9]  \D === [^\d]
+                        3)\s === [\t\n\r\v\f ]  \S === [^\s]
+                        4)\b 单词边界   \B非单词边界
+                            var reg = /\bcde/;
+                            var str = 'abc cde fgh';
+                        5)\u0000    - \uffff
+                          \u020000  - \u02ffff
+                          \u100000  - \u10ffff
+                          unicode编码，匹配汉字
+                            -->[\u4e00-\u9fa5]
+                        6) . === [^\r\n]
+                    6.量词
+                        1)+ 出现1次到无数次
+                        2)* 出现0次到无数次 (最后一位为 ""，匹配不出来的为 "")
+                        3)? 出现0次到1次 (最后一位为 ""，匹配不出来的为 "")
+                        4){X} X为一次匹配的数量
+                        5){X,Y} {3, 5} 从右往左的数量匹配，可以大不要小    -->{3, 5}? 从左往右的数量匹配，可以小不要大
+                        6)^ 以什么开头
+                        7)$ 以什么结尾      ^asd$ -->代表自己asd
+                    7.方法
+                        reg.test(str)   --> 检验是否符合匹配规则 true|false
+                        reg.exec(str)  --> lastIndex
+
+                        str.replace()
+
+                    8.边角
+                        1) () -> $ -> 子表达式
+                        
+                        2)匹配同样aaaa aabb aaab之类的叠数
+                        \1 向前引用一位
+                        aaaa --> /(\w)\1\1\1/g
+                        aabb --> /(\w)\1(\w)\2/g
+                        aaab --> /(\w)\1\1(\w)/g
+                        
+                        aabb -> bbaa
+                        var reg = /(\w)\1(\w)\2/g;
+                        var str = 'aabb';
+                        str.replace(reg, '$2$2$1$1');
+
+                        abab -> baba
+                        var reg = /(\w)(\w)(\w)(\w)/g;
+                        var str = 'abab';
+                        str.replace(reg, '$2$1$2$1');
+                            
+                        3)//随便拼，$为匹配的结果，$1为第一个子表达式匹配内容，$2为第二个子表达式匹配内容
+                            str.replace(reg, function($,$1,$2){
+                                return $2 + $1 + $2 + $1 + ...;
+                            });
+                        
+                        4)->theFirstName
+                            var str = 'the-first-name';
+                            var reg = /-(\w)/g;
+                            console.log(str.replace(reg, function($, $1) {
+                                return $1.toUpperCase();
+                            }));
+                        
+                        5)正向预查(?=)   非正向预查(?!)
+                            找一个a，后面跟着b的那个
+                            var str = 'abaaaa';    
+                            var reg = /a(?=b)/g;
+
+                        6)十进制
+                            var reg = /^([^0]|[1-9]\d+)$/g;
+
+                        7)百度2014正则试题
+
+                            -自己想的                                                    
+                            var str = '10000000000';
+                            var newStr = str.split('').reverse().join('');
+                            var reg = /(\d{3})(?=\B)/g;
+                            console.log(newStr.replace(reg, function($, $1) {
+                                return $1 + '.';
+                            }).split('').reverse().join(''));
+
+                            -标准答案
+                            var str = '100000000000';
+                            var reg = /(?=(\B)(\d{3})+$)/g;
+                            console.log(str.replace(reg, '.'));
+
+                        8)
+                            邮箱
+                            /^\w+@[a-z0-9]+(\.[a-z]+){1,3}$/g
+                            密码
+                            /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?.]).*$/g
+
+        */
+        /*
+             函数式编程-纯函数
+                            -->相同的输入得到相同的输出，不依赖外部环境，一定有返回值
+                            
+                            
+                            如果要使用外部的引用值的话，在函数内部生成一个[]/{}存放，对
+                            函数内的[]/{}进行操作
+
+                            例子：搜索小demo
+       
+        */
+        /*
+                防抖：一般用于搜索操作时
+
+                    --> 函数防抖是在函数需要频繁触发情况时，只有足够
+                        空闲的时间，才执行一次 (公交车到站停一段时间再开)
+                
+                setTimeout延时发送请求,n毫秒后执行，避免浪费资源
+
+                var oInp = document.getElementsByTagName('input')[0];
+                var timer = null;
+                function ajax(e) {
+                    console.log(e);
+                    console.log(this.value);
+                }
+                oInp.oninput = function() {
+                    clearTimeout(timer);
+                    var self = this,
+                        arg = arguments;
+                    timer = setTimeout(function() {
+                        ajax.apply(self, arg);
+                    }, 1000);
+                };
+
+                封装函数
+                function deBounce (handle, delay) {
+                    var timer = null;
+                    return function(){
+                        var self = this,
+                            arg = arguments;
+                        clearTimeout(timer);
+                        timer = setTimeout(function(){
+                            handle.apply(self, arg);
+                        }, delay);
+                    }
+                }
+                oInp.oninput = deBounce(ajax, 1000);
+        */
+        /*
+                节流：窗口调整、页面滚动、抢购疯狂点击
+                    -->预定一个函数只有在大于等于执行周期时才执行，
+                       周期内调用不执行 (水滴到一定重量才落下)
+                    
+                时间戳
+
+                封装函数
+                function throttle(handle, wait) {
+                    var nowTime = 0;
+                    return function(e) {
+                        var lastTime = new Date().getTime();
+                        if (lastTime - nowTime > wait) {
+                            handle.apply(this, arguments);
+                            nowTime = lastTime;
+                        }
+                    };
+                }
+                
+        */
+        /*
+                
+                *运动框架
+
+                1.匀速运动
+                    1) 停止条件(距离差的绝对值小于速度的绝对值->停止， 让物体位置直接等于目标位置)
+                    2) 运动和停止分离(if/else),避免停止后再次运动
+                    3) 定时器开启前先清理前一个定时器，防止多个定时器同时工作
+                
+                2.缓冲运动
+                    1) 速度 = (目标位置-元素当前位置)/缩放系数  
+                    2) 速度取整：speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+                    3) 位置等于目标位置停止
+                    
+                3.多物体运动
+                    1) 设置多个定时器 obj.timer
+                    2) 不能使用公有变量，让运动对象与属性绑定
+
+                4.链式运动
+                    1) 回调函数
+
+                5.完美运动框架
+                    1) 把要改变的值装进一个对象中，把对象传进运动函数中
+                    2) 设置一个标记，等对象中所有的属性都改变后再停止运动
+
+                6.弹性运动
+                    1) 物体运动具有摩擦力影响速度的大小
+                    2) 停止条件(速度接近0，位置接近目标位置)
+                    3) 速度，加速度，摩擦力都定义在定时器外部，避免重置
+                    4) 速度改变后要乘于摩擦力，达到减速目的
+                    5) 加速度与缓冲运动速度相似
+                    6) 速度 = a + 原始速度
+
+                7.碰撞运动
+                    1) 碰撞，碰撞方向相反方向的速度取反
+                        --> 从上运动向下碰撞下框，横向速度不变，纵向速度取反
+                    2) 摩擦力必须有,边框碰撞时，位置等于边框位置
+                    3) 拖拽碰撞运动时注意判断停止条件
+                    4) 拖拽运动可以用运动的距离差作为物体的运动初速度
+                    5) 向下的运动有一个重力加速度gravity
+                    6) 速度，加速度，摩擦力都定义在定时器外部，避免重置
+                
+         */
+        /*
+                BOM -->包含DOM
+
+                BOM对象包含：
+                1) window javascript层级中的顶层对象，表示浏览窗口
+                2) navigator 包含客户端浏览器的信息
+                3) history 包含了浏览器窗口访问过的URL
+                4) location 包含了当前的URL信息
+                5) screen 包含客户端显示屏的信息 (不常用)
+        */
+        /*
+                window对象
+                    --> Window 对象表示一个浏览器窗口或一个框架
+                
+                    常用方法
+                    1) confirm('...');
+                            --> 带有确定(true)和取消(false)按钮的弹出框,返回一个布尔值
+                                配合close()使用，关闭当前窗口
+
+                    2) window.open(URL,name,features,replace);
+                            --> 地址，名称(类似于id)，样式(逗号隔开)，boolean
+                                可以用变量接收
+                    
+                    3) prompt()
+                            --> 弹出一个输入框，返回字符串
+
+                Navigator对象
+
+                    常用属性
+                    1) onLine 
+                        --> 判断是否联网
+
+                    2) cookieEnabled 
+                        --> 判断浏览器是否允许cookie操作
+                    
+                    3) userAgent
+                
+                History对象
+                    --> 包含用户访问过的url    
+                    
+                    常用方法
+                    1) back()
+                        --> 加载 history 列表中的前一个 URL
+                    2) forward()
+                        --> 加载 history 列表中的前一个 URL
+                    3) go()
+                        --> 加载 history 列表中的某个具体页面,参数为数字(正负)
+
+                Location对象
+                    --> 包含有关当前 URL 的信息
+
+                    常用属性
+                    1) hash 
+                        --> 设置或返回从井号 (#) 开始的 URL
+                    2) host
+                        --> 设置或返回主机名和当前 URL 的端口号
+                    3) href
+                        --> 设置或返回完整的 URL
+                    4) pathname 
+                        --> 设置或返回当前 URL 的路径部分
+                    5) protocol 
+                        --> 设置或返回当前 URL 的协议
+                    6) search 
+                        --> 设置或返回从问号 (?) 开始的 URL（查询部分）
+
+                    常用方法
+                    1) assign() 
+                        --> 加载新的文档
+                    2) reload('force') 
+                        --> 重新加载当前文档。参数可选，不填或填 false 则取浏览器缓存的文档
+                    3) replace() 
+                        --> 用新的文档替换当前文档。
+
+        */
+        /*
+                渲染模式
+
+                标准模式、怪异模式
+                    --> 添加/不添加<!DOCTYPE html>
+   
+                    区别：
+                        1) 怪异模式：document.compatMode === 'BackCompat'
+                           标准模式：document.compatMode === 'CSS1Compat'
+                        
+                        2) 盒模型解析不同
+
+                        3) 怪异模式内联(行级)元素可以设置宽高
+                        ...
+       
+        */
+        /*
+                img 预加载
+                
+                1.js中使用 
+                    var oImg = new Image(); 
+                    oImg.src = '...';
+                    oImg.onload = function(){
+                        console.log('加载完成');
+                        document.body.appendChild(oImg);
+                    }
+                2.css
+                    background: url('...') no-repeat -9999px -9999px;
+        */
+        /*
+                 文档碎片 -->类似于div，集中操作DOM，提升性能，但不存在于DOMtree中
+
+                 var oFraf = document.createDocumentFragment();
+       
+        */
+    </script>
+
+
+</body>
+
+</html>

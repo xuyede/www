@@ -1,0 +1,1160 @@
+/* 初始化标签 */
+
+* {
+    margin: 0;
+    padding: 0;
+    color: #424242;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+.normalColorO {
+    color: #f40;
+}
+
+.normalColorG {
+    color: #6c6c6c;
+}
+
+.normalColorW {
+    color: #FFF;
+}
+
+
+/* 去浮动 */
+
+.topNvaLeft .topNvaLeftUl::after,
+.topNvaRight .topNvaRightUl::after,
+.searchTarget .searchTargetUl::after,
+.searchTips .searchTipsUl::after,
+.contextNva .contextNvaUl::after,
+.topBBPicChoose::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+
+/* 整体页面 */
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    height: 800px;
+}
+
+
+/* 顶部导航栏 */
+
+.topNva {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 36px;
+    background-color: #F5F5F5;
+}
+
+.topNvaLeft .topNvaLeftUl li,
+.topNvaRight .topNvaRightUl li {
+    float: left;
+    line-height: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.topNvaLeft .topNvaLeftUl a,
+.topNvaRight .topNvaRightUl a {
+    padding: 5px;
+}
+
+
+/* 下箭头 */
+
+.topSpeilA {
+    width: 6px;
+    height: 3px;
+    background-image: url(img/xsj.png);
+    background-size: 6px 3px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-right: 15px;
+    margin-left: -5px;
+}
+
+
+/* 购物车图标 */
+
+.topShopCar {
+    height: 12px;
+    width: 12px;
+    background-image: url(img/gwc.png);
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-right: -2px;
+}
+
+
+/* 收藏星星图标 */
+
+.topStar {
+    height: 12px;
+    width: 12px;
+    background-image: url(img/star.png);
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-right: -2px;
+}
+
+
+/* 菜单图标 */
+
+.topMenu {
+    height: 12px;
+    width: 12px;
+    background-image: url(img/dh.png);
+    background-size: 12px 12px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-right: -2px;
+}
+
+
+/* 分割线 */
+
+.topRightCut {
+    height: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+
+/* 左边 */
+
+.topNvaLeft {
+    position: absolute;
+    top: 12px;
+    left: 87px;
+    height: 12px;
+    width: 271px;
+}
+
+
+/* 右边 */
+
+.topNvaRight {
+    position: absolute;
+    top: 12px;
+    right: 0;
+    height: 12px;
+    width: 570px;
+}
+
+
+/* 搜索板块 */
+
+.search {
+    position: absolute;
+    width: 100%;
+    height: 125px;
+    left: 0;
+    top: 36px;
+}
+
+
+/* 淘宝logo 188 87*/
+
+.Logo .backToFirPage {
+    position: absolute;
+    left: 79px;
+    top: 18px;
+    width: 188px;
+    height: 0px;
+    padding-top: 87px;
+    background-image: url(img/logo.png);
+    background-size: 188px 87px;
+    overflow: hidden;
+}
+
+
+/* 搜索框 630 38    left 338 top 45*/
+
+.searchBox {
+    position: absolute;
+    top: 45px;
+    left: 338px;
+    width: 630px;
+    height: 35px;
+    border: 2px solid #f40;
+    border-radius: 22px;
+}
+
+
+/* 相机  23 21*/
+
+.camera {
+    position: absolute;
+    top: 7px;
+    right: 88px;
+    width: 23px;
+    height: 21px;
+    background-image: url(img/camera.png);
+    background-size: 23px 21px;
+}
+
+.searchInput .inputSubmit {
+    position: absolute;
+    right: -2px;
+    top: -2px;
+    height: 39px;
+    font-size: 18px;
+    line-height: 36px;
+    width: 72px;
+    background-color: #F80;
+    color: #fff;
+    border: 0;
+    border-top-right-radius: 22px;
+    border-bottom-right-radius: 22px;
+    outline: none;
+}
+
+.searchInput .inputText {
+    position: absolute;
+    top: 9px;
+    left: 10px;
+    width: 480px;
+    height: 16px;
+    border: 0;
+    text-indent: 1.5em;
+    color: #CCC;
+    outline: none;
+}
+
+.Maxglass {
+    position: absolute;
+    top: 10px;
+    left: 11px;
+    width: 14px;
+    height: 14px;
+    background-image: url(img/fdj.png);
+    background-size: 14px 14px;
+}
+
+
+/* 搜索目标  109 22 left 355 top 25*/
+
+.searchTarget {
+    position: absolute;
+    top: 20px;
+    left: 355px;
+    width: 109px;
+    height: 25px;
+}
+
+.searchTarget .searchTargetUl li {
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 25px;
+    padding-right: 6px;
+    padding-left: 6px;
+}
+
+.targetOnclick {
+    background-color: #f80;
+    color: #fff;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.waitOnclick:hover {
+    background-color: #FFEEE0;
+}
+
+
+/* 提示搜索词 */
+
+.searchTips {
+    position: absolute;
+    top: 85px;
+    left: 338px;
+    width: 630px;
+    height: 14px;
+}
+
+.searchTipsUl li {
+    font-size: 12px;
+    float: left;
+    line-height: 14px;
+    padding-right: 9px;
+}
+
+.more {
+    padding-left: 25px;
+}
+
+.rightArrow {
+    position: absolute;
+    top: 3px;
+    right: 0;
+    width: 4px;
+    height: 7px;
+    background-image: url(img/yjt.png);
+    background-size: 4px 7px;
+    background-repeat: no-repeat;
+}
+
+
+/* 二维码 S:75  D:16*/
+
+.code {
+    position: absolute;
+    top: 25px;
+    right: 190px;
+    width: 94px;
+    height: 90px;
+}
+
+.code .deleteCode {
+    position: absolute;
+    left: 0px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    background-image: url(img/del.png);
+    background-size: 16px 16px;
+    border: 1px solid #CCC;
+}
+
+.codeRight {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 88px;
+    width: 75px;
+    border: 1px solid #CCC;
+}
+
+.code .showCode {
+    position: absolute;
+    left: 6px;
+    bottom: 4px;
+    width: 62px;
+    height: 62px;
+    background-image: url(img/ewm.png);
+    background-size: 62px 62px;
+}
+
+.code .showWord {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: bold;
+    position: absolute;
+    left: 8px;
+    top: 0px;
+    height: 20px;
+    width: 62px;
+}
+
+
+/* 内容板块 */
+
+.contextArea {
+    position: absolute;
+    top: 161px;
+    left: 0;
+    width: 100%;
+    height: 670px;
+    background-color: #f4f4f4;
+}
+
+
+/* 内容顶部 */
+
+.contextTop {
+    position: absolute;
+    top: 0;
+    left: 25px;
+    height: 30px;
+    width: 1298px;
+}
+
+
+/* 主题市场 30 190 left 25*/
+
+.themeMarket {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    width: 190px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #ff5000;
+}
+
+.themeMarket>span {
+    position: absolute;
+    left: 50%;
+    margin-left: -32px;
+}
+
+
+/* 内容顶部导航 */
+
+.contextNva {
+    position: absolute;
+    top: 0;
+    left: 190px;
+    width: 1108px;
+    height: 31px;
+    line-height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #ff8000;
+}
+
+.contextNva .contextNvaUl li {
+    float: left;
+    padding-right: 14px;
+    padding-left: 8px;
+}
+
+
+/* 展示内容 */
+
+.context {
+    position: absolute;
+    top: 30px;
+    left: 25px;
+    height: 629px;
+    width: 1298px;
+}
+
+
+/* 内容左边块结构 */
+
+.contextLeft {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 943px;
+    height: 627px;
+}
+
+
+/* 左上 */
+
+.contextLeftTop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 936px;
+    height: 520px;
+}
+
+
+/* 一堆提示的字 */
+
+.contextLeftTopTips {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 520px;
+    width: 188px;
+    border: 1px solid #f40;
+    background-color: #fff;
+}
+
+.contextLeftTopTips ul {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    height: 32px;
+    width: 188px;
+    margin-top: 0.5px;
+}
+
+.contextLeftTopTips ul:hover {
+    background-color: #ffeee0;
+}
+
+.contextLeftTopTips ul li {
+    float: left;
+    font-size: 13px;
+    line-height: 32px;
+    padding-left: 2px;
+}
+
+.yjt {
+    position: absolute;
+    top: 1px;
+    right: 10px;
+}
+
+.move {
+    padding-left: 25px;
+}
+
+
+/* 中间大图片 */
+
+.contextLeftTopBPic {
+    position: absolute;
+    top: 0;
+    left: 205px;
+    width: 549px;
+    height: 520px;
+}
+
+.topBPic {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    height: 280px;
+    width: 520px;
+    background-image: url(img/pic2.png);
+    background-size: 520px 280px;
+}
+
+.topBBPicChoose {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    height: 10px;
+    width: 70px;
+    margin-left: -35px;
+    margin-bottom: -13px;
+    border-radius: 10px;
+    background-color: #f4f4f4;
+    opacity: 0.6;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.topBBPicChoose .yuanqiu {
+    float: left;
+    height: 0px;
+    width: 0px;
+    border: 5px solid #fff;
+    border-radius: 50%;
+    margin-right: 2px;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+
+/* 中间下面大图片 */
+
+.bottomBPic {
+    position: absolute;
+    height: 222px;
+    width: 520px;
+    bottom: 0;
+    left: 15px;
+}
+
+.bottomPic {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 520px;
+    height: 190px;
+    background-image: url(img/pic3.png);
+    background-size: 520px 190px;
+    border-top: 3px solid #f30;
+}
+
+.picNva {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 520px;
+    height: 24px;
+    background-image: url(img/tm.png);
+    background-size: 129px 24px;
+    background-repeat: no-repeat;
+    background-position: left;
+}
+
+.picNva .txt {
+    position: absolute;
+    top: 5px;
+    left: 135px;
+    height: 24px;
+    width: 360px;
+    font-size: 12px;
+    line-height: 24px;
+}
+
+.picNva .txt1 {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    height: 24px;
+    width: 18px;
+    font-size: 12px;
+    line-height: 24px;
+}
+
+
+/* 中间小图片 */
+
+.contextLeftTopSPic {
+    position: absolute;
+    height: 520px;
+    width: 180px;
+    top: 0;
+    right: 0;
+}
+
+.topRightSPic {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 160px;
+    height: 280px;
+    background-image: url(img/pic1.png);
+    background-size: 160px 280px;
+}
+
+.bottomSPIc {
+    position: absolute;
+    right: 0px;
+    bottom: 0;
+    height: 222px;
+    width: 180px;
+}
+
+.bottomSPIc .Pic {
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    width: 160px;
+    height: 194px;
+    background-image: url(img/pic4.png);
+    background-size: 160px 194px;
+}
+
+.bottomSPIc .txt2 {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 24px;
+    width: 100px;
+    line-height: 24px;
+    font-size: 12px;
+}
+
+
+/* 左_底部 */
+
+.contextLeftBot {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 930px;
+    height: 100px;
+    background-color: #fff;
+    background-image: url(img/tbtt.png);
+    background-size: 180px 73px;
+    background-repeat: no-repeat;
+    background-position: 13px center;
+}
+
+.contextOfHead {
+    position: absolute;
+    left: 220px;
+    top: 0;
+    width: 700px;
+    height: 100px;
+    background-image: url(img/pic5.png);
+    background-size: 180px 73px;
+    background-repeat: no-repeat;
+    background-position: 0 center;
+}
+
+.contextOfHead .txt6 {
+    position: absolute;
+    top: 13px;
+    left: 195px;
+    width: 500px;
+    height: 73px;
+}
+
+.contextOfHead .txt6 p {
+    font-weight: bold;
+}
+
+
+/* 内容右边块结构 */
+
+.contextRight {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 355px;
+    height: 627px;
+}
+
+
+/* 右侧登录提醒 */
+
+.loginInt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 355px;
+    height: 150px;
+    background-image: url(img/bg.png);
+    background-size: 355px 150px;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+}
+
+.icon {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    width: 50px;
+    height: 67px;
+    margin-left: -25px;
+}
+
+.iconLogo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: url(img/tx.jpg);
+    background-size: 50px 50px;
+}
+
+.iconTxt {
+    position: absolute;
+    top: 53px;
+    left: 7px;
+    width: 70px;
+    height: 12px;
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.loginTips {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    width: 200px;
+    height: 20px;
+    margin-left: -100px;
+}
+
+.loginTipsLR {
+    position: absolute;
+    top: 2px;
+    width: 95px;
+    height: 16px;
+    border-radius: 15px;
+    background-color: #ffe4db;
+}
+
+.iconLittleT {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 16px;
+    width: 16px;
+    background: url(img/pics.png) 0 0 no-repeat;
+}
+
+.iconSGold {
+    background-position: 0 -572.5px;
+}
+
+.iconSStar {
+    background-position: 0 -528px;
+}
+
+.loginTipsR {
+    right: 0;
+}
+
+.loginTipsL {
+    left: 0;
+}
+
+.icontxt {
+    position: absolute;
+    top: 0;
+    left: 17px;
+    font-size: 12px;
+    line-height: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+.loginBtnBox {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    width: 260px;
+    height: 25px;
+    margin-left: -130px;
+}
+
+.loginBtn {
+    position: absolute;
+    left: 0;
+    width: 6em;
+}
+
+.registerBtn {
+    position: absolute;
+    left: 50%;
+    width: 4em;
+    margin-left: -1em;
+}
+
+.openBtn {
+    position: absolute;
+    right: 0;
+    width: 4em;
+}
+
+.loginFontSty {
+    top: 0;
+    height: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 25px;
+    text-align: center;
+    background-color: #ff6C06;
+    border-radius: 5px;
+}
+
+
+/* 举报提示 */
+
+.reportTips {
+    position: absolute;
+    top: 150px;
+    left: 0;
+    width: 355px;
+    height: 25px;
+    background-color: #ffe4dd;
+    font-size: 14px;
+    line-height: 25px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.triangle {
+    display: block;
+    position: absolute;
+    top: 6px;
+    right: 50px;
+    width: 0;
+    height: 0;
+    border: 6px solid;
+    border-color: transparent transparent transparent #f40;
+}
+
+
+/* 信息板块导航 */
+
+.loginIntNva {
+    position: absolute;
+    left: 0;
+    top: 175px;
+    height: 100px;
+    width: 355px;
+    background-color: #fff;
+}
+
+.loginIntNvaUl {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 355px;
+    height: 40px;
+    font-size: 12px;
+    line-height: 40px;
+}
+
+.loginIntNvaUl li {
+    float: left;
+    padding-left: 22px;
+    padding-right: 25px;
+}
+
+.specialAInNvaUl {
+    font-weight: bold;
+    border-bottom: 2px solid #f40;
+}
+
+.nvaTxtBox {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    height: 60px;
+    width: 355px;
+    font-size: 14px;
+    line-height: 30px;
+}
+
+.nvaTxt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-indent: 1em;
+}
+
+.nvaTxt2 {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    text-indent: 1em;
+}
+
+
+/* 多功能导航栏(右侧) */
+
+.flexoNva {
+    position: absolute;
+    top: 275px;
+    left: 0;
+    width: 356px;
+    height: 233px;
+    background-color: #fff;
+}
+
+.nva-list {
+    width: 356px;
+    height: 0;
+    display: block;
+}
+
+.nva-list li {
+    float: left;
+}
+
+.nva-list a {
+    display: block;
+    text-align: center;
+}
+
+.nva-list p {
+    font-size: 14px;
+}
+
+.nva-list span {
+    display: inline-block;
+}
+
+.importpic {
+    background: url(img/pics.png) 0 0 no-repeat;
+}
+
+.span-normal {
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.span1 {
+    background-position: 0 0;
+}
+
+.span2 {
+    background-position: 0 -45px;
+}
+
+.span3 {
+    background-position: 0 -90px;
+}
+
+.span4 {
+    background-position: 0 -133px;
+}
+
+.span5 {
+    background-position: 0 -175px;
+}
+
+.span6 {
+    background-position: 0 -220px;
+}
+
+.span7 {
+    background-position: 0 -265px;
+}
+
+.span8 {
+    background-position: 0 -308px;
+}
+
+.span9 {
+    background-position: 0 -352px;
+}
+
+.span10 {
+    background-position: 0 -395px;
+}
+
+.span11 {
+    background-position: 0 -440px;
+}
+
+.span12 {
+    background-position: 0 -484px;
+}
+
+.li-normal {
+    width: 87px;
+    height: 76px;
+    border: 1px solid;
+}
+
+.li1,
+.li2,
+.li3 {
+    border-color: #ccc #ccc #ccc transparent;
+}
+
+.li4 {
+    border-color: #ccc transparent #ccc transparent;
+}
+
+.li5,
+.li6,
+.li7 {
+    border-color: transparent #ccc #ccc transparent;
+}
+
+.li8 {
+    border-color: transparent transparent #ccc transparent;
+}
+
+.li9,
+.li10,
+.li11 {
+    border-color: transparent #ccc #ccc transparent;
+}
+
+.li12 {
+    border-color: transparent transparent #ccc transparent;
+}
+
+
+/* 右边板块最底部 */
+
+.lastMission {
+    position: absolute;
+    top: 510px;
+    left: 0;
+    width: 355px;
+    height: 106px;
+    background-color: #fff;
+}
+
+.app-list {
+    position: relative;
+    height: 0;
+    width: 355px;
+}
+
+.app-title {
+    position: relative;
+    height: 22px;
+    width: 355px;
+}
+
+.app-title span {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 22px;
+    text-indent: 2em;
+}
+
+.app-more {
+    position: absolute;
+    display: block;
+    height: 22px;
+    font-size: 12px;
+    line-height: 22px;
+    right: 15px;
+    top: 0;
+}
+
+.app-more:hover {
+    color: #f40;
+}
+
+.app-context {
+    height: 82px;
+    width: 355px;
+}
+
+.app-context a {
+    float: left;
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin-right: 0px;
+    margin-left: 30px;
+    margin-top: 5px;
+}
+
+.app-1 {
+    background: url(img/smalllogo1.png) 0 0 no-repeat;
+}
+
+.app-2 {
+    background: url(img/smalllogo2.png) 0 0 no-repeat;
+}
+
+.app-3 {
+    background: url(img/smalllogo3.png) 0 0 no-repeat;
+}
+
+.app-4 {
+    background: url(img/smalllogo4.png) 0 0 no-repeat;
+}
+
+.app-5 {
+    background: url(img/smalllogo5.png) 0 0 no-repeat;
+}
+
+.app-6 {
+    background: url(img/smalllogo6.png) 0 0 no-repeat;
+}
+
+.app-7 {
+    background: url(img/smalllogo7.png) 0 0 no-repeat;
+}
+
+.app-8 {
+    background: url(img/smalllogo8.png) 0 0 no-repeat;
+}
+
+.app-9 {
+    background: url(img/smalllogo9.png) 0 0 no-repeat;
+}
+
+.app-10 {
+    background: url(img/smalllogo10.png) 0 0 no-repeat;
+}

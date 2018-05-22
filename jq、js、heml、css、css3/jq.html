@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jquery</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        //5.9  
+        /*
+            一、元素选择：              
+                $() --> 返回的都是一个继承了jquery原型的类数组，也叫jQuery对象
+                
+                1. css选择器
+                    --> ()里面可以写入和css选择器一样的，如果选择出的是一组元素，则一起处理
+                        返回一个继承了jquery原型的类数组           
+                
+                    1) 通配符*选择器     
+                                -> $('*')
+                    2) 父子选择器           
+                                -> $('div li')
+                    3) 直接子元素选择器    
+                                -> $('div>p')
+                    4) 并列选择器
+                                -> $('div.active')
+                    5) 分组选择器
+                                -> $('div, ul, span')
+                    6) class选择器
+                                -> $('.div')
+                    7) id选择器
+                                -> $('#div')
+                    8) 标签选择器
+                                -> $('div')
+                    9) 属性选择器
+                                -> $('[title=hello]')
+                
+                2. 原生DOM 、jQuery对象
+                    --> ()里面写入 原生DOM/jQuery对象 的话，会返回一个继承了jquery原型的类数组
+
+                    var div = document.getElementsByClass('div')[0];
+                    var jq = $(div);    
+                            --> jq 为继承jquery原型的类数组
+                    -------------------------------------------------
+                    var a = $( $('div') );
+                    
+                3. null/undefined
+                    --> ()里面写入 null/undefined 的话，会返回一个空的继承了jQuery原型的类数组
+                    
+                4. Func 
+                    --> ()里面写入一个函数的话，会立即执行一次该函数，并返回一个包含文档 (document) 的类数组
+                    $(function(){
+
+                    }) -> jq立即执行函数
+
+                5. jq 特有选择规则
+                    $('ul>li:first');
+                        --> ul 直接子元素 li 里的第一个元素
+                    $('ul>li:eq(2)');
+                        --> ul 直接子元素 li 里 index 为 2 的那个元素 
+                    $('ul>li:odd');
+                        --> ul 直接子元素 li 里双数位(2 4 6 8 ...)
+                    $('ul>li:even');
+                        --> ul 直接子元素 li 里单数位(1 3 5 7 ...)
+
+                    *方法
+                    1.filter() -->选符合条件的     not() -->选符合条件以外的
+                        1) ()写入条件
+                            $('li').filter('.demo');
+                                --> 筛选li里class为demo的元素
+                        2) ()写入函数
+                            $('li').filter(function(index, ele){
+                                return true;
+                            });
+                            
+                            注意：实参 ele 与 index 位置相反 
+                                jq  --> filter(function(index, ele){
+
+                                        })
+                                js  --> filter(function(ele, index){
+
+                                        })
+
+                    2. .has() 
+                            $("div").has(p)
+                                    --> 选中含有p标签的 div标签
+                    
+                    3. .eq()
+                    4. .find() --> 找符合条件的
+                    5. .is() 
+                        --> 判断是否符合条件，返回 true/false
+            
+        */
+        /*
+            jq的函数写法 (链式操作，返回一个对象)
+
+            js -> innerHTML = 123 , jq -> html(123)
+            js -> onclick = function(){} , jq -> click(function(){})
+    
+            常用实例方法 (定义在jq原型上，$.fn. ，一般处理DOM)
+            1. .html()/.text()   --> ()空为取值，写东西为赋值
+
+            2. .css()取值相当于 getComputedStyle, 赋值相当于dom.style.***
+                css()赋值赋一组 取值取一个(第一个 颜色会在内部转换成rgb) 
+                    --> css( {width:100, height:100} ) / css('width','100').css('height','100')
+                        css('width');
+            
+            3. .attr()/.prop()
+
+                .attr() --> 相当于getAttribute/setAttribute,可以设置自定义的属性,自定义的属性可以写进行间,只能查看在行间已有的属性
+                .prop() --> 设置，查看元素自带的属性(class,style,id,name....)，如果设置自定义属性，则只能查看、获取，无法显示在行间
+
+                    ->.attr()获取一个行间没有的属性时，返回undefined     .prop()返回 ""
+
+                注意：
+                    .attr() 的checked、selected、disabled(框不可选中) 就是表示该属性初始状态 (不管选没选中) 的值，
+                    .prop() 的checked、selected、disabled才表示该属性实时状态的值(值为true或false)
+
+                    <input type="checkbox" id="box" checked="checked">
+                    $('#box').prop('checked')    --> true
+                    $('#box').attr('checked')    --> checked
+
+            4. .next()/.prev()/.index()
+                    
+                    .next()  --> 当前节点的下一个兄弟节点 (元素节点)
+                    .prev()  --> 当前节点的上一个兄弟节点 (元素节点)
+                    .index() --> 获取当前元素在队列中的索引值
+
+            5. .addClass()/.removeClass()
+
+                1) ()写入class类名
+                    添加/移除class类名  --> js中的className
+                    addClass()  --> 可以添加一个或多个类名，空格隔开
+                    removeClass()   --> ()里填入要移除的class类名，不填则移除全部class类名
+                    
+                        -> $("p").removeClass("myClass noClass").addClass("yourClass")
+                        
+                2) ()写入一个函数，函数执行后返回一个class类名(字符串形式) 
+                        addClass(function (index, curClass) {})
+                            --> index为索引值，curClass为当前jq对象的class类名
+
+                        $('li').addClass(function(index, curClass) {
+                            var addedClass;
+                            if (curClass === 'demo') {
+                                addedClass = 'demo1';
+                            }
+                            return addedClass;
+                        });
+                            --> 在class类名为 'demo' 的元素上添加 'demo1' 类名
+
+                        $("ul li:last").addClass(function(index) {
+                            return "item-" + index;
+                        });
+                            --> 将在最后一个<li>元素上加上 'item-*'  样式
+
+            6. .toggleClass(className, addOrRemove)
+
+                1) ()写入一个参数,则该参数为类名
+                        --> 如果元素中含有该类名则删除，没有则添加
+                
+                2) ()写入两个参数，第一个为类名，第二个boolean(只能操作一次)
+                        --> 如果判断条件为真，添加类名，否则删除类名
+
+                        $( "#foo" ).toggleClass( className, addOrRemove )
+                            ->  if ( addOrRemove ) {
+                                    $( "#foo" ).addClass( className );
+                                } else {
+                                    $( "#foo" ).removeClass( className );
+                                }
+                
+                3) ()写入一个函数   --> 操作后返回一个字符串当做类名,效果和一个参数一样
+
+            
+            7.元素的剪切插入
+                1)  外部插入(操作后变成兄弟节点)
+                    a.insertBefore(b)   -> 元素a插入到元素b前面
+                    a.insertAfter(b)    -> 元素a插入到元素b后面
+                        执行后返回a
+                                
+                    a.before(b) -> 元素b在元素a前面
+                    a.after(b)  -> 元素b在元素a后面
+                        执行后返回a
+
+                2)  内部插入(操作后变成父子节点)
+                    a.appendTo(b)  -> 元素a插入到元素b里面的最后一位
+                    a.prependTo(b) -> 元素a插入到元素b里面的第一位
+                        执行后返回a
+
+                    a.prepend(b)   -> 把b元素添加到a元素里的第一位
+                    a.append(b)    -> 把b元素添加到a元素里的最后一位  
+                        --> 类似于js中document.body.appendChild(ele)
+                        执行后返回a
+
+            8.元素的移除 (返回被删除的元素)
+                1)  .remove() -> 将匹配元素集合从DOM中删除,同时移除元素上的事件及 jQuery 数据
+                        
+                        eg: 
+                            $('.demo').remove()    --> 删除class为demo的元素
+                            $('div').remove('.demo')   --> 删除class为demo的div元素
+
+                2)  .detach() -> 将匹配元素集合从DOM中删除,同时保存所有jQuery数据和被移走的元素相关联(事件)
+                                当需要移走一个元素，不久又将该元素插入DOM时，这种方法很有用 
+
+            9.元素的添加
+                var oDiv = $('<div class="demo"></div>');
+                $('body').append(oDiv);
+                        --> 一旦执行append语句后，就可以对该标签和里面的标签进行操作
+
+            10.事件
+                1) .on() -> 绑定事件    类似js中 addEventListener
+                        .on('click', 事件源对象, obj, function(e){})
+                            点击后，obj会传进函数中的 e.data
+                            点击后，函数的$(this) -> 事件源对象
+                            -> 类似js事件委托
+
+                2) .off() -> 解绑事件    类似js中 removeEventListener
+                        .off('click') -> 解绑父级全部的事件
+                        .off('click', 事件源) -> 解绑子级里对应事件源的全部函数事件
+                        .off('click', 事件源, handle) -> 解绑子级里对应的事件源的对应的函数事件
+
+                        -> 解绑oUl里class为item1的元素的点击事件
+                        var oUl = $('ul');
+                        oUl.on('click', '.item1', function() {
+                            console.log('item1');
+                        })
+                        oUl.on('click', '.item2', function() {
+                            console.log('item2');
+                        })
+                        oUl.off('click', '.item1');
+
+                3) .one() -> 绑定一次事件，点击过后自动解绑，参数与on()一样
+
+                4) .scroll() ->滚动条滚动触发事件
+                        .scroll(obj, handle)
+                        一般：
+                            $(window).scroll( function(){} );
+
+                            $(window).scrollTop() -> 获取/设置滚动条滚动的高度
+                            $(window).scrollLeft() -> 获取/设置滚动条滚动的宽度
+            
+            11.获取元素尺寸
+
+                1) 
+                    .innerHeight()/.innerWidth()
+                        计算元素内部高度/宽度 (包括padding，不包括border)
+                    
+                    .innerHeight(value)/.innerWidth(value)
+                        设置元素内部高度/宽度 (包括padding，不包括border)
+
+                2)  .outerHeight()/.outerWidth()  计算元素内部高度/宽度 (可选择性包含margin)
+                    
+                    .outerHeight(boolean) -> boolean为true：高度包括margin  boolean不填/false：高度不包括margin
+                    .outerHeight(value) -> 设置高度
+                    .outerHeight(function(index, height){}) -> 函数返回值为高度
+
+            12.事件对象 e   
+                1) 获取鼠标位置
+                    e.pageX/e.pageY  -> 相对于文档的位置
+                    e.clientX/e.clientY  -> 相对于可视窗口的位置
+
+                2)  e.which
+                        -> 针对键盘和鼠标事件，这个属性能确定你到底按的是哪个键(非ASCII码)
+                        键盘：...
+                        鼠标：1 2 3
+                        
+                    e.button
+                        -> 监听鼠标事件 0 1 2
+
+                3) e.preventDefault() --> 取消默认事件
+                   e.stopPropagation() --> 取消冒泡
+                     -> return false; 两者都取消
+            
+            13.获取元素位置
+                1) .offset() -> .left/.top  相对于文档
+                2) .position() -> .left/.top   相对于最近有定位的父级,如果用margin撑开的距离，不算
+
+            14.获取父级元素
+                1) .parent([selector]) -> 获取直接父元素
+                2) .parents([selector]) -> 获取父元素，直到html，返回一个集合
+                        var parentLi = a.parents().map(function() {
+                            return this.tagName;
+                        }).get().join(', ');
+                         -> 获取a元素的所有祖先元素
+                3) .offsetParent() -> 获取最近有定位的父级元素 (position:absolute/relative/fixed)
+                4) .closest([selector]) -> 找到最近的符合条件的父级(包括自身)，要填参数
+            
+            15. .val()  --> value
+                .each(function(index){})  -->  forEach()
+                .end() 终止在当前链的最新过滤操作，并返回匹配的元素的以前状态
+                    -> $('li').eq(0).css('color', 'red').end().eq(4).css('backgroundColor', 'red');
+                .add() -> 创建一个新的jQuery对象 ，元素添加到匹配的元素集合中
+                .slice() -> 根据指定的下标范围，过滤匹配的元素集合，并生成一个新的 jQuery 对象
+                    .slice() 一个参数a，则从a到最后，两个参数a，b，则从a开始，到b前
+                .empty() -> 从DOM中移除集合中匹配元素的所有子节点
+                .siblings() 当前元素节点的所有兄弟节点 
+                .prevAll() 当前元素上面的所有兄弟节点
+                .nextAll() 当前元素下面的所有兄弟节点
+                .prevUntil(obj)/.nextUntil(obj) ->掐头去尾选中元素,参数传jquery对象或dom
+
+            16.节点克隆
+                .clone(boolean) --> boolean为true时，克隆事件 
+
+            17.包裹
+                .wrap()
+                $('li').wrap($('<p>'))  li 外面包裹一层 p
+                    <ul>                -->             <ul>
+                        <li></li>                           <p>                  
+                    </ul>                                       <li></li>
+                                                            </p>
+                                                        </ul>
+
+                .wrapInner
+                $('li').wrapInner($('<p>'))  li 里面包裹一层 p，并把li里的东西放进p中
+                    <ul>                    -->             <ul>
+                        <li>                                    <li>
+                            <span>span</span>                       <p>
+                        </li>                                           <span>span</span>
+                    </ul>                                           </p>
+                                                                </li>
+                                                            </ul>
+                
+                .unwrap()   -> 将匹配元素集合的父级元素删除，保留自身（和兄弟元素，如果存在）在原来的位置
+            
+            18.表单数据串联
+                *   $('form').serialize()  串联表单数据(常用于传数据)
+                    $('form').serializeArray()  串联数据成数组
+
+            19.根据一组 CSS 属性，执行自定义动画
+                1)运动
+                    .animate()  4个参数
+                        --> 1.target 2.durition(一个字符串或者数字决定动画将运行多久 slow/normai/fast 1000 2000 ...) 
+                            3.速度变化方式(swing/linear) 4.回调函数
+                
+                2)停止运动
+                        .stop()两个参数，默认值为false
+                        一：停止当前运动 + 是否停止后续所有运动        true：是 false：否
+                        二：是否立即到达当前运动目标点                   true：是 false：否
+                        .stop() 停止当前运动 + 继续后续运动 (若后续没有运动则停止在当前位置)
+                        .stop(true) 停止后续所有运动
+                        .stop(true, true) 停止当前所有运动 + 停在当前运动的目标点
+                        .stop(false, true) 停止当前运动 + 到达当前运动目标点 + 然后执行后续运动
+
+                        .finish() 停止所有运动并到达最后运动的目标点
+                        .delay() 延迟,参数为时间
+
+                        $('div').animate({left:300}, 1000, 'swing').animate({left:300, top:300}, 1000, 'swing');
+
+                        $('div').stop(); -> 停止第一个animate，并执行第二个animate
+                        $('div').stop(true); -> 停止全部animate
+                        $('div').stop(true, true); -> 停止第一个animate并停在第一个animate的目标点
+                        $('div').stop(false, true); -> 停止第一个animate并停在第一个animate的目标点，然后执行第二个animate
+                        $('div').finish(); -> 停止全部animate，并停在最后一个animate的目标点
+
+                3)滑动隐藏/显示元素 (display：none/block)
+                        1) 滑动效果
+                            .slideToggle(speed, Func);  (speed最好在400-500)
+                                -> 如果元素为 display：none -> display：block
+                                   如果元素为 display：block -> display：none
+
+                            .slideUp(speed, Func); display:block -> display:none
+                            .hide(speed, Func);
+                            
+                            .slideDown(speed, Func); display:none; -> display:block;
+                            .show(speed, Func);
+                                ->  $('div:first').slideDown(300, function next() {
+                                        $(this).next('div').slideDown(300, next);
+                                    })
+                            
+                        2) 淡入淡出效果
+                            .fadeToggle(speed, Func);
+                                -> 如果元素为 display：none -> display：block
+                                   如果元素为 display：block -> display：none
+                            
+                            .fadeIn(speed, Func)    display:none -> display:block
+                            .fadeOut(speed, Func)   display:block -> display:none
+                        
+            20.主动触发匹配元素上的事件
+
+                .trigger(event/obj, extraParameters) -> * 注意：触发事件是会事件冒泡 
+                
+                parameters  1.jq对象/字符串('click'/'mousemove'/'eat'...) 
+                            2.传进目标事件函数的额外参数([]),放在事件函数的第二个参数中
+                                ->  $('div').click( function(e, x, y) {
+                                        if(obj){
+                                            console.log(x + y); -> 3
+                                        }else{
+                                            console.log('no extraParameters');
+                                        }
+                                    });
+                                    $('div').trigger('click', [1, 2]);
+
+                .trigger() 可以触发自定义事件
+                    --> $('div').on('eat', function(){
+                            console.log('eating~');
+                        })
+                        $('div').trigger('eat');
+
+                当事件触发需要往里面传参的，可以使用trigger过渡
+                    
+        */
+        /*
+            jquery工具方法( 定义在jQuery上 ，$. ，一般处理数据 )
+
+            1.$.type()  -> typeof()
+            2.$.trim()  -> 消除字符串两边空格
+        
+            3.$.proxy() -> 改变this指向
+                context为object
+                1) $.proxy(handle, context)  -> 改变handle里的this ，指向context
+                2) $.proxy(context, FuncName, a, b,...) -> 改变函数名为FuncName的函数里的this， 指向context (这个函数名为FuncName的函数必须是context对象的属性)
+                3) $.proxy(handle, context, a, b,...) -> 改变handle里的this， 指向context， 并把a，b，...作为handle的参数传进去
+                4) $.proxy(handle, context)(a,b,...) -> 功能同 3)，返回handle
+            
+            4.$.noConflict() -> 防止多个库同时使用$,造成冲突
+                var myJquery = $.noConflict(); ->  执行后，myJquery === $, $不再为jq
+
+            5.$.parseJSON(str) -> 字符转换成json 要求非常严格 外部是单引号 内部属性是双引号 不需要回车符
+
+            6.$.makeArray() -> 类数组转数组
+
+            7.$.extend() -> 把()里的对象里的函数放到 $ 上
+                ->  插件扩展-提供新的jQuery工具方法,定义在 $.extend()里的函数，可以直接通过 $. 使用
+                        1)  $.extend({
+                                aa : function(){
+                                    console.log('extend.aa()');
+                                }
+                            })
+                            $.aa();
+                        2)  var obj = {
+                                aa : function(){
+                                    console.log('extend.aa()');
+                                }
+                            }
+                            $.extend(obj);
+                            $.aa();
+               
+                ->  合并对象 $.extend(true, obj1, obj2);  obj2的内容合并到obj1中, 深拷贝
+                    合并后不能继续当工具方法使用,除非 $.extend(obj1)
+
+            8.$.fn.extend() -> 把()里的对象里的函数放到 $.fn 上
+                -> 插件扩展-提供新的jQuery实例方法，记住是实例(定义在jQuery的原型上的方法)
+                    自定义实例方法
+
+            9.$.Callbacks()  -> 一个多用途的回调列表对象，提供了强大的的方式来管理回调函数列表
+             
+                ->  var callbacks = $.Callbacks();
+                    callbacks.add()   添加回调函数 ：add()里面放入函数或函数集合(对象)
+                    callbacks.fire()  执行回调函数 ：fire()里面放入指定的参数并调用所有的回调  
+                    callbacks.remove()  移除回调函数 ：remove()里面放入函数或函数集合  
+                    callbacks.disable()  禁用回调函数 ：不传值
+
+                -> $.Callbacks() 参数
+                    1)$.Callbacks('once') 这个回调函数列表只执行一次
+
+                    2)$.Callbacks('unique') 重复添加的回调函数只执行一次
+                        -> callbacks.add(fn1, fn1, fn2);  === callbacks.add(fn1, fn2)；
+
+                    3)$.Callbacks('memory') fire后面的add的函数也会触发
+                        ->  function fn1() {
+                                console.log('this is fn1')
+                            }
+                            function fn2() {
+                                console.log('this is fn2')
+                            }
+                            var callbacks = $.Callbacks('memory'),
+                                add = callbacks.add,
+                                fire = callbacks.fire,
+                                remove = callbacks.remove;
+                            add(fn1);
+                            fire();
+                            add(fn2);             -> fn1 fn2 fn1 fn2 fn1
+                            fire();
+                            remove(fn2);
+                            fire();
+
+                    4)$.Callbacks('stopOnFalse') 如果某个回调函数中有 return false; 则终止后面的回调函数执行
+                        ->  function fn1() {
+                                console.log('this is fn1');
+                                return false;
+                            }
+                            function fn2() {
+                                console.log('this is fn2')
+                            }
+                            var callbacks = $.Callbacks('stopOnFalse'),
+                                add = callbacks.add,
+                                fire = callbacks.fire,
+                                remove = callbacks.remove;
+                            add(fn1);
+                            add(fn2);            
+                            fire();                -> fn1
+
+                    5) 参数可以组合一起使用
+
+            10.$.Deferred() -> 延迟对象,相当于有状态的Callbacks()
+                1)  var dfd = $.Deferred();
+                    成功：dfd.resolve() -> dfd.done(function () {})
+                    失败：dfd.reject()  -> dfd.fail(function () {})
+                    进行：dfd.notify()  -> dfd.progress(function () {})
+
+                    done,fail -> once + memory
+                    progress -> memory
+
+                    ->  var dfd = $.Deferred();
+                        function aa() {
+                            dfd.notify();
+                        }
+                        aa();
+                        dfd.done(function() {
+                            console.log('success');
+                        }).fail(function() {
+                            console.log('error');
+                        }).progress(function() {
+                            console.log('doing');
+                        })
+                2)  dfd.promise(); -> 返回一个promise对象，允许一个异步函数阻止那些干涉其内部请求的进度（progress）或状态（status）的其它代码
+                        ->只能读不能写
+                    
+                    传参：dfd.promise(target) -> 将事件绑定在target对象上，target最好为为一个已有的对象
+                        ->  var obj = {
+                                hello: function(name) {
+                                    console.log('hello' + name);
+                                }
+                            }
+                            var dfd = $.Deferred();
+                            dfd.promise(obj);
+                            dfd.resolve('john');
+
+                            obj.done(function(name) {
+                                obj.hello(name);
+                            }).hello('will');
+                            
+            11.$.when() 
+                参数：    
+                        1)  $.when(deferred)  参数为一个延迟对象，返回值为该延迟对象的promise对象
+                                *如果传入多个延时对象，则当这些延时对象都为resolve时才会执行donecallback
+
+                        2)  $.when(obj) obj不是延时对象或者promise对象，则会被当成一个为resolve的延时对象，
+                                        并立即执行绑定的donecallback，向donecallback传入obj，
+        */
+    </script>
+</body>
+
+</html>

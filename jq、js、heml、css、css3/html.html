@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- head 浏览器编译 -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>淘宝， 淘，呸！</title>
+</head>
+<!-- 人可看见的 -->
+
+<body>
+    hyperText mrakup language
+    <!-- div, span作为容器使用,是结构模块化 -->
+    <!-- 
+        <ul->
+            <li>
+                
+            </li>
+        </ul->
+    ul li结构容易操作，适用于导航栏 
+    -->
+    <!-- 
+        <a href=""></a>
+        1.超链接  href = "目标地址"
+        2.锚点    href = "# + 定位目标id"
+        3.打电话  href = "tel:电话号码" 
+        4.发邮件  href = "mailto:电子邮箱地址"
+    -->
+    <!--
+        <form action="" method="get">
+            <p>
+                username: <input type="text" name="username" value="请输入用户名" style="color:#999" onfocus="if(this.value == '请输入用户名'){this.value = '';this.style.color = '#000000'}" onblur="if(this.value == ''){this.value = '请输入用户名';this.style.color = '#999'}">
+            </p>
+            <p>
+                password: <input type="password" name="password">
+            </p>
+            <p>
+                你最喜欢的水果：<br> apple
+                <input type="radio" name="fruit" value="apple" checked="checked"> <br> banana
+                <input type="radio" name="fruit" value="banana"> <br> orange
+                <input type="radio" name="fruit" value="orange">
+            </p>
+            <p>
+                <select name="province">
+                    <option value="beijing">beijing</option>
+                    <option value="shanghai">shanghai</option>
+                    <option value="changsha">changsha</option>
+                </select>
+            </p>
+            <input type="submit" value="提交">
+        </form>
+        
+        1.表单作为前端与后端数据交互的结构，method 调用方法，action 传送数据目标地址 
+        2.input 数据框(text,passsword,submit,radio)，一定要有数据名name属性才能传送数据
+    -->
+    <!-- 行级元素 1.css不能改变宽高 2.内容决定元素所占位置-->
+    <!-- 
+         strong span em a del
+     -->
+    <!-- 块级元素 1.css可以改变宽高 2.独占一行-->
+    <!-- 
+         div p ul li ol form hr br
+     -->
+    <!-- 行级块元素 1.内容决定大小 2.可以改宽高-->
+    <!-- 
+         img 
+        -->
+
+    <!-- 
+        label 标签，一般于input连用，点击label里的文字可以使input标签聚焦
+            -> <label for="demo">Username</label>
+               <input type="text" id="demo">
+            for里面填目标标签的ID值,绑定在一起，事件触发会一起
+     -->
+
+</body>
+
+</html>

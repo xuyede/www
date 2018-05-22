@@ -1,0 +1,46 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.wrapper {
+    position: relative;
+    width: 100%;
+    height: 600px;
+}
+
+.tips {
+    position: absolute;
+    width: 150px;
+    height: 200px;
+    border: 1px solid black;
+    top: 200px;
+    left: 10%;
+    margin-left: -15px;
+}
+
+.tips p {
+    margin: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 8px;
+}
+
+.content {
+    position: absolute;
+    width: 300px;
+    height: 200px;
+    border: 2px solid black;
+    top: 200px;
+    left: 50%;
+    margin-left: -150px;
+}
+
+.active {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    background-color: '#999';
+}

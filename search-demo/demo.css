@@ -1,0 +1,65 @@
+* {
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+}
+
+li,
+ul {
+    list-style: none;
+}
+
+span {
+    color: #999;
+    font-size: 12px;
+}
+
+.sex {
+    font-size: 14px;
+    border: 1px solid black;
+    /* margin-right: 5px; */
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 5px;
+    color: #474747;
+}
+
+.wrapper {
+    position: absolute;
+    width: 350px;
+    height: 400px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto auto;
+    border: 1px solid black;
+}
+
+.find {
+    margin: 10px;
+}
+
+.active {
+    background-color: aquamarine;
+}
+
+.box {
+    position: absolute;
+    left: 25px;
+    top: 40px;
+    width: 300px;
+    height: 350px;
+}
+
+.pic {
+    float: left;
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+}
+
+.item-List li {
+    padding: 10px;
+    border-bottom: 1px solid black;
+}

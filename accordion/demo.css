@@ -1,0 +1,88 @@
+* {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+body {
+    background-color: rgb(52, 43, 53);
+}
+
+.wrapper {
+    width: 90%;
+    margin: 100px auto;
+    padding: 40px;
+}
+
+.wrapper ul {
+    height: 300px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.wrapper ul li {
+    float: left;
+    width: 0;
+    height: 260px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.wrapper ul li .title {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.wrapper ul li .title h1 {
+    color: #fff;
+    width: 30px;
+    margin: 30px auto;
+}
+
+.wrapper ul li .decoration {
+    width: 400px;
+    position: absolute;
+    padding: 5px;
+    bottom: -60px;
+    background-color: #484848;
+    opacity: 0.9;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+}
+
+.wrapper ul li .content1 {
+    background: url(./images/1.jpg) center 0 no-repeat;
+}
+
+.wrapper ul li .content2 {
+    background: url(./images/2.jpg) center 0 no-repeat;
+}
+
+.wrapper ul li .content3 {
+    background: url(./images/3.jpg) center 0 no-repeat;
+}
+
+.wrapper ul li .content4 {
+    background: url(./images/4.jpg) center 0 no-repeat;
+}
+
+.wrapper ul li .content5 {
+    background: url(./images/5.jpg) center 0 no-repeat;
+}
+
+.wrapper ul li .content6 {
+    background: url(./images/6.jpg) center 0 no-repeat;
+}
+
+.wrapper ul li .content7 {
+    background: url(./images/7.jpg) center 0 no-repeat;
+}

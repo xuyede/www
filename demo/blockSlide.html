@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jq方块移动</title>
+    <style>
+        body {
+            background-color: #262626
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            width: 500px;
+            margin: 100px auto;
+            overflow: hidden;
+        }
+        
+        .item {
+            float: left;
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            background: green;
+            text-align: center;
+            line-height: 100px;
+        }
+        
+        .active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            background: rgb(255, 255, 255);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="item" style="background-color: #5D8E49">1</div>
+        <div class="item" style="background-color: #55BBC4">2</div>
+        <div class="item" style="background-color: #6C4F9B">3</div>
+        <div class="item" style="background-color: #A45789">4</div>
+        <div class="item" style="background-color: #F05A5A">5</div>
+        <div class="item" style="background-color: #5D8E49">6</div>
+        <div class="item" style="background-color: #55BBC4">7</div>
+        <div class="item" style="background-color: #6C4F9B">8</div>
+        <div class="item" style="background-color: #A45789">9</div>
+        <div class="item" style="background-color: #F05A5A">10</div>
+        <div class="item" style="background-color: #5D8E49">11</div>
+        <div class="item" style="background-color: #55BBC4">12</div>
+        <div class="item" style="background-color: #6C4F9B">13</div>
+        <div class="item" style="background-color: #A45789">14</div>
+        <div class="item" style="background-color: #F05A5A">15</div>
+        <div class="item" style="background-color: #5D8E49">16</div>
+        <div class="item" style="background-color: #55BBC4">17</div>
+        <div class="item" style="background-color: #6C4F9B">18</div>
+        <div class="item" style="background-color: #A45789">19</div>
+        <div class="item" style="background-color: #F05A5A">20</div>
+    </div>
+    <div class="active"></div>
+
+    <script src="../jquery-3.3.1/jquery.js"></script>
+    <script>
+        $(function() {
+            var flag = true;
+            $('.item').on('mouseenter', function() {
+                var self = $(this),
+                    pos = $(this).position();
+                if (flag) {
+                    flag = false;
+                    $('.active').css({
+                        width: '100%',
+                        height: $(window).height()
+                    })
+                }
+                $('.active').stop(false, false).animate({
+                    width: self.width(),
+                    height: self.height(),
+                    left: pos.left + 5,
+                    top: pos.top + 5,
+                    opacity: 0.7
+                }, 200);
+            })
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Ua-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="pac.css">
+    <title>拖拽碰撞运动</title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: rgb(28, 199, 170);
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+
+    <script src="../tools.js"></script>
+    <script>
+        var oDiv = document.getElementsByTagName('div')[0];
+
+        //物体上一次的运动位置
+        var lastX = parseInt(org.getStyle(oDiv, 'left')),
+            lastY = parseInt(org.getStyle(oDiv, 'top'));
+
+        carshMove(oDiv);
+        oDiv.addEventListener('mousedown', function(e) {
+            clearInterval(oDiv.timer);
+            var event = e || window.event,
+                self = this;
+
+            var xDis = e.clientX - this.offsetLeft,
+                yDis = e.clientY - this.offsetTop;
+
+            //当拖拽停止后物体的初速度
+            var xSpeed = 0,
+                ySpeed = 0;
+            document.addEventListener('mousemove', mouseMove, false);
+
+            function mouseMove(e) {
+                var xPos = e.clientX - xDis,
+                    yPos = e.clientY - yDis;
+
+                //速度等于拖拽两个时刻的距离差
+                xSpeed = xPos - lastX;
+                ySpeed = yPos - lastY;
+
+                //记录上一次位置，直到停止拖拽
+                lastX = xPos;
+                lastY = yPos;
+
+                self.style.top = yPos + 'px';
+                self.style.left = xPos + 'px';
+                document.addEventListener('mouseup', mouseUp, false);
+
+                function mouseUp() {
+                    carshMove(self, xSpeed, ySpeed);
+                    document.removeEventListener('mousemove', mouseMove, false);
+                    document.removeEventListener('mouseup', mouseUp, false);
+                }
+            }
+        }, false)
+
+        function carshMove(obj, x, y) {
+            clearInterval(obj.timer);
+            var xSpeed = x || 0,
+                ySpeed = y || 0,
+                gravity = 9.8;
+
+            obj.timer = setInterval(function() {
+                ySpeed += gravity;
+                var yCurVal = parseInt(org.getStyle(obj, 'top')),
+                    xCurVal = parseInt(org.getStyle(obj, 'left')),
+                    yPos = yCurVal + ySpeed,
+                    xPos = xCurVal + xSpeed,
+                    viewport = org.getViewportOffset();
+
+                if (yPos > viewport.h - obj.offsetHeight) {
+                    ySpeed *= -1;
+                    ySpeed *= 0.8;
+                    xSpeed *= 0.8;
+                    yPos = viewport.h - obj.offsetHeight;
+                } else if (yPos < 0) {
+                    ySpeed *= -1;
+                    ySpeed *= 0.8;
+                    xSpeed *= 0.8;
+                    yPos = 0;
+                } else if (xPos < 0) {
+                    xSpeed *= -1;
+                    ySpeed *= 0.8;
+                    xSpeed *= 0.8;
+                    xPos = 0;
+                } else if (xPos > viewport.w - obj.offsetWidth) {
+                    xSpeed *= -1;
+                    ySpeed *= 0.8;
+                    xSpeed *= 0.8;
+                    xPos = viewport.w - obj.offsetWidth;
+                }
+
+                if (Math.abs(xSpeed) <= 1) {
+                    xSpeed = 0;
+                }
+                if (Math.abs(ySpeed) <= 5) {
+                    ySpeed = 0;
+                }
+                if (xSpeed == 0 && ySpeed == 0 && yPos == viewport.h - obj.offsetHeight) {
+                    clearInterval(obj.timer);
+                    console.log('over');
+                } else {
+                    obj.style.left = xPos + 'px';
+                    obj.style.top = yPos + 'px';
+                }
+            }, 20);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>cookie-drag</title>
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: plum;
+            position: absolute;
+            left: 100px;
+            top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+    <script>
+
+        var managerCookie = {
+            setCookie: function (key, value, time) {
+                document.cookie = key + '=' + value + ';max-age=' + time;
+                return this;
+            },
+            getCookie: function (key, callback) {
+                var str = document.cookie,
+                    arr = str.split('; '),
+                    len = arr.length;
+
+                for (var i = 0; i < len; i++) {
+                    var itemArr = arr[i].split('=');
+                    if (itemArr[0] == key) {
+                        callback(itemArr[1]);
+                        return this;
+                    }
+                }
+                callback('undefined');
+                return this;
+            }
+        }
+
+        var oDiv = document.getElementsByTagName('div')[0];
+
+        var drag = {
+            init: function (ele) {
+                this.div = ele;
+                var self = this;
+                this.bindEvent();
+                managerCookie
+                    .getCookie('left', function (data) {
+                        self.div.style.left = data + 'px';
+                    })
+                    .getCookie('top', function (data) {
+                        self.div.style.top = data + 'px';
+                    })
+            },
+            bindEvent: function () {
+                var self = this;
+                this.div.addEventListener('mousedown', self.mouseDown.bind(self), false);
+            },
+            mouseDown: function (e) {
+                this.xDis = e.clientX - this.div.offsetLeft;
+                this.yDis = e.clientY - this.div.offsetTop;
+                this.mouse_move = this.mouseMove.bind(this);
+                this.mouse_up = this.mouseUp.bind(this);
+                document.addEventListener('mousemove', this.mouse_move, false);
+                document.addEventListener('mouseup', this.mouse_up, false);
+            },
+            mouseMove: function (e) {
+                this.xPos = e.clientX - this.xDis;
+                this.yPos = e.clientY - this.yDis;
+                this.div.style.left = this.xPos + 'px';
+                this.div.style.top = this.yPos + 'px';
+            },
+            mouseUp: function () {
+                document.removeEventListener('mousemove', this.mouse_move, false);
+                document.removeEventListener('mouseup', this.mouse_up, false);
+                managerCookie
+                    .setCookie('left', this.div.offsetLeft, 1000)
+                    .setCookie('top', this.div.offsetTop, 1000);
+            }
+        }
+        drag.init(oDiv);
+    </script>
+</body>
+
+</html>

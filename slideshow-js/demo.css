@@ -1,0 +1,109 @@
+* {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+body {
+    background-color: #ccc;
+}
+
+.wrapper {
+    width: 420px;
+    height: 450px;
+    margin: 100px auto 0;
+    position: relative;
+    background-color: #CCC;
+}
+
+.box {
+    width: 400px;
+    height: 320px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    overflow: hidden;
+}
+
+.big-pic {
+    width: 2400px;
+    height: 320px;
+    position: absolute;
+}
+
+.big-pic img {
+    float: left;
+    width: 400px;
+    height: 320px;
+}
+
+.big-pic img::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.left-btn {
+    width: 130px;
+    height: 320px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    /* background-color: red; */
+    opacity: 0.4;
+}
+
+.right-btn {
+    width: 130px;
+    height: 320px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /* background-color: green; */
+    opacity: 0.4;
+}
+
+.l-btn {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 130px;
+    background: url('./lbt/btn.gif') 0 0 no-repeat;
+    opacity: 0;
+}
+
+.r-btn {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    right: 0;
+    top: 130px;
+    background: url('./lbt/btn.gif') 0 0 no-repeat;
+    background-position: 0 -60px;
+    opacity: 0;
+}
+
+.sml-pic {
+    width: 400px;
+    height: 84px;
+    position: absolute;
+    bottom: 15px;
+    left: 10px;
+}
+
+.sml-pic img {
+    float: left;
+    width: 100px;
+    height: 80px;
+    opacity: 0.3;
+}
+
+.sml-pic img::float {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.sml-pic .active {
+    opacity: 1;
+}

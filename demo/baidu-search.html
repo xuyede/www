@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>baidu-search</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .wrapper {
+            width: 400px;
+            height: 50px;
+            margin: 100px auto;
+        }
+
+        input {
+            width: 400px;
+            height: 34px;
+        }
+
+        ul {
+            display: none;
+            width: 400px;
+            border: 1px solid #ccc;
+        }
+        ul li:hover{
+            background-color: rgb(233, 233, 233);
+        }
+        ul li a {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            color: #484848;
+            font-size: 14px;
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <input type="text">
+        <ul></ul>
+    </div>
+
+    <script>
+        var oInput = document.getElementsByTagName('input')[0],
+            oUl = document.getElementsByTagName('ul')[0];
+
+        oInput.oninput = deBounce(getRequest,300);
+
+        function getRequest(){
+            var val = this.value,
+                oScript = document.createElement('script');
+            
+            oScript.src = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su' + '?wd=' + val + '&cb=doJSON';
+            document.head.appendChild(oScript);
+            document.head.removeChild(oScript);
+
+            oInput.onblur = function(){
+                setTimeout(function(){
+                    oUl.style.display = 'none';  
+                }, 100);
+            }
+            oInput.onfocus = function(){
+                if(oUl.children.length != 0){
+                    oUl.style.display = 'block';
+                }
+            }
+        }
+
+        function deBounce(handle, delay){
+            var timer = null;
+            return function(){
+                clearInterval(timer);
+                var self = this;
+                timer = setTimeout(function(){
+                    handle.call(self);
+                },delay);
+            };
+        }
+
+        function doJSON(data) {
+            var arr = data.s,
+                len = arr.length,
+                str = '';
+            if(len == 0){
+                oUl.innerHTML = '';
+                oUl.style.display = 'none';
+            }
+            else{
+                arr.forEach(function(ele){
+                    str += '<li><a href="https://www.baidu.com/s?wd=' + ele + '">' + ele + '</a></li>';                     
+                });
+                oUl.style.display = 'block';
+                oUl.innerHTML = str;
+            }
+        }
+    </script>
+</body>
+
+</html>

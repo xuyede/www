@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动态生成登录框</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            text-decoration: none;
+            color: #484848;
+            font-size: 14px;
+        }
+        
+        .wrapper {
+            width: 350px;
+            height: 400px;
+            margin: 100px auto 0;
+            position: relative;
+            background-color: #fff;
+            display: none;
+        }
+        
+        .wrapper .close {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        
+        .wrapper .logo {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 140px;
+            height: 24px;
+            text-align: center;
+            line-height: 24px;
+            margin-left: -70px;
+            font-size: 18px;
+            color: #000;
+        }
+        
+        .wrapper .login {
+            position: absolute;
+            bottom: 30px;
+            left: 25px;
+            width: 300px;
+            height: 70%;
+        }
+        
+        .wrapper ul li {
+            width: 280px;
+            height: 40px;
+            margin-bottom: 20px;
+            margin-left: 10px;
+        }
+        
+        .wrapper ul input.active {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .wrapper ul li.speLi {
+            height: 25px;
+            position: relative;
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        
+        .wrapper ul .text {
+            position: absolute;
+            font-size: 12px;
+        }
+        
+        .wrapper ul .logining {
+            background-color: #3f89ec;
+            border: none;
+            border-radius: 3px;
+        }
+        
+        .wrapper .login .forgPass {
+            color: #3f89ec;
+            position: absolute;
+            left: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#" class="start">登录</a>
+    <!-- <script src="../tools.js"></script> -->
+    <script src="../jquery-3.3.1/jquery.js"></script>
+    <script>
+        var start = $('.start'),
+            flag = true;
+        start.on('click', function() {
+            bindEvent();
+        });
+
+        function bindEvent() {
+            if (flag) {
+                flag = false;
+                var oDiv = $('<div class="wrapper">\
+                                    <span class="logo">用户名密码登录</span>\
+                                    <a href="#" class="close">×</a>\
+                                    <div class="login">\
+                                        <ul>\
+                                            <li><input type="text" class="username active" placeholder="手机/邮箱/用户名"></li>\
+                                            <li><input type="password" class="password active" placeholder="密码"></li>\
+                                            <li class="speLi">\
+                                                <p><input type="checkbox" class="selfLogin" id="self"><label for="self" class="text">下次自动登录</label></p>\
+                                            </li>\
+                                            <li><input type="submit" value="登录" class="logining active"></li>\
+                                        </ul>\
+                                        <a href="#" class="forgPass">忘记密码?</a>\
+                                    </div>\
+                                </div>');
+                $('body').append(oDiv);
+            }
+            $('.wrapper').fadeIn();
+            $('.close').one('click', function() {
+                bindClose();
+            });
+            $('body').css('backgroundColor', '#ccc');
+        }
+
+        function bindClose() {
+            $('.wrapper').fadeOut();
+            $('body').css('backgroundColor', '#fff');
+        }
+    </script>
+</body>
+
+</html>
