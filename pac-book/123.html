@@ -11,10 +11,15 @@
 <body>
     
     <script>
-
-        var age = 18;
-        window.name = age;
+        Father.prototype.age = 18;
+        function Father() {
+            var name = 'will';
+            this.lastName = 'sunday';
+            console.log(this)
+        }
     
+        var father = new Father();
+        console.log(father);
     </script>
 </body>
 

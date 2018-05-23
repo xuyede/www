@@ -482,7 +482,7 @@
 
         //*构造函数(new出来的)
         // 内部原理
-        //1.在头部隐式增加 var this = Object.create(Func.prototype);
+        //1.在头部隐式增加 var this = Object.create(Func.prototype);  --> this的原型为构造函数的原型
         //2.执行this.xxx = xxx
         //3.在函数末尾隐式返回 return this
 
@@ -517,6 +517,35 @@
         //  var person = new Person();
         //      --> person.__proto__  ===  Person.prototype (都可以读写操作)
 
+
+
+
+
+
+
+
+
+
+
+
+
+                // var person = new Person()
+                //  1.构造函数Person被new的时候，在头部创建 var this = Object.create(Person.prototype)
+                //  2.构造函数自身执行,并在函数最后return this
+                //  3.person拿到构造函数Person的this引用
+                //  4.person.__proto__ === Person.prototype
+
+
+
+
+
+
+
+
+
+
+
+
         /*
             Parent.prototype.name = 'hehe';  
             function Parent(){}
@@ -541,7 +570,7 @@
                 -->原来function Car(){} ,改了之后变成function Parent(){}
         */
 
-        //4.15
+        //4.15 构造函数被new的时候会执行一遍函数本身
         //构造函数寻遍自己的属性没找到目标属性后，接着遍历 __proto__ 
         //                    
         // var this = {                 -->Object.create(Func.prototype)
