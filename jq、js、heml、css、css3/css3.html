@@ -17,6 +17,70 @@
                 -o      ->  opera
 
 
+        1.  border-radius -> 在每个角，找出目标像素的矩形，连接对角线，换成弧形
+                border-radius：1     -> 复合属性
+                border-radius：1 2 3 4      -> 左上角开始，顺时针 
+                    -> 如果单位为 %, 则在border对应的角找出宽高一半的矩形
+                
+                border-top-left-radius: 1 2
+                border-top-right-radius: 1 2
+                border-bottom-left-radius: 1 2
+                border-bottom-right-radius: 1 2
+            
+        2.  box-shadow -> 盒子阴影
+                box-shadow: X轴偏移量 Y轴偏移量 blur shadow-size color shadow-way
+
+                设置不同的4个边，用',' 隔开
+                box-shadow: 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0
+
+                用途：鼠标移入，立体感
+
+        3.  text-shadow -> 字体阴影
+                text-shadow: x-offset y-offset blur color
+
+        4.  rgba  -> 颜色值
+                rgba(1, 2, 3, 4)
+                1, 2, 3: 0-255
+                      4: 透明度 0-1
+
+        5.  gradient -> 背景颜色渐变
+            1)线性渐变 (linear-to)
+                background: linear-gradient(dierction, color, color, ...)
+                    -> 
+                        direction : 渐变方向 
+                                        1)to top/to left/to right/to bottom/to top left/...
+                                        2)角度值 deg
+
+                        color: red 10%, green 30%, yellow 100%
+                                red 整体从0到10%为红色，10%到30%为绿色，30%到100%为黄色
+
+            2)径向渐变 (radial-at)
+                background: radial-gradient(shape at position, color, color, ...)
+                    -> 
+                        shape : 放射形状， 圆形 circle 椭圆 ellipse
+                            -> circle 100px at ... 规定圆的半径为100px
+
+                        position : 圆心位置 可以两个值也可以一个值(第二个值默认为center/50%), 数值可以为%、px、top、left...
+                            
+        6.  文字边界换行
+            word-wrap: break-word
+
+        7.  自定义字体
+            @font-face{
+                font-family: 'myFontFamily';
+                src: url();
+            }
+            font-family: 'myFontFamily'
+
+            兼容性写法
+            @font-face {
+                font-family: 'diyfont';
+                src: url('diyfont.eot'); /* IE9+ */
+                src: url('diyfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+                    url('diyfont.woff') format('woff'), /* chrome、firefox */
+                    url('diyfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+                    url('diyfont.svg#fontname') format('svg'); /* iOS 4.1- */
+            }
 
      -->
 </body>
