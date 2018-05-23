@@ -114,10 +114,56 @@
               
         11. background-size -> 背景图片的大小(默认为原大小)
                 cover ：充满
-                contain ： 保留原来大小
+                contain ： 保留原来比例大小
 
         12. background-position -> 定位图片位置
      -->
+     <!-- 
+
+        css3 选择器
+        
+        1.  属性选择器(标签所有属性，包括自定义)
+            li[class^='la']{ } class类名中以la开头的元素
+            li[class$='la']{ } class类名中以la结尾的元素
+            li[class*='la']{ } class类名中存在la的元素
+
+        2.  伪元素、伪类选择器
+
+            伪类选择器
+                1) :root    -> 根标签
+                2) :not()   -> 选中符合条件之外的元素
+                3) :empty   -> 选择元素内容为空的元素(空格都不行，但不包括伪元素添加的内容)
+                4) :target  -> 用来匹配被location.hash 选中的元素(即锚点元素 a标签锚点跳转)
+
+                索引受其他元素'阻挡'
+                5) ele:first-child   -> 某一个元素下的第一个子元素且为ele
+                        -> li:first-child{ } 某一个元素下的第一个li元素
+                6) ele:last-child    -> 某一个元素下的最后一个子元素且为ele
+                7) :nth-child(n/ 表达式：2n+1,n从0开始)     -> 选择第n个
+                8) :nth-last-child(n)   -> 倒着选第n个
+
+                索引不受其他元素'阻挡'
+                9)  ele:first-of-type   -> 某一个元素下第一个为ele的元素 
+                10) ele:last-of-type    -> 某一个元素下最后一个为ele的元素
+                11) ele:nth-of-type(n){}     -> 选择第n个
+                12) ele:nth-last-of-type(n){} -> 倒着选择第n个
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      -->
 </body>
 
 </html>
