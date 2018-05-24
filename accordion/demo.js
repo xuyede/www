@@ -10,23 +10,24 @@ function init() {
 init();
 
 function bindEvent() {
-    oUl.on('mouseenter', 'li', function() {
+    oUl.on('mouseenter', 'li', function () {
         move($(this));
     });
-    oUl.on('mouseleave', function() {
+    oUl.on('mouseleave', function () {
         init();
     });
 }
 bindEvent();
 
 function move(event) {
+    event.siblings().stop().animate({
+        width: ot + 'px'
+    }, 500, 'swing');
     event.stop().animate({
         width: 400
-    }, 400, 'linear').siblings().stop().animate({
-        width: ot + 'px'
-    }, 400, 'linear');
-    event.find('.title').fadeOut('slow');
-    event.siblings().find('.title').fadeIn('slow');
+    }, 500, 'swing');
+    event.find('.title').fadeOut('fast');
+    event.siblings().find('.title').fadeIn('fast');
     event.find('.decoration').stop().animate({
         bottom: 0
     }, 400, 'swing');
