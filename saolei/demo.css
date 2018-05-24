@@ -2,9 +2,6 @@
     margin: 0;
     padding: 0;
 }
-/* body{
-    background-color: #CCC;
-} */
 
 .wrapper{
     width: 600px;
@@ -55,7 +52,6 @@
     left: 50%;
     top: 50%;
     margin: -100px 0 0 -200px;
-    
 }
 
 .block{
@@ -67,7 +63,6 @@
 }
 
 .boom{
-    color: red;
     font-size: 10px;
     text-align: center;
     line-height: 39px;
@@ -79,4 +74,19 @@
     line-height: 39px;
     font-size: 16px;
     font-weight: bold;
+}
+
+.flag{
+    background-color: plum !important;
+    font-size: 10px;
+    text-align: center;
+    line-height: 39px;
+    font-weight: bold;
+}
+
+.color1{
+    background-color: #888;
+}
+.color2{
+    background-color: #fff;
 }
