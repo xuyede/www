@@ -7,29 +7,146 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>aaa</title>
     <style>
-        li:nth-last-of-type(3){
-            color: red;
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+        }
+
+        .wrapper {
+            width: 400px;
+            height: 50px;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .txt {
+            width: 60px;
+            height: 25px;
+            outline: none;
+            border: 1px solid #888;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-right: 0;
+            padding-left: 10px;
+            position: relative;
+            font-size: 12px;
+
+        }
+
+        .btn {
+            height: 27px;
+            width: 80px;
+            border: none;
+            background-color: #2d78f4;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: blod;
+            position: absolute;
+            outline: none;
+        }
+
+        .box {
+            border: 1px solid #ccc;
+            width: 297px;
+            position: absolute;
+            top: 27px;
+            left: 10px;
+            display: none;
+        }
+
+        a {
+            display: block;
+            width: 100%;
+            margin: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        li:hover {
+            background-color: #CCC
         }
     </style>
 </head>
 
 <body>
-    <span>111</span>
-    <p>22222</p>
-    <li>0</li>
-    <li>232</li>
-    <li>2323</li>
-    <ul>
-        <span>666</span>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-    </ul>
-    <li>ioajd</li>
-    <li>6</li>
-    <span>8888</span>
+    <div class="wrapper">
+        <input type="text" class="txt" placeholder="搜索">
+        <button class="btn">百度</button>
+        <ul class="box"></ul>
+    </div>
+    <script src="../tools.js"></script>
+    <script>
+        var oInput = document.getElementsByClassName('txt')[0],
+            oUl = document.getElementsByClassName('box')[0],
+            oBtn = document.getElementsByClassName('btn')[0];
+
+        oInput.oninput = deBounce(getRequest, 300);
+        oInput.addEventListener('focus', function () {
+            org.startMove(oInput, {
+                'width': 298
+            })
+        }, false)
+
+        function getRequest() {
+            var val = this.value,
+                oScript = document.createElement('script');
+
+            oScript.src = 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=' + val + '&cb=doJSON';
+            document.head.appendChild(oScript);
+            document.head.removeChild(oScript);
+
+            oBtn.onsubmit = function () {
+                window.open('https://www.baidu.com/s?wd=' + val, '', '', '');
+            }
+
+            //298 60
+            oInput.onblur = function () {
+                setTimeout(function () {
+                    org.startMove(oInput, {
+                        'width': 60
+                    });
+                    oUl.style.display = 'none'
+                }, 500);
+            }
+            if (val != '') {
+                oInput.onfocus = function () {
+                    oUl.style.display = 'block';
+                }
+            }
+        }
+
+        function doJSON(data) {
+            var arr = data.s,
+                len = arr.length,
+                str = '';
+
+            if (len == 0) {
+                oUl.style.display = 'none';
+            } else {
+                for (var i = 0; i < len / 2; i++) {
+                    str += '<li><a href="https://www.baidu.com/s?wd=' + arr[i] + '">' + arr[i] + '</a></li>';
+                }
+                oUl.innerHTML = str;
+                oUl.style.display = 'block';
+            }
+        }
+
+        //防抖
+        function deBounce(handle, delay) {
+            var timer = null;
+            return function () {
+                var self = this;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    handle.call(self);
+                }, delay);
+            };
+        }
+    </script>
 </body>
 
 </html>
