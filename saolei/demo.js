@@ -4,8 +4,7 @@ var oBtn = document.getElementsByClassName('start-game')[0],
     oResidueBoom = document.getElementsByClassName('residue')[0],
     oClose = document.getElementsByClassName('close')[0],
     aBoom = document.getElementsByClassName('boom'),
-    boomNum = 10,
-    flag = true;
+    boomNum = 10;
 
 bindEvent();
 function bindEvent() {
@@ -37,7 +36,6 @@ function bindEvent() {
 }
 
 function rightBtnClick(ele) {
-
     var _ele = ele,
         num = 0;
     if (!_ele.classList.contains('clicked')) {
@@ -45,11 +43,10 @@ function rightBtnClick(ele) {
     }
 
     num = boomNum - document.getElementsByClassName('flag').length;
-    if (num == 0) {
+    if (num === 0) {
         num = 0;
     }
     oResidueBoom.innerHTML = num;
-
 }
 
 function leftBtnClick(ele) {
@@ -109,6 +106,20 @@ function leftBtnClick(ele) {
                 }
             }
         }
+    }
+    if (document.getElementsByClassName('tips').length === 90) {
+        window.setTimeout(function () {
+            var restart = window.confirm('666,还来不?');
+            if (restart) {
+                oLeiBox.innerHTML = '';
+                init();
+            } else {
+                oLeiBox.innerHTML = '';
+                oWrapper.style.display = 'none';
+                oBtn.style.display = 'block';
+                document.body.style.backgroundColor = '#fff';
+            }
+        }, 800);
     }
 }
 
