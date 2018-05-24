@@ -1,0 +1,82 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+/* body{
+    background-color: #CCC;
+} */
+
+.wrapper{
+    width: 600px;
+    height: 500px;
+    position:absolute;
+    left: 50%;
+    top:50%;
+    margin: -250px 0 0 -300px;
+    background-color: #FFF;
+    box-shadow: 0 0 5px 5px #888;
+    display: none;
+}
+
+.close{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    cursor: pointer;
+}
+
+.lei-box{
+    width: 400px;
+    height: 400px;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    box-shadow: 0 0 5px 2px #CCC;
+}
+.residue{
+    font-size: 50px;
+    position: absolute;
+    right: 50px;
+    top: 200px;
+    text-shadow: 2px 2px 4px #888;
+}
+
+.start-game{
+    width:400px;
+    height: 100px;
+    font-size: 50px;
+    background-color: plum;
+    border: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -100px 0 0 -200px;
+    
+}
+
+.block{
+    float: left;
+    width: 39px;
+    height: 39px;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.boom{
+    color: red;
+    font-size: 10px;
+    text-align: center;
+    line-height: 39px;
+    font-weight: bold;
+}
+
+.tips{
+    text-align: center;
+    line-height: 39px;
+    font-size: 16px;
+    font-weight: bold;
+}
