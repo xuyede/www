@@ -134,14 +134,16 @@
         产生浮动流的元素与块级元素发生分层
         与inline属性、文本以及产生BFC的元素不发生分层
         2. 消除浮动流
-            ①使用伪元素 
+            1)使用伪元素 
             ::before{                   ::after{
                 centent="";                 centent="";  
                 display:block;              display:block;
                 visibility: hidden;         visibility: hidden;
                 clear:both;                 clear:both;
             }                           }
-            ②BFC
+            
+            2)浮动元素父容器设置overflow: hidden
+            3)浮动元素父容器设置浮动
       -->
 
     <!-- 居中 -->
