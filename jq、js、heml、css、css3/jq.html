@@ -37,6 +37,11 @@
                                 -> $('div')
                     9) 属性选择器
                                 -> $('[title=hello]')
+                                -> $('input[type=button]')
+                            
+                            表单标签中，可以这样写
+                                -> $(':text') / $(':submit') / $(':password')
+                                    选择对应的input标签
                 
                 2. 原生DOM 、jQuery对象
                     --> ()里面写入 原生DOM/jQuery对象 的话，会返回一个继承了jquery原型的类数组
@@ -65,9 +70,11 @@
                         --> ul 直接子元素 li 里双数位(2 4 6 8 ...)
                     $('ul>li:even');
                         --> ul 直接子元素 li 里单数位(1 3 5 7 ...)
+                    $('li:gt(2)');
+                        --> 选择索引为2后面所有的li，不受父子关系影响
 
                     *方法
-                    1.filter() -->选符合条件的     not() -->选符合条件以外的
+                    1.filter() -->选符合条件的     not() -->过滤()里的内容
                         1) ()写入条件
                             $('li').filter('.demo');
                                 --> 筛选li里class为demo的元素
@@ -92,6 +99,7 @@
                     4. .find() --> 找符合条件的
                     5. .is() 
                         --> 判断是否符合条件，返回 true/false
+                    6. .size() --> jq对象的个数
             
         */
         /*
@@ -292,8 +300,9 @@
             
             15. .val()  --> value
                 .each(function(index){})  -->  forEach()
-                .end() 终止在当前链的最新过滤操作，并返回匹配的元素的以前状态
+                .end() 终止在当前链的最新过滤操作，并返回匹配的元素的以前结果集
                     -> $('li').eq(0).css('color', 'red').end().eq(4).css('backgroundColor', 'red');
+                .andSelf() 终止过滤操作，返回筛选的元素和匹配的元素的以前结果集
                 .add() -> 创建一个新的jQuery对象 ，元素添加到匹配的元素集合中
                 .slice() -> 根据指定的下标范围，过滤匹配的元素集合，并生成一个新的 jQuery 对象
                     .slice() 一个参数a，则从a到最后，两个参数a，b，则从a开始，到b前
@@ -341,6 +350,7 @@
                         .stop()两个参数，默认值为false
                         一：停止当前运动 + 是否停止后续所有运动        true：是 false：否
                         二：是否立即到达当前运动目标点                   true：是 false：否
+                        
                         .stop() 停止当前运动 + 继续后续运动 (若后续没有运动则停止在当前位置)
                         .stop(true) 停止后续所有运动
                         .stop(true, true) 停止当前所有运动 + 停在当前运动的目标点
@@ -359,14 +369,16 @@
 
                 3)滑动隐藏/显示元素 (display：none/block)
                         1) 滑动效果
+                            上下
                             .slideToggle(speed, Func);  (speed最好在400-500)
                                 -> 如果元素为 display：none -> display：block
                                    如果元素为 display：block -> display：none
-
                             .slideUp(speed, Func); display:block -> display:none
-                            .hide(speed, Func);
-                            
                             .slideDown(speed, Func); display:none; -> display:block;
+
+                            左上角
+                            .toggle(speed, Func)
+                            .hide(speed, Func);
                             .show(speed, Func);
                                 ->  $('div:first').slideDown(300, function next() {
                                         $(this).next('div').slideDown(300, next);
