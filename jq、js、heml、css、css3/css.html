@@ -222,10 +222,25 @@
         opacity : 0;
         
         兼容：两个都加上
-
-
      -->
+    <!--
+        覆盖：
+            两个同级position元素(static除外),设置z-index的元素在上面，并把上面的元素背景色变白
 
+            z-index 只对 position 为 absolute/fixed/relative 生效
+
+            <div class="box1">
+                box1-father
+                <div class="demo1">demo1-son</div>
+            </div>
+            <div class="box2">
+                box2-father
+                <div class="demo2">demo2-son</div>
+            </div>
+
+            如果box1、box2都为position：非static，且box1、box2的z-index一样，因为节点顺位
+            box2和demo2都会覆盖在box1和demo1上面，不管demo1的z-index设置多大也不会覆盖box2和demo2
+      -->
 </body>
 
 </html>
