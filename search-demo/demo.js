@@ -34,7 +34,13 @@ var aSpan = document.getElementsByClassName('sex'),
 
 aSpan[2].className = 'sex active';
 
-bindEvent();
+start();
+function start () {
+    init();
+    filterByInput(personArr);
+    bindEvent();
+}
+
 function bindEvent () {
     org.addEvent(aSpan[0], 'click', function() { 
         change(this);
@@ -94,8 +100,7 @@ function init() {
         }
     }())
 }
-init();
-filterByInput(personArr);
+
 function filterByInput (target) {
     input.oninput = function() {
         var result = filterByText(this.value, target);
