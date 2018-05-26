@@ -40,13 +40,14 @@ function bindEvent () {
         change(this);
         var result = filterSex('male');
         filterTarget(result);
-    
+        filterByInput(result);
     });
     
     org.addEvent(aSpan[1], 'click', function() {
         change(this);
         var result = filterSex('female');
         filterTarget(result);
+        filterByInput(result);
     });
     
     org.addEvent(aSpan[2], 'click', function() {
@@ -94,25 +95,24 @@ function init() {
     }())
 }
 init();
-
-input.oninput = function() {
-    var result = filterByText(this.value, personArr);
-    console.log(result);
-    clearTimeout(hTimer);
-    hTimer = setTimeout(function() {
-        if (result.length != 0) {
-            clearTimeout(timer);
-            timer = setTimeout(function() {
-                clearAll();
-                filterTarget(result);
-            }, 300);
-
-        } else {
-            clearAll();
-            init();
-        }
-    }, 1000);
-};
+filterByInput(personArr);
+function filterByInput (target) {
+    input.oninput = function() {
+        var result = filterByText(this.value, target);
+        console.log(result);
+        clearTimeout(hTimer);
+        hTimer = setTimeout(function() {
+            if (result.length != 0) {
+                clearTimeout(timer);
+                timer = setTimeout(function() {
+                    clearAll();
+                    filterTarget(result);
+                }, 100);
+    
+            } 
+        }, 1000);
+    };
+}
 
 function filterTarget(target) {
     var len = target.length;
