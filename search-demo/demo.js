@@ -33,23 +33,27 @@ var aSpan = document.getElementsByClassName('sex'),
     hTimer = null;
 
 aSpan[2].className = 'sex active';
-org.addEvent(aSpan[0], 'click', function() {
-    change(this);
-    var result = filterSex('male');
-    filterTarget(result);
 
-});
-
-org.addEvent(aSpan[1], 'click', function() {
-    change(this);
-    var result = filterSex('female');
-    filterTarget(result);
-});
-
-org.addEvent(aSpan[2], 'click', function() {
-    change(this);
-    init();
-});
+bindEvent();
+function bindEvent () {
+    org.addEvent(aSpan[0], 'click', function() { 
+        change(this);
+        var result = filterSex('male');
+        filterTarget(result);
+    
+    });
+    
+    org.addEvent(aSpan[1], 'click', function() {
+        change(this);
+        var result = filterSex('female');
+        filterTarget(result);
+    });
+    
+    org.addEvent(aSpan[2], 'click', function() {
+        change(this);
+        init();
+    });
+}
 
 function change(self) {
     input.value = '';

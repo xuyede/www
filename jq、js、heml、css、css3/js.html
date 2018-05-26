@@ -1237,11 +1237,15 @@
                 --> 接收一个函数作为累加器，数组中的每个值（左->右），最终计算为一个值
 
                 //原型链上reduce的操作原理
-                Array.prorotype.myReduce = function(func, initialVal, context){
-                    for (var i = 0; i < this.length; i++) {
-                        initialVal = func.call(context, initialVal, this[i], i, this);
+                Array.prototype.myReduce = function (func, initialVal, context) {
+                    var _initialVal = initialVal || this[0],
+                        i = Object.prototype.toString.call(initialVal) === '[object Undefined]' ? 1 : 0,
+                        len = this.length;
+
+                    for (; i < len; i++) {
+                        _initialVal = func.call(context, _initialVal, this[i], i, this);
                     }
-                    return initialVal;
+                    return _initialVal;
                 }
                 
                 //eg
@@ -1255,7 +1259,7 @@
                     name: 'myReduce'
                 })
                 
-                var obj = arr.reduce(function(baton, curVal){
+                var obj = arr.reduce(function(baton, curVal, index, self){
                     ...
                 }, initialVal);
                 baton: -->如果initialVal有值，则baton第一次为initialVal；
