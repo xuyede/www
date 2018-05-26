@@ -62,12 +62,7 @@ function change(self) {
     self.className = 'sex active';
 }
 
-function clearClass() {
-    var len = aSpan.length;
-    for (var i = 0; i < len; i++) {
-        aSpan[i].className = 'sex';
-    }
-}
+
 
 function filterSex(target) {
     var newArr = [],
@@ -143,6 +138,13 @@ function clearAll() {
         len = child.length;
     for (var i = 0, j = 0; j < len; j++) {
         oUl.removeChild(child[i]);
+    }
+}
+
+function clearClass() {
+    var len = aSpan.length;
+    for (var i = 0; i < len; i++) {
+        aSpan[i].className = 'sex';
     }
 }
 
