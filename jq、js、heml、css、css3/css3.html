@@ -192,17 +192,32 @@
                 4) ::first-letter
                 5) ::first-line
 
-
-
-
-
-
-
-
-
-
-
       -->
+      <!-- 
+            好玩的东西 ：transform
+
+            transform: a b c d; ->可以实现元素的形状、角度、位置等的变化
+
+        *   1.  transform: rotate()/ratateX()/rotateY()/rotateZ()/rotate3d(x, y, z, angle) 
+                    ->rotate()默认等于rotateZ() 正值顺时针旋转，负值逆时针
+
+                rotate3d(x, y, z, angle) -> x,y,z为3个方向的矢量，最后求3个方向的合力,以合力的方向为轴，旋转angle
+
+            2.  transform: scale(x, y)/scaleX()/scaleY()/scaleZ()/scale3d(x, y, z)
+                    ->以x， y为轴进行缩放, 0-1为缩小, 1-~为放大 (值为负数则反面缩放)
+                    ->scale(x, y) 接受两个值，如果第二参数未提供，则第二个参数使用第一个参数的值
+
+            3.  transform: skew(); 对元素进行倾斜扭曲
+                skew(x, y);接受两个值，第一个参数对应X轴，第二个参数对应Y轴。如果第二个参数未提供，则默认值为0
+                skewX(), skewY()
+
+        *   4.  transform: translate(x, y)/translateX()/translateY()/translateZ()/translate3d(x, y, z)
+                -> 相对于自身位置移动
+                -> translate(x, y)第二个参数不填，默认为0
+
+            5.  transform-origin: a b;  a,b可以为center/top/left/... 50%/100%/... px...
+                -> 中心点默认为元素的x,y轴的50%
+       -->
 </body>
 
 </html>
