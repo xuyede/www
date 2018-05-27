@@ -218,6 +218,80 @@
             5.  transform-origin: a b;  a,b可以为center/top/left/... 50%/100%/... px...
                 -> 中心点默认为元素的x,y轴的50%
        -->
+
+       <!-- 
+
+            过渡动画：transition
+
+            transition: prop time way delay, prop time way delay, ...
+
+            prop -> transition-property 要过渡的属性
+            time -> transition-duration 过渡所花的时间  .5s 1s
+            way  -> transition-timing-function 过渡的方式/函数  linear 匀速 ease 慢快慢  cubic-bezier(n,n,n,n) 0-0
+            delay-> transition-delay 过渡开始或结束的等待时间 .5s 1s
+
+        -->
+
+        <!-- 
+
+            动画：animation
+
+            animation: keyframesName time way delay direction count 
+
+            1) keyframeName -> animation-name 关键帧名字
+
+            2) time    -> animation-duration 动画所花的时间  .5s 1s
+
+            3) way     -> animation-timing-function 动画的方式/函数  
+                linear 匀速 ease 慢快慢  cubic-bezier(n,n,n,n) 0-0
+
+            4) dalay -> 延时 默认0
+
+            5) count   -> animation-iteration-count 定义动画的播放次数 
+                默认 1 
+                    n 
+                    infinite(无限次)
+
+            6) direction -> animation-direction 定义动画的播放方向 
+                默认    normal  
+                        reverse(反向) 
+                        alternate(奇数次正向，偶数次反向) 
+                        alternate-reverse(偶数次正向，奇数次反向)
+
+            7) animation-play-state 
+                默认    running 播放
+                        paused  暂停
+
+            8) animation-fill-mode -> 定义动画开始前和结束后发生的操作
+                默认    none
+                        forwards 动画结束后应用在最后关键帧的状态
+                        backwards 动画开始时是否立即应用0%的状态(如果动画有延迟，则在0%的状态下开始延迟)
+                        both
+
+            动画关键帧：
+                @keyframes name{
+                    0%{
+
+                    }
+                    20%{
+
+                    }
+                    ...
+                    100%{
+
+                    }
+
+                    如果只有0% 100%，可以用from to 替代
+                    from{
+
+                    }
+                    to{
+
+                    }
+                }
+
+
+         -->
 </body>
 
 </html>
