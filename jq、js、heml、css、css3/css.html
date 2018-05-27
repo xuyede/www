@@ -25,6 +25,9 @@
         11.伪元素选择器 "天生行级元素" a::before{content:""}/a::after{content:""}，不占DOM结构
         12. div ~ li div后面的所有同级li元素
         13. div + li div后面紧跟的li
+        14. [title |= 'abc'] title以abc-开头的元素
+        15. [title *= 'abc'] title包含abc字符串的元素
+        16. [title ~= 'abc'] title包含abc关键字的元素 'abc bcd' [title ~= 'abc' i]忽略大小写
     -->
     <!-- 选择器优先级 -->
     <!-- 
