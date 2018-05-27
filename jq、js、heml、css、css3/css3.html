@@ -129,68 +129,73 @@
 
         2.  伪元素、伪类选择器
 
-            伪类选择器
-                1) :root    -> 根标签,相当于找html，如果要找html的话，用 :root
-                    :root{
-                        background-color: red;
-                    }
+                交互式伪类：用户也页面发现交互产生某种状态
+                1) :hover   ->鼠标移入
+                2) :active  ->点击后的标签 ，多用于a和button标签 
+                    -webkit-tag-highlight-color: agba(0,0,0,0);  移动端取消浏览器默认点击高亮样式
 
-                2) :not()   -> 选中符合条件之外的元素
-                    li:not([class=active]){
+                伪类选择器
+                    1) :root    -> 根标签,相当于找html，如果要找html的话，用 :root
+                        :root{
+                            background-color: red;
+                        }
 
-                    }
+                    2) :not()   -> 选中符合条件之外的元素
+                        li:not([class=active]){
 
-                3) :empty   -> 选择元素内容为空的元素(空格都不行，但不包括伪元素添加的内容)
-                    li:empty{
+                        }
 
-                    }
+                    3) :empty   -> 选择元素内容为空的元素(空格都不行，但不包括伪元素添加的内容)
+                        li:empty{
 
-                4) :target  -> 用来匹配被location.hash 选中的元素(即锚点元素 a标签锚点跳转,可以用于点击跳转加样式)
-                    div:target{
-                        
-                    }
+                        }
 
-                索引受其他元素'阻挡'
-                5) ele:first-child   -> 某一个元素下的第一个子元素且为ele
-                        -> li:first-child{ } 某一个元素下的第一个li元素
-                6) ele:last-child    -> 某一个元素下的最后一个子元素且为ele
+                    4) :target  -> 用来匹配被location.hash 选中的元素(即锚点元素 a标签锚点跳转,可以用于点击跳转加样式)
+                        div:target{
+                            
+                        }
 
-            *   7) :nth-child(n/ 表达式：2n+1,n从0开始)     -> 选择第n个
+                    索引受其他元素'阻挡'
+                    5) ele:first-child   -> 某一个元素下的第一个子元素且为ele
+                            -> li:first-child{ } 某一个元素下的第一个li元素
+                    6) ele:last-child    -> 某一个元素下的最后一个子元素且为ele
 
-                8) :nth-last-child(n)   -> 倒着选第n个
+                *   7) :nth-child(n/ 表达式：2n+1,n从0开始)     -> 选择第n个
 
-                索引不受其他元素'阻挡'，找ele这一类型的第一个
-                9)  ele:first-of-type   -> 某一个元素下第一个为ele的元素 
-                10) ele:last-of-type    -> 某一个元素下最后一个为ele的元素
+                    8) :nth-last-child(n)   -> 倒着选第n个
 
-            *   11) ele:nth-of-type(n){}     -> 选择第n个
+                    索引不受其他元素'阻挡'，找ele这一类型的第一个
+                    9)  ele:first-of-type   -> 某一个元素下第一个为ele的元素 
+                    10) ele:last-of-type    -> 某一个元素下最后一个为ele的元素
 
-                12) ele:nth-last-of-type(n){} -> 倒着选择第n个
+                *   11) ele:nth-of-type(n){}     -> 选择第n个
 
-                    -> 选表格的元素用这种方法有奇效
+                    12) ele:nth-last-of-type(n){} -> 倒着选择第n个
 
-                13) ele:only-child      ->唯一子元素
-                14) ele:only-of-type    ->唯一子元素
+                        -> 选表格的元素用这种方法有奇效
 
-                表示状态的伪类选择器(input)
-                15) :enabled    -> 可用的
-                16) :disabled   -> 不可用的
-                17) :checked    -> 选中的
-                    input:checked + span{   ->选择选中的input后面紧挨的元素
+                    13) ele:only-child      ->唯一子元素
+                    14) ele:only-of-type    ->唯一子元素
 
-                    }
+                    表示状态的伪类选择器(input)
+                    15) :enabled    -> 可用的
+                    16) :disabled   -> 不可用的
+                    17) :checked    -> 选中的
+                        input:checked + span{   ->选择选中的input后面紧挨的元素
 
-            伪元素选择器
-                1) ::after
-                2) ::before
-                3) ::selection 用来匹配突出显示的文本（用鼠标选择文本的时候）浏览器默认情况下，用鼠标选择网页文本是以蓝色的背景，白色的字体显示的。
-                        属性：user-select: none;
-                        -moz-::selection    ->FF
-                    ::selection{
+                        }
 
-                    }
-                4) ::first-letter
-                5) ::first-line
+                伪元素选择器
+                    1) ::after
+                    2) ::before
+                    3) ::selection 用来匹配突出显示的文本（用鼠标选择文本的时候）浏览器默认情况下，用鼠标选择网页文本是以蓝色的背景，白色的字体显示的。
+                            属性：user-select: none;
+                            -moz-::selection    ->FF
+                        ::selection{
+
+                        }
+                    4) ::first-letter
+                    5) ::first-line
 
       -->
       <!-- 
