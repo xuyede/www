@@ -221,11 +221,12 @@
 
        <!-- 
 
-            过渡动画：transition
+            过渡动画：transition  相同元素的两个不同状态转换可以用transition过渡
 
             transition: prop time way delay, prop time way delay, ...
 
             prop -> transition-property 要过渡的属性
+                如果多个属性有共同的time way ，可以用 all
             time -> transition-duration 过渡所花的时间  .5s 1s
             way  -> transition-timing-function 过渡的方式/函数  linear 匀速 ease 慢快慢  cubic-bezier(n,n,n,n) 0-0
             delay-> transition-delay 过渡开始或结束的等待时间 .5s 1s
