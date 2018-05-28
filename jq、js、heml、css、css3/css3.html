@@ -139,22 +139,15 @@
                 UI式伪类：主要针对表单元素的状态变化
                 1) :enabled -> 启用
                    :disabled -> 禁用
-                
                 2) :optional -> 非必填
-                3) :required -> 必填
-
+                    :required -> 必填
                 4) :default -> 默认的用户交互状态，input（text、radiu）
-
                 5) :valid -> 验证成功状态   input form
-                6) :invalid -> 验证失败状态
+                   :invalid -> 验证失败状态
+                6) :checked -> 选中状态
 
-                7) :checked -> 选中状态
-
-
-
-
-
-
+                结构式伪类：在文档中的位置
+                1)
 
 
 
@@ -180,26 +173,29 @@
                         }
 
                     索引受其他元素'阻挡'
-                    5) ele:first-child   -> 某一个元素下的第一个子元素且为ele
+
+                    ul > :first-child{}
+                
+                    5) :first-child   -> 某一个元素下的第一个子元素且为ele
                             -> li:first-child{ } 某一个元素下的第一个li元素
-                    6) ele:last-child    -> 某一个元素下的最后一个子元素且为ele
+                    6) :last-child    -> 某一个元素下的最后一个子元素且为ele
 
                 *   7) :nth-child(n/ 表达式：2n+1,n从0开始)     -> 选择第n个
 
                     8) :nth-last-child(n)   -> 倒着选第n个
 
                     索引不受其他元素'阻挡'，找ele这一类型的第一个
-                    9)  ele:first-of-type   -> 某一个元素下第一个为ele的元素 
-                    10) ele:last-of-type    -> 某一个元素下最后一个为ele的元素
+                    9)  :first-of-type   -> 某一个元素下第一个为ele的元素 
+                    10) :last-of-type    -> 某一个元素下最后一个为ele的元素
 
-                *   11) ele:nth-of-type(n){}     -> 选择第n个
+                *   11) :nth-of-type(n){}     -> 选择第n个
 
-                    12) ele:nth-last-of-type(n){} -> 倒着选择第n个
+                    12) :nth-last-of-type(n){} -> 倒着选择第n个
 
                         -> 选表格的元素用这种方法有奇效
 
-                    13) ele:only-child      ->唯一子元素
-                    14) ele:only-of-type    ->唯一子元素
+                    13) :only-child      ->唯一子元素
+                    14) :only-of-type    ->唯一子元素
 
                     表示状态的伪类选择器(input)
                     15) :enabled    -> 可用的
