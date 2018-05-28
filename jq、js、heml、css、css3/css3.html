@@ -172,7 +172,7 @@
                             
                         }
 
-                    索引受其他元素'阻挡'
+                    索引受其他元素'阻挡'，前面可以限制父级
 
                     ul > :first-child{}
                 
@@ -181,10 +181,18 @@
                     6) :last-child    -> 某一个元素下的最后一个子元素且为ele
 
                 *   7) :nth-child(n/ 表达式：2n+1,n从0开始)     -> 选择第n个
+                        应用：两端对齐，中间有空隙的列表   
+                            ->  ul :nth-child(4n){
+                                    margin-right = 0;
+                                    margin-bottom = 10px;
+                                }
+                                ul :nth-last-child(1){
+                                    margin-bottom = 0;
+                                }
 
                     8) :nth-last-child(n)   -> 倒着选第n个
 
-                    索引不受其他元素'阻挡'，找ele这一类型的第一个
+                    索引不受其他元素'阻挡'，找ele这一类型的第一个 
                     9)  :first-of-type   -> 某一个元素下第一个为ele的元素 
                     10) :last-of-type    -> 某一个元素下最后一个为ele的元素
 
