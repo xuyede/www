@@ -10,10 +10,10 @@ function init() {
 init();
 
 function bindEvent() {
-    oUl.on('mouseenter', 'li', function () {
+    oUl.on('mouseenter', 'li', function() {
         move($(this));
     });
-    oUl.on('mouseleave', function () {
+    oUl.on('mouseleave', function() {
         init();
     });
 }
