@@ -130,28 +130,56 @@
         2.  伪元素、伪类选择器
 
                 交互式伪类：用户也页面发现交互产生某种状态
-                1) :hover   ->鼠标移入
-                2) :active  ->点击后的标签 ，多用于a和button标签 
-                    -webkit-tag-highlight-color: agba(0,0,0,0);  移动端取消浏览器默认点击高亮样式
-                3) :focus   ->鼠标或键盘激活获取焦点， 多用于表单控件、超链接
-                    :focus-within -> 当前元素本身或者后代元素获得焦点时，该元素发生状态改变
+                *   1) :hover   ->鼠标移入
+                    2) :active  ->点击后的标签 ，多用于a和button标签 
+                        -webkit-tag-highlight-color: agba(0,0,0,0);  移动端取消浏览器默认点击高亮样式
+                    3) :focus   ->鼠标或键盘激活获取焦点， 多用于表单控件、超链接
+                        :focus-within -> 当前元素本身或者后代元素获得焦点时，该元素发生状态改变
 
                 UI式伪类：主要针对表单元素的状态变化
-                1) :enabled -> 启用
-                   :disabled -> 禁用
-                2) :optional -> 非必填
-                    :required -> 必填
-                4) :default -> 默认的用户交互状态，input（text、radiu）
-                5) :valid -> 验证成功状态   input form
-                   :invalid -> 验证失败状态
-                6) :checked -> 选中状态
+                    1) :enabled -> 启用
+                    :disabled -> 禁用
+                    2) :optional -> 非必填
+                        :required -> 必填
+                    4) :default -> 默认的用户交互状态，input（text、radiu）
+                    5) :valid -> 验证成功状态   input form
+                    :invalid -> 验证失败状态
+                *   6) :checked -> 选中状态
 
                 结构式伪类：在文档中的位置
-                1)
+                    索引受其他元素'阻挡'，前面可以限制父级
 
+                        ul > :first-child{}
+                *   1) :first-child   -> 某一个元素下的第一个子元素
+                                -> li:first-child{ } 某一个元素下的第一个li元素
+                *   2) :last-child    -> 某一个元素下的最后一个子元素
 
+                *   3) :nth-child(n/ 表达式：2n+1,n从0开始)     -> 选择第n个
+                            应用：两端对齐，中间有空隙的列表   
+                                ->  ul :nth-child(4n){
+                                        margin-right = 0;
+                                        margin-bottom = 10px;
+                                    }
+                                    ul :nth-last-child(1){
+                                        margin-bottom = 0;
+                                    }
 
-                伪类选择器
+                    4) :nth-last-child(n)   -> 倒着选第n个
+
+                    索引不受其他元素'阻挡'，找ele这一类型的第一个 
+                    5) :first-of-type   -> 某一个元素下第一个元素 
+                    6) :last-of-type    -> 某一个元素下最后一个元素
+
+                **  7) :nth-of-type(n){}     -> 选择第n个
+
+                    8) :nth-last-of-type(n){} -> 倒着选择第n个
+
+                        -> 选表格的元素用这种方法有奇效
+
+                    9) :only-child      ->唯一子元素
+                    10) :only-of-type    ->唯一子元素
+
+                其他伪类选择器
                     1) :root    -> 根标签,相当于找html，如果要找html的话，用 :root
                         :root{
                             background-color: red;
@@ -171,40 +199,7 @@
                         div:target{
                             
                         }
-
-                    索引受其他元素'阻挡'，前面可以限制父级
-
-                    ul > :first-child{}
-                
-                    5) :first-child   -> 某一个元素下的第一个子元素且为ele
-                            -> li:first-child{ } 某一个元素下的第一个li元素
-                    6) :last-child    -> 某一个元素下的最后一个子元素且为ele
-
-                *   7) :nth-child(n/ 表达式：2n+1,n从0开始)     -> 选择第n个
-                        应用：两端对齐，中间有空隙的列表   
-                            ->  ul :nth-child(4n){
-                                    margin-right = 0;
-                                    margin-bottom = 10px;
-                                }
-                                ul :nth-last-child(1){
-                                    margin-bottom = 0;
-                                }
-
-                    8) :nth-last-child(n)   -> 倒着选第n个
-
-                    索引不受其他元素'阻挡'，找ele这一类型的第一个 
-                    9)  :first-of-type   -> 某一个元素下第一个为ele的元素 
-                    10) :last-of-type    -> 某一个元素下最后一个为ele的元素
-
-                *   11) :nth-of-type(n){}     -> 选择第n个
-
-                    12) :nth-last-of-type(n){} -> 倒着选择第n个
-
-                        -> 选表格的元素用这种方法有奇效
-
-                    13) :only-child      ->唯一子元素
-                    14) :only-of-type    ->唯一子元素
-
+           
                     表示状态的伪类选择器(input)
                     15) :enabled    -> 可用的
                     16) :disabled   -> 不可用的
@@ -212,6 +207,7 @@
                         input:checked + span{   ->选择选中的input后面紧挨的元素
 
                         }
+
 
                 伪元素选择器
                     1) ::after
