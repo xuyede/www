@@ -29,9 +29,12 @@
                 border-bottom-left-radius: 1 2
                 border-bottom-right-radius: 1 2
             
-        2.  box-shadow -> 盒子阴影
-                box-shadow: X-offset Y-offset blur shadow-size color shadow-way
+        2.  box-shadow -> 盒子阴影(x-offset/y-offset 一定要有), 如果不设置的参数要用默认值占位，会受到圆角影响
+                box-shadow: shadow-way X-offset Y-offset blur shadow-size color 
 
+                shadow-way：inset，如果不设置则默认为outset
+                blur：默认为0
+                color：默认为currentColor，建议写上color，兼容
                 设置不同的4个边，用',' 隔开
                 box-shadow: 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0
 
@@ -214,7 +217,7 @@
                         }
 
 
-                伪元素选择器(清浮动，inline-block两端对齐)
+                伪元素选择器(清浮动，inline-block两端对齐) ,如果是替代元素(img、input、...)，则不会显示在上面，用做图片加载失败时的提示
                     1) ::after
                         content=attr(prop)
                         content=url();
