@@ -59,9 +59,7 @@ function startTimer() {
 function mainloop() {
     'use strict';
     bigPicUl.style.left = -400 + 'px';
-    headTimer = setInterval(function() {
-        start();
-    }, 2000);
+    startTimer();
 }
 
 //监听按钮点击事件
