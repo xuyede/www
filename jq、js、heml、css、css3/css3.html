@@ -383,14 +383,32 @@
 
                 父元素(容器)：display：flex  主轴为x轴，侧轴为y轴
                     1.flex-direction 决定主轴的方向
+                        ->  row（默认值）：主轴为水平方向，起点在左端
+                            row-reverse：主轴为水平方向，起点在右端
+                            column：主轴为垂直方向，起点在上沿
+                            column-reverse：主轴为垂直方向，起点在下沿
 
-                    2.flex-wrap 是否换行
+                    2.flex-wrap 如果一条轴线排不下，如何换行
+                        ->  nowrap（默认）：不换行
+                            wrap：换行，第一行在上方
+                            wrap-reverse：换行，第一行在下方
+
 
                     3.flex-flow  flex-direction和flex-wrap的简写
 
                     4.justify-content  项目在主轴上的对齐方式
+                        ->  flex-start（默认值）：左对齐
+                            flex-end：右对齐
+                            center： 居中
+                            space-between：两端对齐，项目之间的间隔都相等
+                            space-around：每个项目两侧的间隔相等
 
                     5.align-items  在侧轴上如何对齐
+                        ->  flex-start：交叉轴的起点对齐
+                            flex-end：交叉轴的终点对齐
+                            center：交叉轴的中点对齐
+                            baseline: 项目的第一行文字的基线对齐
+                            stretch（默认值）：如果项目未设置高度或设为auto，将占满整个容器的高度
 
                     6.align-content  多根轴线的对齐方式
 
