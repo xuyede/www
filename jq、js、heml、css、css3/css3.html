@@ -249,7 +249,7 @@
                     4) ::first-letter
                     5) ::first-line
 
-      -->
+    -->
     <!-- 
             好玩的东西 ：transform
 
@@ -274,7 +274,7 @@
 
             5.  transform-origin: a b;  a,b可以为center/top/left/... 50%/100%/... px...
                 -> 中心点默认为元素的x,y轴的50%
-       -->
+    -->
 
     <!-- 
 
@@ -288,7 +288,7 @@
             way  -> transition-timing-function 过渡的方式/函数  linear 匀速 ease 慢快慢  cubic-bezier(n,n,n,n) 0-0
             delay-> transition-delay 过渡开始或结束的等待时间 .5s 1s
 
-        -->
+    -->
 
     <!-- 
 
@@ -347,12 +347,76 @@
 
                     }
                 }
-         -->
+    -->
 
-         <!-- 
-                columns -> 多列布局
+    <!-- 
+            columns -> 多列布局
+            
+            1)  column-width:指每一列的宽度 根据容器宽度自适应
+            2)  column-count:指规定的列数 唯一精准的是列数
+                -> 不要两者同时用
+            3)  column-gap:设置列与列之间的宽度，直接用数值表示即可(eg:10px) 
+            4)  column-rule:列之间的线，与border相似
+    -->
 
-          -->
+    <!-- 
+
+            盒模型
+
+            1.W3C标准盒模型
+                element空间高度（盒子） = width + padding + border;
+                width 为内容高度 即width不包括padding 和 border
+
+            2.IE6混杂模式盒模型
+                内容高度 （盒子）= width - padding - border
+                即设置width的数值就是element 的空间高度，width包含padding 和border
+
+            box-sizing : border-box/content-box
+                ->
+                    content-box为W3C标准盒子
+                    border-box为IE6混杂模式的盒子
+
+     -->
+    <!-- 
+
+            弹性盒子 : display:flex
+
+                父元素(容器)：display：flex  主轴为x轴，侧轴为y轴
+                    1.flex-direction 决定主轴的方向
+
+                    2.flex-wrap 是否换行
+
+                    3.flex-flow  flex-direction和flex-wrap的简写
+
+                    4.justify-content  项目在主轴上的对齐方式
+
+                    5.align-items  在侧轴上如何对齐
+
+                    6.align-content  多根轴线的对齐方式
+
+                子元素(项目)：默认子元素沿着x轴排列
+                    1.flex-grow：number 
+                        -> 根据所设置的比例分配盒子所剩余的空间拓展,number越大，分到的比例越多 默认值为0 
+
+                    2.flex-shrink：number 
+                        -> 超出的部分按比例，分配给对应的子元素砍掉相应的大小，number越大，分到的比例越多 默认值为1
+
+                    3.flex-basis：伸缩基准值
+                        -> 占据主轴的大小，主轴默认为x轴
+                           flex-decoration: column; 改变主轴为y轴
+
+                        当主轴为x轴时，flex-basis 为 width ，且覆盖width属性
+                        当主轴为y轴时，flex-basis 为 height，且覆盖height属性
+
+                    4.flex：是flex-grow, flex-shrink 和 flex-basis的简写
+
+                    5.order：number number定义项目的排列顺序，数值越小，排列越靠前，默认为0
+
+                    6.align-self ：单个项目对齐方式，会覆盖align-items属性
+                        -> center/flex-start/flex-end/baseline
+         
+    -->
+
 </body>
 
 </html>
