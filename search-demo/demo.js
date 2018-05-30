@@ -31,7 +31,7 @@ var aSpan = document.getElementsByClassName('sex'),
     oUl = document.getElementsByClassName('item-List')[0],
     timer = null,
     hTimer = null;
-
+   
 aSpan[2].className = 'sex active';
 
 start();
