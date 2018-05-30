@@ -104,17 +104,10 @@ function init() {
 function filterByInput (target) {
     input.oninput = function() {
         var result = filterByText(this.value, target);
-        console.log(result);
         clearTimeout(hTimer);
         hTimer = setTimeout(function() {
-            if (result.length != 0) {
-                clearTimeout(timer);
-                timer = setTimeout(function() {
-                    clearAll();
-                    filterTarget(result);
-                }, 100);
-    
-            } 
+            clearAll();
+            filterTarget(result);
         }, 1000);
     };
 }
