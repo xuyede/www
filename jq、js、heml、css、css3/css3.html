@@ -425,26 +425,34 @@
                                 stretch（默认值）：轴线占满整个交叉轴。
 
                 子元素(项目)：默认子元素沿着x轴排列
-                    1.flex-grow：number 
-                        -> 根据所设置的比例分配盒子所剩余的空间拓展,number越大，分到的比例越多 默认值为0 
+                    项目沿主轴的自适应伸缩（按比例分配容器的剩余空间）：
+                        1.flex-grow：number 
+                            -> 根据所设置的比例分配盒子所剩余的空间,number越大，分到的比例越多 默认值为0 
 
-                    2.flex-shrink：number 
-                        -> 超出的部分按比例，分配给对应的子元素砍掉相应的大小，number越大，分到的比例越多 默认值为1
+                        2.flex-shrink：number 
+                            -> 超出的部分按比例，分配给对应的子元素砍掉相应的大小，number越大，分到的比例越多 (默认值为1,平均分配)
 
-                    3.flex-basis：伸缩基准值
-                        -> 占据主轴的大小，主轴默认为x轴
-                           flex-decoration: column; 改变主轴为y轴
+                        3.flex-basis：定义子项在主轴的大小
+                            -> 占据主轴的大小，主轴默认为x轴，默认为auto
+                            flex-decoration: column; 改变主轴为y轴
 
-                        当主轴为x轴时，flex-basis 为 width ，且覆盖width属性
-                        当主轴为y轴时，flex-basis 为 height，且覆盖height属性
+                            当主轴为x轴时，flex-basis 为 width ，且覆盖width属性
+                            当主轴为y轴时，flex-basis 为 height，且覆盖height属性
 
-                    4.flex：是flex-grow, flex-shrink 和 flex-basis的简写
+                        4.flex：是flex-grow, flex-shrink 和 flex-basis的简写
+                            ->  flex: 0 1 auto; （默认值）
 
-                    5.order：number number定义项目的排列顺序，数值越小，排列越靠前，默认为0
+                            常用需求：
+                                1)  flex: none;  -> 0 0 auto, 不扩展不收缩，保持设置的尺寸
+                                2)  flex: auto;  -> 1 1 auto, 可扩展可收缩
+                                3)  只写比例值（number），flex-basis默认变为0%
+                                4)  只写尺寸值（basis），前面两个默认为可扩展可收缩（1 1）
 
-                    6.align-self ：单个项目对齐方式，会覆盖align-items属性
-                        -> center/flex-start/flex-end/baseline
-         
+                        5.order：number number定义项目的排列顺序，数值越小，排列越靠前，默认为0
+
+                        6.align-self ：单个项目对齐方式，会覆盖align-items属性
+                            -> center/flex-start/flex-end/baseline
+            
     -->
 
 </body>
