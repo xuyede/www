@@ -14,10 +14,15 @@ span {
     font-size: 12px;
 }
 
+.sex-box {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
 .sex {
     font-size: 14px;
     border: 1px solid black;
-    /* margin-right: 5px; */
     padding-left: 6px;
     padding-right: 6px;
     border-radius: 5px;
@@ -27,13 +32,14 @@ span {
 .wrapper {
     position: absolute;
     width: 350px;
-    height: 400px;
+    max-height: 400px;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
     margin: auto auto;
     border: 1px solid black;
+    overflow: hidden;
 }
 
 .find {
@@ -41,7 +47,7 @@ span {
 }
 
 .active {
-    background-color: aquamarine;
+    background-color: #f80;
 }
 
 .box {
@@ -50,6 +56,7 @@ span {
     top: 40px;
     width: 300px;
     height: 350px;
+    overflow-y: auto;
 }
 
 .pic {

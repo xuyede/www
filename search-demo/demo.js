@@ -26,131 +26,148 @@ var personArr = [{
     sex: 'male'
 }];
 
-var aSpan = document.getElementsByClassName('sex'),
-    input = document.getElementsByClassName('find')[0],
-    oUl = document.getElementsByClassName('item-List')[0],
-    timer = null,
-    hTimer = null;
-   
-aSpan[2].className = 'sex active';
+var oSex = document.getElementsByClassName('sex-box')[0],
+    oInput = document.getElementsByClassName('find')[0],
+    oUl = document.getElementsByClassName('item-List')[0];
+
 
 start();
-function start () {
-    init();
-    filterByInput(personArr);
+
+function start() {
+    init(personArr);
     bindEvent();
 }
 
-function bindEvent () {
-    org.addEvent(aSpan[0], 'click', function() { 
-        change(this);
-        var result = filterSex('male');
-        filterTarget(result);
-        filterByInput(result);
+function init(arr) {
+    var _arr = arr,
+        str = '';
+
+    _arr.forEach(function(ele) {
+        str += '<li>\
+                    <img src="' + ele.url + '" class="pic">\
+                    <p>' + ele.name + '</p>\
+                    <span>' + ele.description + '</span>\
+                </li>';
     });
-    
-    org.addEvent(aSpan[1], 'click', function() {
-        change(this);
-        var result = filterSex('female');
-        filterTarget(result);
-        filterByInput(result);
-    });
-    
-    org.addEvent(aSpan[2], 'click', function() {
-        change(this);
-        init();
-    });
+    oUl.innerHTML = str;
 }
 
-function change(self) {
-    input.value = '';
-    clearAll();
-    clearClass();
-    self.className = 'sex active';
-}
-
-
-
-function filterSex(target) {
-    var newArr = [],
-        len = personArr.length;
-    for (var i = 0; i < len; i++) {
-        personArr[i].sex === target ? newArr.push(personArr[i]) : '';
-    }
-    return newArr;
-}
-
-function init() {
-    (function() {
-        var len = personArr.length;
-        for (var i = 0; i < len; i++) {
-            var li = document.createElement('li'),
-                img = document.createElement('img'),
-                span = document.createElement('span'),
-                p = document.createElement('p');
-
-            img.src = personArr[i].url;
-            img.className = 'pic';
-            span.innerText = personArr[i].description;
-            p.innerText = personArr[i].name;
-            li.appendChild(img);
-            li.appendChild(p);
-            li.appendChild(span);
-            oUl.appendChild(li);
+function bindEvent() {
+    oInput.oninput = deBounce(filterByInput, 1000);
+    oSex.addEventListener('click', function(e) {
+        var event = e || window.event,
+            target = event.target || event.srcElement;
+        if (target.tagName === 'SPAN') {
+            document.getElementsByClassName('active')[0].className = 'sex';
+            target.className = 'sex active';
+            // sign._sex = target.innerText;
+            dealWith.setHandle(filter);
+            // dealWith.setSign({_sex : target.innerText});
+            // init(filter(doubleFilter, personArr));
+            init(dealWith.setSign({_sex : target.innerText}));
         }
-    }())
+    }, false);
 }
 
-function filterByInput (target) {
-    input.oninput = function() {
-        var result = filterByText(this.value, target);
-        clearTimeout(hTimer);
-        hTimer = setTimeout(function() {
-            clearAll();
-            filterTarget(result);
-        }, 1000);
+function filterByInput() {
+    // sign._name = this.value;
+    var val = this.value;
+    dealWith.setHandle(filter);
+    // dealWith.setSign({_name : val});
+    // init(filter(doubleFilter, personArr));
+    init(dealWith.setSign({_name : val}));
+}
+
+function deBounce(handle, delay) {
+    var timer = null;
+    return function() {
+        var self = this;
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            handle.call(self);
+        }, delay);
     };
 }
 
-function filterTarget(target) {
-    var len = target.length;
-    for (var j = 0; j < len; j++) {
-        var li = document.createElement('li'),
-            img = document.createElement('img'),
-            span = document.createElement('span'),
-            p = document.createElement('p');
+function filterBySex(sex, arr) {
+    var _sex = sex,
+        _arr = arr,
+        newArr = [];
 
-        img.src = target[j].url;
-        img.className = 'pic';
-        span.innerText = target[j].description;
-        p.innerText = target[j].name;
-        li.appendChild(img);
-        li.appendChild(p);
-        li.appendChild(span);
-        oUl.appendChild(li);
+    if (_sex === 'all') {
+        return _arr;
+    } else {
+        newArr = _arr.filter(function(ele) {
+            return ele.sex === _sex ? true : false;
+        });
+        return newArr;
     }
 }
 
-function clearAll() {
-    var child = oUl.children,
-        len = child.length;
-    for (var i = 0, j = 0; j < len; j++) {
-        oUl.removeChild(child[i]);
-    }
-}
+function filterByName(name, arr) {
+    var _name = name,
+        _arr = arr,
+        newArr = [];
 
-function clearClass() {
-    var len = aSpan.length;
-    for (var i = 0; i < len; i++) {
-        aSpan[i].className = 'sex';
-    }
-}
-
-function filterByText(text, arr) {
-    var newArr = [],
-        len = arr.length;
-    for (var i = 0; i < len; i++) {
-        arr[i].name.indexOf(text) != -1 ? newArr.push(arr[i]) : '';
-    }
+    newArr = _arr.filter(function(ele) {
+        return ele.name.indexOf(_name) !== -1 ? true : false;
+    });
     return newArr;
 }
+
+var sign = {
+    _name: '',
+    _sex: 'all'
+}
+
+var doubleFilter = {
+    _name: filterByName,
+    _sex: filterBySex
+}
+
+function filter(obj, arr) {
+    var _arr = arr,
+        _obj = obj;
+
+    for (var k in _obj) {
+        // _arr = obj[k](sign[k], _arr);
+        _arr = obj[k](dealWith.getSign()[k], _arr);
+    }
+    return _arr;
+}
+
+function deal(firstsign) {
+    var arr = [],
+        sign = firstsign;
+
+    function getSign() {
+        return sign;
+    }
+
+    function setSign(obj) {
+        var newArr = [];
+        for (var prop in obj) {
+            sign[prop] = obj[prop];
+            //重点在这！！！
+            arr.forEach(function(ele) {
+                newArr = ele(doubleFilter, personArr);
+            });
+        }
+        return newArr;
+    }
+
+    function setHandle(handle) {
+        arr.push(handle);
+    }
+
+    return {
+        getSign: getSign,
+        setSign: setSign,
+        setHandle: setHandle
+    };
+}
+
+var dealWith = deal({
+    _name : '',
+    _sex : 'all'
+});
