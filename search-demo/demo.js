@@ -65,6 +65,7 @@ function bindEvent() {
             // dealWith.setSign({_sex : target.innerText});
             // init(filter(doubleFilter, personArr));
             init(dealWith.setSign({_sex : target.innerText}));
+        
         }
     }, false);
 }
