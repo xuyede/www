@@ -115,11 +115,6 @@ function filterByName(name, arr) {
     return newArr;
 }
 
-var sign = {
-    _name: '',
-    _sex: 'all'
-}
-
 var doubleFilter = {
     _name: filterByName,
     _sex: filterBySex
