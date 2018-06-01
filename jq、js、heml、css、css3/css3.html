@@ -454,7 +454,40 @@
                             -> center/flex-start/flex-end/baseline
             
     -->
+    <!-- 
+            媒体查询 -> 是向不同设备提供不同样式的一种方式，响应式布局
 
+                media type(媒体类型) -> 通过 media type 我们可以对不同的设备指定特定的样式
+                    -> all(所有设备) / screen(彩色电脑设备) / print(文档打印或打印预览模式)
+
+                Media features(媒体特性) 
+                    -> width(渲染区宽度) / device-width(设备宽度)...
+
+                media query -> Media Type(判断条件) + Media features(媒体特性)
+
+                用法：
+                    1)  通过link标签
+                        <link rel="stylesheet" media="screen and (max-width : 410px)" href="demo.css">
+                    
+                    2)  在style标签中使用
+                        <style>
+                            @media (max-width : 600px) {
+                                div{
+                                    ...
+                                }
+                            }
+                        </style>
+
+                    3)  在css中使用 (常用)
+                        @media screen and (max-width : 800px) and (min-width : 600px){
+                            div{
+                                ...
+                            }
+                        }
+                        
+
+
+     -->
 </body>
 
 </html>
