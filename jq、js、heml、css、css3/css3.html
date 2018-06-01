@@ -480,10 +480,15 @@
 
                     3)  在css中使用 (常用)
                         @media screen and (max-width : 800px) and (min-width : 600px){
-                            div{
-                                ...
-                            }
+                            ...
                         }
+                        @media screen and (min-width: 769px), print and (min-width: 6in){
+                            ...
+                        }
+                        @media not screen and (monochrome) {
+                            ...
+                        }
+
                         
 
 
