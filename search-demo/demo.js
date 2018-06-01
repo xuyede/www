@@ -144,11 +144,12 @@ function deal(firstsign) {
         var newArr = [];
         for (var prop in obj) {
             sign[prop] = obj[prop];
-            //重点在这！！！
-            arr.forEach(function(ele) {
-                newArr = ele(doubleFilter, personArr);
-            });
+            
         }
+        //watch this
+        arr.forEach(function(ele) {
+            newArr = ele(doubleFilter, personArr);
+        });
         return newArr;
     }
 
