@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #333;
+        }
+
+        .wrapper {
+            position: relative;
+            height: 400px;
+            width: 600px;
+            margin: 100px auto;
+            perspective: 600px;
+        }
+
+        .box {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 180px;
+            height: 240px;
+            margin: -120px 0 0 -90px;
+            transform-style: preserve-3d;
+            transform: rotateX(-25deg);
+            /* animation: trun 60s linear infinite; */
+        }
+
+        /* @keyframes trun {
+            0% {
+                transform: rotateX(-25deg) rotateY(0deg);
+            }
+            100% {
+                transform: rotateX(-25deg) rotateY(360deg);
+            }
+        } */
+
+        .box>img {
+            position: absolute;
+            box-shadow: 0 0 10px #ddd;
+            left: 0;
+            top: 0;
+            width: 180px;
+            height: 240px;
+            opacity: .9;
+        }
+
+        .box> :nth-child(1) {
+            transform: rotateY(0deg) translateZ(0px);
+        }
+
+        .box> :nth-child(2) {
+            transform: rotateY(0deg) translateZ(0px);
+        }
+
+        .box> :nth-child(3) {
+            transform: rotateY(0deg) translateZ(0px);
+        }
+
+        .box> :nth-child(4) {
+            transform: rotateY(0deg) translateZ(0px);
+        }
+
+        .box> :nth-child(5) {
+            transform: rotateY(0deg) translateZ(0px);
+        }
+
+        .box> :nth-child(6) {
+            transform: rotateY(0deg) translateZ(0px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="box">
+            <img src="./1.jpg" alt="">
+            <img src="./2.jpg" alt="">
+            <img src="./3.jpg" alt="">
+            <img src="./4.jpg" alt="">
+            <img src="./5.jpg" alt="">
+            <img src="./6.jpg" alt="">
+        </div>
+    </div>
+    <script>
+        var aImg = document.getElementsByTagName('img')
+            oDiv = document.getElementsByClassName('box')[0],
+            headTimer = null,
+            moveTimer = null,
+            i = 5;
+
+        headTimer = setInterval(function () {
+            change(aImg[i], i);
+            i--;
+            if (i < 0) {
+                clearInterval(headTimer);
+                setTimeout(function () {
+                    move();
+                }, 1000)
+                console.log('over');
+            }
+        }, 1000);
+
+        function move () {
+            var temp = 0;
+            moveTimer = setInterval(function () {
+                var speed = .5;
+                temp += speed;
+                oDiv.style.transform = 'rotateX(-25deg) rotateY('+ temp +'deg)';
+            }, 40)
+        }
+        
+        function change(dom, count) {
+            
+            if (count !== 0) {
+                var timer = null,
+                    temp = 0,
+                    temp1 = 0;
+                clearInterval(timer);
+                timer = setInterval(function () {
+                    var speed = (count * 60) / 12;
+                    temp += speed;
+                    temp1 += speed * (6 - count);
+                    if (temp1 > 240) {
+                        temp1 = 240;
+                    }
+                    // if (temp > count * 60) {
+                    //     temp = count * 60;
+                    // }
+                    if (temp == count * 60 && temp1 == 240) {
+                        dom.style.transform = 'rotateY(' + (count * 60) + 'deg) translateZ(240px)';
+                        clearInterval(timer);
+                    } else {
+                        dom.style.transform = 'rotateY(' + temp + 'deg) translateZ(' + temp1 + 'px)';
+                    }
+                }, 30);
+
+            } else {
+                var timer = null,
+                    temp = 0;
+                clearInterval(timer);
+
+                timer = setInterval(function () {
+                    var speed = 240 / 10;
+                    temp += speed;
+                    if (temp >= 240) {
+                        dom.style.transform = 'translateZ(240px)';
+                        clearInterval(timer);
+                    } else {
+                        dom.style.transform = 'translateZ(' + temp + 'px)';
+                    }
+                }, 30);
+            }
+
+        }
+    </script>
+</body>
+
+</html>
