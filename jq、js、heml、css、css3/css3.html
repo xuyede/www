@@ -468,7 +468,7 @@
                     -> all(所有设备) / screen(彩色电脑设备) / print(文档打印或打印预览模式)
 
                 Media features(媒体特性) 
-                    -> width(渲染区宽度) / device-width(设备宽度)...
+                    -> width(渲染区宽度) / device-width(手机电脑平板的宽度)...
 
                 media query -> Media Type(判断条件) + Media features(媒体特性)
 
@@ -486,12 +486,15 @@
                         </style>
 
                     3)  在css中使用 (常用)
+                        并列
                         @media screen and (max-width : 800px) and (min-width : 600px){
                             ...
                         }
+                        或
                         @media screen and (min-width: 769px), print and (min-width: 6in){
                             ...
                         }
+                        否（筛选出screen）
                         @media not screen and (monochrome) {
                             ...
                         }
