@@ -274,6 +274,29 @@
 
             5.  transform-origin: a b;  a,b可以为center/top/left/... 50%/100%/... px...
                 -> 中心点默认为元素的x,y轴的50%
+
+
+
+
+            空间动画
+
+            1.  transform-style: flat / preserve-3d  
+            
+                设置在父元素中，设置了transform-style:preserve-3d的元素，就不能防止子元素溢出设置overflow：hidden；否则会导致preserve-3d失效
+
+                flat: 默认，子元素将不保留其 3D 位置
+                preserve-3d : 子元素将保留其 3D 位置
+
+            2.  *景深 -> 父元素加上景深才有3d效果 
+                    1)  perspective：600px;   默认值为none
+                            -> 人眼距离物体距离为600px， 一般景深设置要比物体大
+                    2)  perspective-origin: top/left/....   默认值50% 50%
+            
+            3.  backface-visibility: visible | hidden  默认值：visible
+                    -> 设置在子元素中，在元素运动过程中，能否展示元素的背面
+
+
+
     -->
 
     <!-- 
