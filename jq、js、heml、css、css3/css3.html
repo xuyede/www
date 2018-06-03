@@ -487,6 +487,47 @@
                     5)  flex布局中，子项目margin为auto，则平均分配剩余空间，上下左右平均分
     -->
     <!-- 
+            grid布局/栅格布局 （综合性网站）
+                -> 以相交的水平线和垂直线，将页面规划成网格状，将内容模块按需布置到网格中
+
+                1)  水平线：网格行（row）
+                2)  垂直线：网格列（column）
+                3)  网格：单元格（cell）
+                    -> 双层结构，外层容器，内层子项
+
+                1.  display: grid; -> 父容器激活gird布局机制
+
+                2.  父容器创建grid
+                        ->  行：grid-template-rows: 100px 100px ...;
+                            列：grid-template-columns: 100px 100px ...;
+
+                3.  子项设置位置
+                        number为 行/列 的线坐标
+
+                        ->  行：grid-row-start: number      
+                                grid-row-end: number
+
+                        ->  列：grid-column-start: number   
+                                grid-column-end: number
+
+                4.  如需调整子项大小，在父级的grid-template-rows / grid-template-columns调节
+
+                基本设置：
+                    1)  父容器激活grid机制 -> display: grid; 
+                    2)  父容器创建行列 -> grid-template-rows / grid-template-columns
+                    3)  子项设置位置 -> grid-row-strat / grid-row-end 、grid-column-start / grid-column-end  
+                    4)  调整子项尺寸在父容器的 grid-template-rows / grid-template-columns 中调
+
+            
+            因为grid布局只在较新的浏览器中兼容，所以使用传统float模拟grid布局
+            
+            1)  规划整体布局：判断布局的列数，设置不同列宽样式，具体值px（class）， 注意是不同的具体值
+            2)  用html结构控制布局的行
+            3)  所有布局模块 float
+            4)  给不同的模块加上不同的列宽
+
+     -->            
+    <!-- 
             媒体查询 -> 是向不同设备提供不同样式的一种方式，响应式布局
 
                 media type(媒体类型) -> 通过 media type 我们可以对不同的设备指定特定的样式
