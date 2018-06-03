@@ -219,6 +219,8 @@
                 2)  .detach() -> 将匹配元素集合从DOM中删除,同时保存所有jQuery数据和被移走的元素相关联(事件)
                                 当需要移走一个元素，不久又将该元素插入DOM时，这种方法很有用 
 
+                3)  .empty() -> 从DOM中移除集合中匹配元素的全部元素,慎用
+
             9.元素的添加
                 var oDiv = $('<div class="demo"></div>');
                 $('body').append(oDiv);
@@ -268,12 +270,13 @@
                     .innerHeight(value)/.innerWidth(value)
                         设置元素内部高度/宽度 (包括padding，不包括border)
 
-                2)  .outerHeight()/.outerWidth()  计算元素内部高度/宽度 (可选择性包含margin)
+                2)  .outerHeight()/.outerWidth()  计算元素内部高度/宽度 (包括border， 可选择性包含margin)
                     
                     .outerHeight(boolean) -> boolean为true：高度包括margin  boolean不填/false：高度不包括margin
                     .outerHeight(value) -> 设置高度
                     .outerHeight(function(index, height){}) -> 函数返回值为高度
 
+                3)  .height() / .width() -> 获取、设置元素宽高
             12.事件对象 e   
                 1) 获取鼠标位置
                     e.pageX/e.pageY  -> 相对于文档的位置
@@ -313,7 +316,6 @@
                 .add() -> 创建一个新的jQuery对象 ，元素添加到匹配的元素集合中
                 .slice() -> 根据指定的下标范围，过滤匹配的元素集合，并生成一个新的 jQuery 对象
                     .slice() 一个参数a，则从a到最后，两个参数a，b，则从a开始，到b前
-                .empty() -> 从DOM中移除集合中匹配元素的所有子节点
                 .siblings() 当前元素节点的所有兄弟节点 
                 .prevAll() 当前元素上面的所有兄弟节点
                 .nextAll() 当前元素下面的所有兄弟节点
