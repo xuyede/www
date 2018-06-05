@@ -308,11 +308,11 @@
 
             transition: prop time way delay, prop time way delay, ...
 
-            prop -> transition-property 要过渡的属性
+            prop -> transition-property 要过渡的属性  默认值为all
                 如果多个属性有共同的time way ，可以用 all
-            time -> transition-duration 过渡所花的时间  .5s 1s
-            way  -> transition-timing-function 过渡的方式/函数  linear 匀速 ease 慢快慢  cubic-bezier(n,n,n,n) 0-0
-            delay-> transition-delay 过渡开始或结束的等待时间 .5s 1s
+            time -> transition-duration 过渡所花的时间  .5s 1s  默认值为0
+            way  -> transition-timing-function 过渡的方式/函数  linear 匀速 ease 慢快慢  cubic-bezier(n,n,n,n) 0-0 默认值为ease
+            delay-> transition-delay 过渡开始或结束的等待时间 .5s 1s    默认值为0
 
     -->
 
