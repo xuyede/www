@@ -443,7 +443,8 @@
 
             5.$.parseJSON(str) -> 字符转换成json 要求非常严格 外部是单引号 内部属性是双引号 不需要回车符
 
-            6.$.makeArray() -> 类数组转数组
+            6.$.makeArray() -> 类数组转数组  
+              $.inArray(num, arr) -> indexOf          
 
             7.$.extend() -> 把()里的对象里的函数放到 $ 上
                 ->  插件扩展-提供新的jQuery工具方法,定义在 $.extend()里的函数，可以直接通过 $. 使用
@@ -564,6 +565,30 @@
                         2)  $.when(obj) obj不是延时对象或者promise对象，则会被当成一个为resolve的延时对象，
                                         并立即执行绑定的donecallback，向donecallback传入obj，
         */
+       /*
+            $.ajax({
+                type : 'GET',
+                url : './get.php'，
+                success : function (data) {
+
+                },
+                error : function (data) {
+
+                }
+            })
+                1.type(method)  -> 请求类型'GET'/'POST' （string）
+                2.url   -> 请求路径
+                3.success   -> 请求成功
+                4.error     -> 请求失败
+                5.data  -> 拼接到url后的数据
+                6.cache -> 浏览器是否设置缓存
+                7.crossDomain -> 是否跨域
+
+
+       
+       
+       
+       */
     </script>
 </body>
 
