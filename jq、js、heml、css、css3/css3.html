@@ -555,15 +555,15 @@
 
                     3)  在css中使用 (常用)
                         并列
-                        @media screen and (max-width : 800px) and (min-width : 600px){
+                        @media only screen and (max-width : 800px) and (min-width : 600px){
                             ...
                         }
                         或
                         @media screen and (min-width: 769px), print and (min-width: 6in){
                             ...
                         }
-                        否（筛选出screen）
-                        @media not screen and (monochrome) {
+                        否（针对一整条查询语句 === 非打印状态，才调用media的样式）not一般针对媒体类型
+                        @media not print{
                             ...
                         }
 
