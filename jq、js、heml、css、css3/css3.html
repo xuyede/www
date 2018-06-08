@@ -530,13 +530,15 @@
     <!-- 
             媒体查询 -> 是向不同设备提供不同样式的一种方式，响应式布局
 
-                media type(媒体类型) -> 通过 media type 我们可以对不同的设备指定特定的样式
-                    -> all(所有设备) / screen(彩色电脑设备) / print(文档打印或打印预览模式)
+                media type(媒体类型) -> 通过 media type 我们可以对不同的设备指定特定的样式 默认为all
+                    -> all / print/ screen / speech(语音合成器等发声设备)
 
                 Media features(媒体特性) 
-                    -> width(渲染区宽度) / device-width(手机电脑平板的宽度)...
+                    ->  width(渲染区宽度) / device-width(手机电脑平板的宽度)
+                        (orientation : landscpe(横屏)、portrait(竖屏))
+                        (min-resolution : 2dppx)分辨率
 
-                media query -> Media Type(判断条件) + Media features(媒体特性)
+                @madia 媒体类型 操作符(and/not/only) 媒体特性
 
                 用法：
                     1)  通过link标签
