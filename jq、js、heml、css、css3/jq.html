@@ -444,9 +444,14 @@
             5.$.parseJSON(str) -> 字符转换成json 要求非常严格 外部是单引号 内部属性是双引号 不需要回车符
 
             6.$.makeArray() -> 类数组转数组  
-              $.inArray(num, arr) -> indexOf          
+              $.inArray(num, arr) -> indexOf 
+              
+            7.$.paesrHTML(str) -> 将字符串解析到一个DOM节点的数组中
+                ->  str = "hello, <span>my name is</span> jQuery";
+                    html = $.parseHTML(str);
+                    html -> 一个装着str各个元素类型的数组，[text, span, text]
 
-            7.$.extend() -> 把()里的对象里的函数放到 $ 上
+            8.$.extend() -> 把()里的对象里的函数放到 $ 上
                 ->  插件扩展-提供新的jQuery工具方法,定义在 $.extend()里的函数，可以直接通过 $. 使用
                         1)  $.extend({
                                 aa : function(){
@@ -465,11 +470,11 @@
                 ->  合并对象 $.extend(true, obj1, obj2);  obj2的内容合并到obj1中, true深拷贝
                     合并后不能继续当工具方法使用,除非 $.extend(obj1)
 
-            8.$.fn.extend() -> 把()里的对象里的函数放到 $.fn 上
+            9.$.fn.extend() -> 把()里的对象里的函数放到 $.fn 上
                 -> 插件扩展-提供新的jQuery实例方法，记住是实例(定义在jQuery的原型上的方法)
                     自定义实例方法
 
-            9.$.Callbacks()  -> 一个多用途的回调列表对象，提供了强大的的方式来管理回调函数列表
+            10.$.Callbacks()  -> 一个多用途的回调列表对象，提供了强大的的方式来管理回调函数列表
              
                 ->  var callbacks = $.Callbacks();
                     callbacks.add()   添加回调函数 ：add()里面放入函数或函数集合(对象)
@@ -519,7 +524,7 @@
 
                     5) 参数可以组合一起使用
 
-            10.$.Deferred() -> 延迟对象,相当于有状态的Callbacks()
+            11.$.Deferred() -> 延迟对象,相当于有状态的Callbacks()
                 1)  var dfd = $.Deferred();
                     成功：dfd.resolve() -> dfd.done(function () {})
                     失败：dfd.reject()  -> dfd.fail(function () {})
@@ -557,7 +562,7 @@
                                 obj.hello(name);
                             }).hello('will');
                             
-            11.$.when() 
+            12.$.when() 
                 参数：    
                         1)  $.when(deferred)  参数为一个延迟对象，返回值为该延迟对象的promise对象
                                 *如果传入多个延时对象，则当这些延时对象都为resolve时才会执行donecallback
