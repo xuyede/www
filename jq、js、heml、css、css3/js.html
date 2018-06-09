@@ -1719,7 +1719,8 @@
                         7)$ 以什么结尾      ^asd$ -->代表自己asd
                     7.方法
                         reg.test(str)   --> 检验是否符合匹配规则 true|false
-                        reg.exec(str)  --> lastIndex
+                        reg.exec(str)  
+                            --> 放回一个数组，[满足匹配的str否则为undefined， 第一个子表达式， 第二个子表达式， ...]  如果子表达式不符合，则为undefined
 
                         str.replace()
 
