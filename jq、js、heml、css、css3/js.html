@@ -621,6 +621,41 @@
             var obj = {};
             Person.call(obj, 'will', 22);
                 --> obj = {name : 'will', age : 22};
+
+
+            call原理:
+            Function.prototype.myCall = function (context) {
+                var ctx = context || window,
+                    arg = arguments,
+                    len = arg.length,
+                    args = [];
+                ctx.fn = this;
+                for (var i = 1; i < len; i++) {
+                    args.push('arg[' + i + ']');
+                }
+                var result = eval('ctx.fn(' + args.join(',') + ')');
+                delete ctx.fn;
+                return result;
+            }
+
+            apply原理：
+            Function.prototype.myApply = function (context, arr) {
+                var ctx = context || window,
+                    len = arr && arr.length,
+                    args = [];
+                ctx.fn = this;
+                if (!arr) {
+                    var result = eval('ctx.fn(' + args.join(',') + ')');
+                    return result;
+                } else {
+                    for (var i = 0; i < len; i ++) {
+                        args.push('arr[' + i + ']');
+                    }
+                    var result = eval('ctx.fn(' + args.join(',') + ')');
+                    delete ctx.fn;
+                    return result;
+                }
+            }
         */
 
         /*
