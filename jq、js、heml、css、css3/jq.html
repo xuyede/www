@@ -443,7 +443,9 @@
 
             5.$.parseJSON(str) -> 字符转换成json 要求非常严格 外部是单引号 内部属性是双引号 不需要回车符
 
-            6.$.makeArray() -> 类数组转数组  $.makeArray([], {}), 前合并到后
+            6.$.makeArray(likeArray) -> 类数组转数组  
+                    -> $.makeArray(A, B), A合并到B,并以B的形式返回
+
               $.inArray(num, arr) -> indexOf 
               
             7.$.paesrHTML(str, context, boolean) -> 将字符串解析到一个DOM节点的数组中
