@@ -446,7 +446,9 @@
             6.$.makeArray() -> 类数组转数组  $.makeArray([], {}), 前合并到后
               $.inArray(num, arr) -> indexOf 
               
-            7.$.paesrHTML(str) -> 将字符串解析到一个DOM节点的数组中
+            7.$.paesrHTML(str, context, boolean) -> 将字符串解析到一个DOM节点的数组中
+                        boolean：是否解析script标签
+                        context：DOM的上下文，默认document
                 ->  str = "hello, <span>my name is</span> jQuery";
                     html = $.parseHTML(str);
                     html -> 一个装着str各个元素类型的数组，[text, span, text]
