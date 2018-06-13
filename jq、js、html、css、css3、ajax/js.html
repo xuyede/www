@@ -94,8 +94,91 @@
         // 2: 把形参、 变量声明放进AO对象， 赋值为undefined
         // 3: 实参， 形参值统一
         // 4: 把函数声明放进AO对象， 赋值为函数体
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //      注意-->   如果函数为if的判断语句，则在判断后自动删除，为undefined。
         //                如果在if语句里的函数，函数为表达式，预编译时为undefined，执行到if语句再赋值为函数
+
+        /*
+            var a = 10;
+            if (function c () {}) {
+                function f () {
+                    return typeof c + a;
+                }
+            }
+            function test (a, b) {
+                console.log(a);
+                var a = 20;
+                console.log(d);
+                if (b) {
+                    function d () {
+                        console.log(b() + a);    
+                    };
+                }
+                console.log(d);
+                d();
+            }
+            test(20, f); 
+        */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /*
             var a = 100;
