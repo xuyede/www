@@ -192,6 +192,7 @@
                     var oScript = document.createElement('script');
                     oScript.src = 'demo.php?cb=doJSON';
                     document.head.appendChild(oScript);
+                    document.head.removeChild(oScript);
                     function doJSON(data){
                         console.log(data);
                     }
