@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 
+
+            1. canvas 画布
+                -> <canvas width="500" height="500"></canvas>
+            
+                操作：
+                    1) 获取canvas对象    var oCanvas = ***;    -> 画布
+                    2) 获取canvas上下文  var ctx = oCanvas.getContext('2d');    -> 画笔
+                    3) 设置宽高  oCanvas.width = '500'
+                                oCanvas.height = '500'    
+                                
+                写入文字：ctx.fillText(content, posX, posY)
+                载入背景：ctx.drawImage(img, posX, posY)
+              
+             画布图形的旋转 ->
+                    清屏：ctx.clearRect(startX, startY, width, height) 
+   保存改变canvas前的状态：ctx.save();
+             改变画布原点：ctx.translate(x, y) 默认为0 0
+             绕着原点旋转：ctx.rotate(deg)
+               填充的颜色：ctx.fillStyle = '#f0f0f0' 
+                 填充矩形：ctx.fillRect(startX, startY, width, height) 相对于原点
+    恢复改变canvas前的状态：ctx.restore();
+
+              画笔移动到：ctx.moveTo(x, y)
+   从当前点绘制直线到x, y：ctx.lineTo(x, y)
+                描边大小：ctx.lineWidth = 10
+         闭合路径当前路径：ctx.closePath()
+                    描边：ctx.stroke()
+               开启新路径：ctx.beginPath()
+
+                 
+
+
+     -->
+</body>
+</html>
