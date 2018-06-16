@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        myAjax = {
+            ajax: function (param) {
+                if (param.datatype && param.datatype === 'jsonp') {
+                    //jsonp
+                    var selfHost = window.location.host;
+                    var url = param.url;
+                    var targetHost = url.split('https://')[1].split('/')[0];
+                    //随机的回调函数
+                    var callback = 'jQuery' + new Date().getTime();
+                    var isSameOrigin = true;
+
+                    if (selfHost != targetHost) {
+                        isSameOrigin = false;
+                    }
+                    if (isSameOrigin) {
+                        //不跨域
+                        var xhr = null;
+                        if (window.XMLHttpRequest) {
+                            xhr = new XMLHttpRequest();
+                        } else {
+                            xhr = new ActiveXObject('Microsoft.XMLHttp');
+                        }
+
+                        xhr.open(param.type, param.url + '?' + param.data + '&cb=' + callback, true);
+                        xhr.send();
+
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status === 200) {
+                                    //jQuery2382913({})
+                                    var temp = xhr.responseText.split(callback)[1];
+                                    var result = temp.substring(1, temp.length - 1);
+                                    window[callback] = param.success(result);
+                                } else {
+                                    param.error && param.error();
+                                }
+                            }
+                        }
+                    } else {
+                        //跨域
+                        window[callback] = param.success;
+                        var oSc = document.createElement('script');
+                        oSc.src = param.url + "?" + param.data + '&cb=' + callback;
+                        document.head.appendChild(oSc);
+                        document.head.removeChild(oSc);
+                    }
+                } else {
+                    //ajax
+                    var xhr = null;
+                    if (window.XMLHttpRequest) {
+                        xhr = new XMLHttpRequest();
+                    } else {
+                        xhr = new ActiveXObject('Microsoft.XMLHttp');
+                    }
+
+                    var method = param.type.toUpperCase();
+                    if (method === 'GET') {
+                        var time = new Date().getTime();
+                        xhr.open(method, param.url + '?' + param.data + '&time=' + time, true);
+                        xhr.send();
+                    } else if (method === 'POST') {
+                        xhr.open(method, param.url, true);
+                        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                        xhr.send(param.data);
+                    }
+
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4) {
+                            if (xhr.status === 200) {
+                                if (param.datatype === 'json') {
+                                    param.success(JSON.parse(xhr.responseText));
+                                } else if ('') {
+                                    //其他数据类型
+                                } else {
+                                    param.success(xhr.responseText);
+                                }
+                            } else {
+                                param.error && param.error();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        myAjax.ajax({
+            type: 'GET',
+            url: 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',
+            data: 'wd=nba',
+            datatype: 'jsonp',
+            success: doJSON,
+            error: function () {
+                console.log('error')
+            }
+        })
+
+        function doJSON(data) {
+            console.log(data);
+        }
+
+    </script>
+</body>
+
+</html>
