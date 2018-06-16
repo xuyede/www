@@ -13,11 +13,11 @@
     <script>
         myAjax = {
             ajax: function (param) {
+                var selfHost = window.location.host;
+                var url = param.url;
+                var targetHost = url.split('https://')[1].split('/')[0];
                 if (param.datatype && param.datatype === 'jsonp') {
                     //jsonp
-                    var selfHost = window.location.host;
-                    var url = param.url;
-                    var targetHost = url.split('https://')[1].split('/')[0];
                     //随机的回调函数
                     var callback = 'jQuery' + new Date().getTime();
                     var isSameOrigin = true;
@@ -58,6 +58,13 @@
                         document.head.removeChild(oSc);
                     }
                 } else {
+                    if (selfHost != targetHost) {
+                        var error = param.error || function () {
+                            console.log('error, ajax can not cross-domain');
+                        };
+                        error();
+                        return;
+                    }
                     //ajax
                     var xhr = null;
                     if (window.XMLHttpRequest) {
@@ -100,11 +107,11 @@
             type: 'GET',
             url: 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',
             data: 'wd=nba',
-            datatype: 'jsonp',
+            datatype: 'json',
             success: doJSON,
-            error: function () {
-                console.log('error')
-            }
+            // error : function () {
+            //     console.log('error')
+            // }
         })
 
         function doJSON(data) {
