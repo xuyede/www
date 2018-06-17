@@ -34,9 +34,11 @@
    从当前点绘制直线到x, y：ctx.lineTo(x, y)
                 描边大小：ctx.lineWidth = 10
          闭合路径当前路径：ctx.closePath()
-                    描边：ctx.stroke()
+                    描边：ctx.stroke()      -> .stroke()和.fill()作用域当前路径
+                    填充：ctx.fill()
                开启新路径：ctx.beginPath()
-
+                   画矩形：ctx.rect(startX, startY, width, height)  -> 配合.fill()或.stroke()
+                    矩形：.fillRect()/.strokeRect()  -> 单独开启子路径
                  
 
 
