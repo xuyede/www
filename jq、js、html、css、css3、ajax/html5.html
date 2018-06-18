@@ -10,7 +10,7 @@
     <!-- 
 
             1. canvas 画布
-                -> <canvas width="500" height="500"></canvas>
+                -> 放大会失帧
             
                 操作：
                     1) 获取canvas对象    var oCanvas = ***;    -> 画布
@@ -48,8 +48,22 @@
                          ctx.fillRect(0, 0, oCanvasW, oCanvasH);
 
                          -> 45deg,#6fc7b5 0%,#13bdce, 20%,#0094d9 40%, #5a3694 60%, #ee4d74 80%, #f58c58 100%
-              
-
      -->
+     <!-- 
+
+            2.SVG 可缩放矢量图形 (标签 -> css操作)
+                -> 放大不失帧
+
+                所有标签都要放到<svg></svg>里
+
+                直线
+                    -> <line x1='' y1='' x2='' y2=''></line>
+                矩形
+                    -> <rect x='' y='' width='' height='' rx='' ry=''></rect>
+                圆形
+                    -> <circle r='' cx='' cy=''></circle>
+                椭圆
+                    -> <ellipse rx='' ry='' cx='' cy=''></ellipse>
+      -->
 </body>
 </html>
