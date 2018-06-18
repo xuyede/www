@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas></canvas>
+    <script src="requestAnimationFrame.js"></script>
+    <script>
+        var oCanvas = document.getElementsByTagName('canvas')[0];
+        var ctx = oCanvas.getContext('2d');
+        oCanvas.width = '500';
+        oCanvas.height = '500';
+        oCanvas.style.border = '1px solid black';
+        ctx.fillStyle = 'plum';
+        ctx.fillRect(200, 0, 100, 100)
+        var clearW = oCanvas.width,
+            clearH = oCanvas.height;
+        var init = {
+            posY: 0,
+            active: function () {
+                var self = this;
+                this.posY += 10;
+                var timer = requestAnimationFrame(function () {
+                    ctx.clearRect(0, 0, clearW, clearH);
+                    this.drawRect(this.posY);
+                    if (this.posY < 350) {
+                        requestAnimationFrame(this.active.bind(this));
+                    } else {
+                        cancelAnimationFrame(timer)
+                    }
+                }.bind(self))
+            },
+            drawRect: function (posY) {
+                ctx.fillStyle = 'plum';
+                ctx.fillRect(200, posY, 100, 100);
+            }
+        }
+        requestAnimationFrame(init.active.bind(init));
+    </script>
+</body>
+
+</html>
