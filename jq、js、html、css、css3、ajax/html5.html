@@ -22,7 +22,7 @@
              画布图形的旋转 ->
                     清屏：ctx.clearRect(startX, startY, width, height) 
    保存改变canvas前的状态：ctx.save();
-             改变画布原点：ctx.translate(x, y) 默认为0 0
+         改变画布原点位置：ctx.translate(x, y) 默认为0 0
              绕着原点旋转：ctx.rotate(deg)
                填充的颜色：ctx.fillStyle = '#f0f0f0' 
                  填充矩形：ctx.fillRect(startX, startY, width, height) 相对于原点
@@ -42,6 +42,12 @@
                 直角弧形：ctx.arcTo(startX, startY, endX, endY, r) -> 起点和终点在同一x/y上
               填充背景图：ctx.drawImage(image, clipX, clipY, clipW, clipH, X, Y, W, H)  -> 不裁剪的话不用写clip*参数
                 写入文字：ctx.fillText(content, posX, posY)
+            渐变背景颜色：var bg = ctx.createLinearGradient(startX, startY, endX, endY);
+                         bg.addColorStop(%, color);
+                         ctx.fillStyle = bg;
+                         ctx.fillRect(0, 0, oCanvasW, oCanvasH);
+
+                         -> 45deg,#6fc7b5 0%,#13bdce, 20%,#0094d9 40%, #5a3694 60%, #ee4d74 80%, #f58c58 100%
               
 
      -->
