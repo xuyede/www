@@ -18,8 +18,6 @@
                     3) 设置宽高  oCanvas.width = '500'
                                 oCanvas.height = '500'    
                                 
-                写入文字：ctx.fillText(content, posX, posY)
-                载入背景：ctx.drawImage(img, posX, posY)
               
              画布图形的旋转 ->
                     清屏：ctx.clearRect(startX, startY, width, height) 
@@ -38,9 +36,13 @@
                     填充：ctx.fill()
                开启新路径：ctx.beginPath()
                    画矩形：ctx.rect(startX, startY, width, height)  -> 配合.fill()或.stroke()
-                    矩形：.fillRect()/.strokeRect()  -> 单独开启子路径
-                 
-
+                    矩形：ctx.fillRect()/.strokeRect()  -> 单独开启子路径
+                    弧形：ctx.arc(x, y, r, 起始角, 结束角：2*Math.PI, 方向：false顺/true逆)
+                        -> 一个圆，顺/逆时针， 右 0/2*Math.PI， 下 0.5*Math.PI， 左 1*Math.PI， 上 1.5*Math.PI
+                直角弧形：ctx.arcTo(startX, startY, endX, endY, r) -> 起点和终点在同一x/y上
+              填充背景图：ctx.drawImage(image, clipX, clipY, clipW, clipH, X, Y, W, H)  -> 不裁剪的话不用写clip*参数
+                写入文字：ctx.fillText(content, posX, posY)
+              
 
      -->
 </body>
