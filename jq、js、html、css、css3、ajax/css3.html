@@ -409,6 +409,14 @@
             
             默认带有margin的标签： body h* p ul dl ol dd
 
+            margin：双飞翼布局
+            1. 中，左，右三部分全部左浮动,左右固定宽高，中间自适应
+            2. 中间部分只作为外壳，里面嵌套一层结构作为操作主体
+            3. 左 -> margin-left：-100%
+            4. 右 -> margin-left: -selfWidth
+            5. 中 -> width:100%
+            6. 中里面的 -> margin：0 left/right.width;
+
      -->
     <!-- 
 
