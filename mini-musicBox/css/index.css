@@ -1,0 +1,145 @@
+body{
+    background-color: #333;
+}
+.player{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.player .player_nva{
+    width: 400px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 25px;
+    background-color: #fff;
+    border-radius: 20px;
+}
+.player .player_nva .player_cd{
+    position: absolute;
+    left: 30px;
+    top: -50px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    transition: .2s ease-in-out;
+}
+.player_cd div{
+    display: none;
+}
+.player_cd .song_active{
+    display: block;
+}
+.player .player_nva.play .player_cd{
+    transform: scale(1.15);    
+}
+@keyframes move{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+.player_nva .player_cd::before{
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f0f0f0;
+    border-radius: 50%;
+}
+.player_nva.play .player_cd::after{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 0 30px 28px -10px rgba(0,0,0,.4);
+    border-radius: 50%;
+}
+.player .player_nva .player_control{
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    margin-top: -10px;
+}
+.player_nva .player_control div{
+    position: relative;
+    width: 60px;
+    height: 60px;
+    margin: 10px;
+    border-radius: 8px;
+    transition: .2s ease-in-out;
+}
+.player_nva .player_control div:hover{
+    background-color: #D7DCE2;
+}
+.player_nva .player_control div:hover .icon{
+    fill:#fff;
+}
+.icon.pause, .icon.play{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+}
+.player_control .player_prev svg{
+    transform: rotate(180deg);
+}
+.player_nva.play .player_control .icon.pause{
+    display: block;
+}
+.player_nva.play .player_control .icon.play{
+    display: none;
+}
+.icon.pause{
+    display: none;
+}
+.icon{
+    width: 2em;
+    height: 2em;
+    font-size: 30px;
+    fill: #D7DCE2;
+    cursor: pointer;
+}
+.player .player_musicTime{
+    position: absolute;
+    height: 5px;
+    width: 250px;
+    bottom: 15px;
+    right: 40px;
+    border-radius: 5px;
+    background-color: rgb(212, 212, 212);
+    overflow: hidden;
+}
+.player .player_musicTime .player_time{
+    height: 100%;
+    width: 0%;
+    background-color: rgb(232, 60, 60);
+}
+.player .player_songInf{
+    position: absolute;
+    height: 100%;
+    width: 90%;
+    left: 5%;
+    top: 0%;
+    z-index: -1;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: rgb(124, 178, 243);
+    text-align: center;
+}
+.player .player_songInf p{
+    color: #333;
+    margin: 5px;
+
+}
+
