@@ -91,7 +91,10 @@
                             A = elliptical Arc
                             Z = closepath
                             大写字母为绝对路径，小写字母为相对路径
-            
+
+                            A -> 圆弧(两个椭圆的交点为起始点的4条圆弧)
+                                A rx ry 旋转(*deg):不旋转(0) 大圆弧(1):小圆弧(0) 顺时针(1):逆时针(0) endX endY  
+                                
                 stroke 
                     ->  1. stroke : 描边颜色(none/color/currentColor:父级颜色)
                         2. stroke-width : 描边线条宽度
@@ -105,7 +108,8 @@
                 viewBox="0, 0, xRatio, yRatio"
                     -> 当svg加上该属性后，svg里面的元素的单位变为
                                 svg宽、高(哪个小选哪个) / xRatio、yRatio(哪个大选哪个)
-                preserveAspectRatio="xMidYMid meet";
+                
+                preserveAspectRatio="xMidYMid meet"
                     Mid 居中 Min 左 Max 右
                     meet slice
 
