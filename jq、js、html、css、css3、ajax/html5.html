@@ -99,6 +99,23 @@
                         4. stroke-linejoin : 描边转角的表现方式(miter/round/bevel)
                         5. stroke-dasharray： 10px;     按数值切分
                         6. stroke-dashoffset: 20px;     移动数值距离，正数为左运动，负数为右运动
+                        7. getTotalLength() : 获取路径总长度 -> path标签
+                        8. getPointAtLength(x) : 获取路径上距离起始点x长度的点的坐标 -> path标签
+
+                viewBox="0, 0, xRatio, yRatio"
+                    -> 当svg加上该属性后，svg里面的元素的单位变为
+                                svg宽、高(哪个小选哪个) / xRatio、yRatio(哪个大选哪个)
+                preserveAspectRatio="xMidYMid meet";
+                    Mid 居中 Min 左 Max 右
+                    meet slice
+
+                js生成svg标签
+                    -> 
+                        svg为xml的标签，js动态生成是需要命名空间
+                            -> var char = 'http://www.w3.org/2000/svg';
+
+                        创建： var svg = document.createElementNS(char, 'svg');
+                        属性用 setAttribute 设置
 
       -->
 </body>
