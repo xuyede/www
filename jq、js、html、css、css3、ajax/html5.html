@@ -122,5 +122,21 @@
                         属性用 setAttribute 设置
 
       -->
+      <!-- 
+            优化动画 ： requestAnimationFrame() -> 改变里面的this用bind方法
+
+            1000ms / 60fps -> 16 ms/fps
+
+            var timer = requestAnimationFrame(function () {
+                ...
+            });
+            if (...) {
+                cancelAnimationFrame(timer);
+            }
+
+            兼容性，引用 requestAnimationFrame.js 文件 (低版本浏览器使用setTimeout兼容) 
+
+
+       -->
 </body>
 </html>
