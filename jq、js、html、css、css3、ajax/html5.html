@@ -159,5 +159,27 @@
 
                 详细看网络部分知识
         -->
+        <!-- 
+
+            历史记录
+                1.history.back()
+                2.history.forward()
+                3.history.go(n)
+
+                添加/替换时不会刷新页面,所以一般用来传标识(?one ...),适用于单页面切换
+                history.pushState(state, title, url); -> 添加一条历史记录
+                history.replaceState(state, title, url); -> 替换当前的历史记录
+
+                state
+                    -> 一个与指定网址相关的状态对象，popstate事件触发时，该对象会传入回调函数中
+                       如果不需要这个对象，此处可以填null
+                title
+                    -> 新页面的标题，但是所有浏览器目前都忽略这个值，因此这里可以填null 
+                url
+                    -> 新的网址，必须与当前页面处在同一个域。浏览器的地址栏将显示这个网址
+
+
+             
+         -->
 </body>
 </html>
