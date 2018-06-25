@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 
+
+        内置对象 Object 的常用方法
+
+        1. Object.create(obj) -> 创建一个新对象，使用obj为新对象的__proto__ (obj可为null)
+
+        2. Object.assign(target, sources ...) -> 将所有可枚举属性的值从一个或多个源对象复制(不可枚举和继承属性不能)到目标对象，返回目标对象
+            -> 如果需要深拷贝，则
+                        var result = Object.assign(target, sources ...)
+                        JSON.parse(JSON.stringify(result));
+
+        3. Object.defineProperty(obj, prop, descriptor) -> 直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象
+            -> descriptor 属性描述符
+                {
+                    value : prop要修改的值,
+                    enumerable : prop是否可枚举(true/false),
+                    configurable : prop是否可删除(true/false),  -> 这三个默认为false
+                    writable : prop是否可更改值(true/false),
+                }
+
+        4. Object.entries(obj) -> 把对象转化为数组 [[key,value], ...]，返回数组
+        
+
+
+        5. Object.freeze(obj) -> 冰洁该对象，视为不可拓展的对象，啥都不能做，返回冻结对象
+           Object.isFrozen(obj) -> 判断是否被冻结
+
+        6. Object.preventExtensions(obj) -> 使该对象变为不可拓展的对象
+           Object.isExtensible(obj) -> 判断是否为可拓展的对象
+                
+        7. Object.seal(obj) -> 封闭该对象，视为不可拓展的对象，但可以改变现有的属性
+           Object.isSealed(obj) -> 判断是否为封闭函数
+
+
+
+        8. Object.keys(obj) -> 返回一个含有该对象的可枚举的属性的字符串数组
+            -> var obj = {"name" : "sunday", "age" : 18}
+               Object.keys(obj) -> ["name", "age"]
+
+        9. Object.values(obj) -> 返回一个含有该对象的可枚举的属性的值得字符串数组
+       
+        10. Object.prototype.hasOwnProperty(prop) -> 枚举对象时过滤原型链上的属性
+
+        11. Object.prototype.isPrototypeOf(obj) -> 一个对象是否存在于另一个对象的原型链上
+            -> 检查 baz 对象是否继承自 Foo.prototype
+                if (Foo.prototype.isPrototypeOf(baz)) {
+                     // do something safe
+                }   
+ 
+    -->
+</body>
+</html>
