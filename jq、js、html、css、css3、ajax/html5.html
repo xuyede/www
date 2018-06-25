@@ -186,5 +186,38 @@
                                
                     hashchange : 当页面hash值(#..)改变时触发，常用于构建单页面应用
          -->
+         <!-- 
+
+            异步 worker -> 受同源策略限制,不能获取document、window，所以无法处理dom，只能处理数据
+
+                开始一个worker
+                    -> var worker = new Worker('./worker.js');
+
+                结束一个worker
+                    -> 
+                        close() 在worker.js中调用(工人自己不干了) 
+                        terminate() 在主线程中调用(老板炒了你) -> 推荐用这个,由主线程控制链接
+                    
+                    1) 主线程
+                        var worker = new Worker('./worker.js');
+                        -> 接收数据
+                        worker.addEventListener('message', function (e) {
+                            deal(e.data);
+                            // 结束worker
+                            worker.terminate();
+                        });
+                        -> 发送数据
+                        worker.postMessage(data);
+                        function deal (data) {}
+
+                    2) worker.js
+                        -> 接收数据
+                        addEventListener('message', function (e) {
+                            var result = deal(e.data);
+                            postMessage(result);
+                        });
+                        function deal (data) {}
+                        
+          -->
 </body>
 </html>
