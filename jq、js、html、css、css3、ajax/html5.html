@@ -179,7 +179,12 @@
                     -> 新的网址，必须与当前页面处在同一个域。浏览器的地址栏将显示这个网址
 
 
-             
+                事件：
+                    popstate : 历史记录发生改变时触发(pushState和replaceState的state会传到回调函数中)
+                               但pushState和replaceState不会触发
+                               可配合ajax切换历史记录显示
+                               
+                    hashchange : 当页面hash值(#..)改变时触发，常用于构建单页面应用
          -->
 </body>
 </html>
