@@ -219,5 +219,62 @@
                         function deal (data) {}
                         
           -->
+
+          <!-- 
+                位置信息
+                    -> window.navigator.geolocation
+
+                    1. .getCurrentPosition(success, error, options) => 获取当前位置信息
+                        -> 
+                            success 成功的回调
+                            error 失败的回调
+                            options 参数
+
+                            成功时返回Geoposition对象，包含
+                              ->
+                              coords对象
+                                latitude 纬度
+                                longitude 经度
+                                altitude 海拔
+                                accuracy 定位精准度，单位m
+                                altitudeAccuracy 海拔精准度，单位m
+                                heading 方向
+                                speed 速度
+                            
+                            失败时返回PositionError对象，包含
+                              ->
+                                code
+                                message 错误信息
+                                用户拒绝 code = 1
+                                获取不到 code = 2
+                                连接超时 code = 3
+
+                            options
+                              ->
+                                enableHighAccuracy 是否需要高精度位置默认false
+                                timeout 单位ms 请求超时时间 默认infinity
+                                maximumAge 单位ms，默认0 设置多少则该时间段内不更新地理信息
+
+                    2.  .watchPosition(success, error, options) => 监视位置变化,地理位置发生变化时，自动调用
+                        clearWatch() => 清除位置监听
+
+                        与计数器启动/关闭相似
+                            var pos = window.navigator.geolocation.watchPosition(*, *, *);
+                                //do something
+                            clearWatch(time);
+
+                监听加速度定位
+                    devicemotion
+
+                    window.addEventListener('devicemotion', function (event) {
+                        console.log(event);
+                    })
+                    event ->
+                        1. accelerationIncludingGravity 重力加速度,z轴方向加了9.8,在x,y方向上的值两者相同
+                        2. acceleration 重力加速度     需要陀螺仪
+                        3. rotationRate(alpha, beta, gamma) 旋转速率
+                        4. interval 获取的时间间隔
+
+           -->  
 </body>
 </html>
