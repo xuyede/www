@@ -245,6 +245,7 @@
                               ->
                                 code
                                 message 错误信息
+
                                 用户拒绝 code = 1
                                 获取不到 code = 2
                                 连接超时 code = 3
@@ -263,7 +264,8 @@
                                 //do something
                             clearWatch(time);
 
-                监听加速度定位
+
+                监听加速度变化
                     devicemotion
 
                     window.addEventListener('devicemotion', function (event) {
@@ -275,6 +277,80 @@
                         3. rotationRate(alpha, beta, gamma) 旋转速率
                         4. interval 获取的时间间隔
 
+
+                    微信摇一摇原理：
+                    ->  1. 监听加速度变化，获取重力加速度
+                        2. 添加时间戳，节约性能，判断时间差大于300才为摇，否则默认为手抖，时间改变
+                        3. 获取当前重力加速度的方向值
+                        4. 求速度 (var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000) -> 测试出来的
+                        5. 与实验速度比较，大于实验速度才认为是摇了，否则为手抖，xyz改变
+
+                        var SHAKE_THRESHOLD = 800;
+                        var last_update = 0;
+                        var x, y, z, last_x = 0, last_y = 0, last_z = 0;
+                        function deviceMotionHeadler(eventData) {
+                            var acceleration = eventData.accelerationIncludingGravity;
+                            var curTime = new Date().getTime();
+                            if ((curTime - last_update) > 300) {
+                                var diffTime = curTime - last_update;
+                                last_update = curTime;
+                                x = acceleration.x;
+                                y = acceleration.y;
+                                z = acceleration.z;
+
+                                var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                                if (speed > SHAKE_THRESHOLD) {
+                                    alert('shaked~!');
+                                    var div = document.createElement('div');
+                                    div.innerText = '11';
+                                    document.body.appendChild(div);
+                                }
+                                last_x = x;
+                                last_y = y;
+                                last_z = z;
+                            }
+                        }
+                        window.addEventListener('devicemotion', deviceMotionHeadler, false);
+
+
+                监听设备在方向上的变化
+                    deviceorientation
+
+                    window.addEventListener('deviceorientation', function (event) {
+                        console.log(event);
+                    })    
+
+                    event -> 
+                    1.alpha 表示设备沿z轴上的旋转角度，范围为0~360      -> 手机放桌面，屏幕面向的方向为z轴
+                    2.beta 表示设备在x轴上的旋转角度，范围为-180~180,它描述的是设备由前向后旋转的情况       -> 手机放桌面，窄边为x轴
+                    3.gamma 表示设备在y轴上的旋转角度，范围为-90~90,它描述的是设备由左向右旋转的情况        -> 手机放桌面，宽边为y轴
+                    4、webkitCompassHeading：与正北方向的角度差值。正北为0度，正东为90度，正南为180度，正西为270度。因为0度是正北，所以叫指北针
+                    5、webkitCompassAccuracy：指北针的精确度，表示偏差为正负多少度。一般是10。
+
+
            -->  
+           <!-- 
+                    多媒体（好玩的东西）
+
+                        1.audio -> 音频
+                        2.video -> 视频
+
+                            -> 一些通用的属性
+                                controls : 显示控件
+                                autoplay : 自动播放
+                                preload : none 不加载/ metadata 加载原数据/ auto 浏览器自己加载适应的数据 -> 一般为auto或者不写这属性
+                                    preload="auto"
+
+                                loop : 循环播放
+                                poster : 视频不可用时，使用图片替代(video独有)，一般截取视频的第一帧作为poster的引入
+                                    poster="./img.jpg"
+
+                            -> 多类型资源 兼容多种资源类型
+                                <audio id="music">  
+                                    <source src="成都.mp3" type="audio/mpeg">
+                                    <source src="成都.ogg" type='audio/ogg"'>
+                                </audio>
+
+            -->
 </body>
 </html>
