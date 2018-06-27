@@ -351,6 +351,20 @@
                                     <source src="成都.ogg" type='audio/ogg"'>
                                 </audio>
 
+                        *脚本操作
+                            var audio = new Audio('./....'); -> 没有 new Video()
+                            var video = document.createElement('video');
+                            video.setAttribute('src', './....');
+
+                            currentSrc -> 音频文件的地址 -> 异步加载，window.onload
+
+                            方法：
+                                play()
+                                pause()
+                                load() -> 重新加载
+                                volume -> 声音大小，[0-1]
+                                muted -> 是否静音 true/false
+
             -->
 </body>
 </html>
