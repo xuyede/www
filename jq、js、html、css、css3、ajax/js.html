@@ -1909,7 +1909,7 @@
                     var timer = null;
                     return function(){
                         var self = this,
-                            arg = arguments;
+                            arg = arguments; //事件对象
                         clearTimeout(timer);
                         timer = setTimeout(function(){
                             handle.apply(self, arg);
