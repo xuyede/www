@@ -392,8 +392,7 @@
                                 5) timeupdate -> 播放时触发
             -->
             <!-- 
-                    drag / drop
-
+                    drag
                     1. drag元素 
                         -> 启动 ：添加属性draggable="true"
                         -> 事件 ：
@@ -409,6 +408,37 @@
                                     -> e.dataTransfer.setData('', '');
                            取值 ：在drop事件中
                                     -> e.dataTransfer.getData('');                        
+
+                        -> 拖拽文件上传
+                                1. drop事件要取消默认事件，防止浏览器自动以链接形式打开
+                                2. 拖拽文件信息在 e.dataTransfer.files 中储存
+                                3. 先经过文件读取，再通过ajax上传
+
+                    
+                    FileReader
+                        -> 用于读取文件
+
+                        var reader = new FileReader();
+
+                        -> 方法：
+                            1.  reader.abort() 终止读取
+                            2.  reader.readAsBinaryString(file) 将文件读取为二进制编码
+                            3.  reader.readAsDataURL(file) 将文件读取为DataURL编码
+                            4.  reader.readAsText(file, [encoding]) 将文件读取为文本
+                            5.  reader.readAsArrayBuffer(file)​​​​​​​ 将文件读取为arraybuffer
+
+                        -> 事件：
+                            1.  onloadstart 读取开始时触发
+                           *2.  onprogress 读取中
+                            3.  onloadend 读取完成触发，无论成功或失败
+                           *4.  onload 文件读取成功完成时触发
+                            5.  onabort 中断时触发
+                            6.  onerror 出错时触发
+
+                        -> 读取的结果
+                            fr.onload = function () {
+                                this.result;
+                            }
 
              -->
 </body>
