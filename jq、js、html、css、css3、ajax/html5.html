@@ -394,16 +394,21 @@
             <!-- 
                     drag / drop
 
-                    1. drag 
+                    1. drag元素 
                         -> 启动 ：添加属性draggable="true"
                         -> 事件 ：
-                                    dragstart -> 拖拽元素，开始拖拽时触发
+                                    dragstart -> 拖拽元素，开始拖拽时触发       -> 该阶段一般传值
                                     dragend -> 拖拽元素，拖拽完成时触发
 
                                     dragenter -> 拖拽元素进入目标元素时触发       -> 鼠标进入
-                                    dragover -> 拖拽元素在目标元素中移动时触发
+                                    dragover -> 拖拽元素在目标元素中移动时触发    -> 一般用于取消dragover默认事件，配合drop
                                     
-                                    drop -> 拖拽元素在目标元素中松开鼠标时触发(dragover取消默认事件才能触发)
+                                    drop -> 拖拽元素在目标元素中松开鼠标时触发(dragover取消默认事件才能触发)    -> 该阶段可以取值做出相应的操作
+                        
+                        -> 传值 ：在dragstart事件中
+                                    -> e.dataTransfer.setData('', '');
+                           取值 ：在drop事件中
+                                    -> e.dataTransfer.getData('');                        
 
              -->
 </body>
