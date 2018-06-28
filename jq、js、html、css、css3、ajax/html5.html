@@ -205,7 +205,7 @@
                             deal(e.data);
                             // 结束worker
                             worker.terminate();
-                        });
+                        }, false);
                         -> 发送数据
                         worker.postMessage(data);
                         function deal (data) {}
@@ -215,7 +215,7 @@
                         addEventListener('message', function (e) {
                             var result = deal(e.data);
                             postMessage(result);
-                        });
+                        }, false);
                         function deal (data) {}
                         
           -->
@@ -391,5 +391,20 @@
                                 4) ended -> 播放结束时触发
                                 5) timeupdate -> 播放时触发
             -->
+            <!-- 
+                    drag / drop
+
+                    1. drag 
+                        -> 启动 ：添加属性draggable="true"
+                        -> 事件 ：
+                                    dragstart -> 拖拽元素，开始拖拽时触发
+                                    dragend -> 拖拽元素，拖拽完成时触发
+
+                                    dragenter -> 拖拽元素进入目标元素时触发       -> 鼠标进入
+                                    dragover -> 拖拽元素在目标元素中移动时触发
+                                    
+                                    drop -> 拖拽元素在目标元素中松开鼠标时触发(dragover取消默认事件才能触发)
+
+             -->
 </body>
 </html>
