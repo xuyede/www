@@ -361,7 +361,7 @@
                             方法：
                                 1) play()
                                 2) pause()
-                                3) load() -> 重新加载
+                                3) load() -> 重新加载 配合autoplay使用
                                 4) volume -> 声音大小，[0-1]
                                 5) muted -> 是否静音 true/false
                                 6) playbackRate -> 播放速率
@@ -382,6 +382,14 @@
                                         -> Math.floor(audio.buffered.end(0) / audio.duration * len) 缓冲进度，len为总长度 
                                 
                                 10) paused -> true为暂停，false为播放
+                                    ended -> 为true时表示播放完
+
+                            事件：
+                                1) play -> 开始播放时触发
+                                2) pause -> 暂停播放时触发
+                                3) loadedmetadata -> 获取完元数据时触发
+                                4) ended -> 播放结束时触发
+                                5) timeupdate -> 播放时触发
             -->
 </body>
 </html>
