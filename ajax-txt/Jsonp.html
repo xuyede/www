@@ -18,6 +18,7 @@
                     agreement = url.split('://')[0],
                     targetHost;
 
+                // 兼容http、https
                 if (agreement === 'https') {
                     targetHost = url.split('https://')[1].split('/')[0];
                 } else {
@@ -56,11 +57,12 @@
                         xhr.onreadystatechange = function () {
                             if (xhr.readyState === 4) {
                                 if (xhr.status === 200) {
-                                    // jQuery273651({})
+                                    // jQuery273651({}) -> 拆分
                                     var temp = xhr.responseText.split(callback)[1];
                                     var result = temp.substring(1, temp.length - 1);
                                     window[callback] = param.success(result);
                                 } else {
+                                    // 获取失败
                                     var error = param.error || function () {
                                         console.log('jsonp error(not cross domain)');
                                     }
@@ -73,6 +75,7 @@
                 } else {
                     // ajax
                     if (selfHost !== targetHost) {
+                        // 跨域不可用
                         var error = param.error || function () {
                             console.log('Ajax can not cross domain');
                         }
@@ -92,11 +95,11 @@
                                 var datatype = param.datatype;
 
                                 if (datatype) {
-                                    // 有datatype属性
+                                    // 希望放回的数据类型
                                     if (datatype === 'json') {
                                         param.success && param.success(JSON.parse(xhr.responseText));
                                     } else {
-                                        //其他属性
+                                        //其他属性 -> html ...
                                     }
                                 } else {
                                     // 直接输出
