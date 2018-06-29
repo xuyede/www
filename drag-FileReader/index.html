@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="box">把文件拖拽到此处</div>
+        <div class="progress-bar">
+            <div class="bar"></div>
+        </div>
+        <span class="percent-num">0%</span>
+        <div class="close">中断上传</div>
+    </div>
+    <script src="./js/ajax.js"></script>
+    <script src="./js/fileRead.js"></script>
+    <script>
+        var oBox = document.getElementsByClassName('box')[0],
+            oBar = document.getElementsByClassName('bar')[0],
+            oPercentNum = document.getElementsByClassName('percent-num')[0],
+            oClose = document.getElementsByClassName('close')[0],
+            totalWidth = document.getElementsByClassName('progress-bar')[0].offsetWidth;
+
+        var events = {
+            // 上传完成
+            load : function (data) {
+               //ajax
+            },
+            // 上传中
+            progress : function (percent) {
+                oBar.style.width = Math.floor(percent) / 100 * totalWidth + 'px';
+                oPercentNum.innerHTML = Math.round(percent) + '%';
+            },
+            // 全部上传完成
+            success : function () {
+                console.log('上传文件成功');
+            }
+        };
+
+        oBox.addEventListener('dragover', function (e) {
+            e.preventDefault();
+        }, false);
+        var upload;
+        oBox.addEventListener('drop', function (e) {
+            e.preventDefault();
+            var file = e.dataTransfer.files[0];
+            upload = new UploadFile(file, events);
+        }, false);
+
+        oClose.addEventListener('click', function () {
+            upload.abort();
+            console.log('终止上传');
+        }, false);
+    </script>
+</body>
+
+</html>

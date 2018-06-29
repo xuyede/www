@@ -419,7 +419,7 @@
                         -> 用于读取文件
 
                         var reader = new FileReader();
-
+                        var file = e.dataTransfer.file
                         -> 方法：
                             1.  reader.abort() 终止读取
                             2.  reader.readAsBinaryString(file) 将文件读取为二进制编码
