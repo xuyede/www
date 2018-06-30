@@ -8,10 +8,76 @@
 </head>
 <body>
     <!-- 
+            前端模块化
+                1.模块化实现
+                    1) 函数
+                        function add (a, b) {
+                            return a + b;
+                        }
+                        function show () {
+                            console.log(add());
+                        }
 
+                            -> 一个函数一个功能，只能用于练习。。。
 
+                    2) 对象
+                        var ppt = {
+                            len : 4,
+                            init : function () {
+                                this.show();
+                            },
+                            show : function () {
+                                console.log(this.len);
+                            }
+                        }
+                        ppt.init();
 
-        
+                            -> 有一个相对独立的作用域，但是，在外部可以改变里面的变量(ppt.len = 5)，不安全啊。。。
+                    
+                    3) 立即执行函数 + 返回对象
+                        var way = (function () {
+                            var len = 4;
+                            function show () {
+                                console.log(len);
+                            }
+                            return {
+                                show : show
+                            };
+                        } ())
+                        way.show();
+
+                            -> 有独立的作用域，可以暴露指定接口
+
+                    4) 立即执行函数 + 依赖传入实参(jQuery)
+                        (function (a, b) {
+                            b(a);
+                        })(window, function (window) {
+                            function jQuery () {
+
+                            }
+                            window.$ = window.jQuery = jQuery;
+                        })
+
+                        对一个大模块的功能添加(module为已有的功能模块)
+                        module = (function (param) {
+                            param.add = function (a, b) {
+                                return a + b;
+                            }
+                            return param;
+                        } (window.module || {}))
+
+                            -> 有独立的作用域，可以把接口暴露给指定对象
+                
+                2.更好的模块化规范
+                    -> 将属性或行为类似的内容放在同一个js文件中，把这个js文件称为模块
+                       一个js文件就是一个模块，其内部定义的变量是属于这个模块的，不会
+                       对外暴露，也就是说不污染全局变量
+
+                    1) 独立
+                    2) 完整
+                    3) 依赖关系
+                       
+                    CommonJs规范
      -->
 </body>
 </html>
