@@ -77,7 +77,74 @@
                     2) 完整
                     3) 依赖关系
                        
-                    CommonJs规范
+                    CommonJs模块规范 -> 同步加载，适用于服务端
+                    AMD模块规范 -> 异步加载，允许指定回调函数，使用于浏览器
+                        
+
+                    重点* require.js
+                        -> 管理模块之间的依赖性，便于代码的编写和维护
+
+                        1.  <script src="./js/require.js" data-main="./js/main"></script>
+                                -> data-main属性：指定网页程序的主模块，main.js文件会第一个被require.js加载
+                                                  require.js默认文件后缀名为.js，所以可以把main.js写成main
+
+                        2.  主模块的写法
+                            ->  main.js 
+                                    通过require()函数引入依赖的模块
+                                    ->  require(['module1', 'module2'], function (module1, module2) {
+
+                                            //some code here
+
+                                        })
+
+                                        require()函数第一个参数为数组，表示依赖的模块，第二个参数为回调函数
+                                        当模块全部加载完后被调用，加载的模块会以参数形式传入该函数，从而在回
+                                        调函数内部就可以使用这些模块
+
+                                    通过require.config(),对模块的加载行为进行自定义,方法写在主模块头部
+                                    ->  require.config({
+                                            baseUrl : 'js' -> 改变根目录,则下面paths不用加js/
+                                            paths : {
+                                                //指定各个模块的加载路径,不用写后缀名
+                                                'module1' : 'js/module1',
+                                                'module2' : 'js/module2'
+                                            }
+                                        })
+
+                        3.  AMD模块的写法(非主模块)
+                            ->  假定现在有一个math.js文件，它定义了一个math模块
+                                -> math.js
+                                    通过define()函数包裹
+                                    ->  define(function (){
+                                    　　　　var add = function (x,y){
+                                    　　　　　　return x+y;
+                                    　　　　};
+                                    　　　　return {
+                                    　　　　　　add: add
+                                    　　　　};
+                                    　　});
+
+                                -> main.js
+
+                                　  require(['math'], function (math){
+                            　　　　    alert(math.add(1,1));
+                                　  });
+
+                            ->  如果该模块还依赖于别的模块,那么define()函数的第一个参数，必须是一个数组，指明该模块的依赖性
+                                -> math.js
+                                    define(['myLib'], function(myLib){
+                                　　　　function foo(){
+                                　　　　　　myLib.doSomething();
+                                　　　　}
+                                　　　　return {
+                                　　　　　　foo : foo
+                                　　　　};
+                                　　});
+                                    
+                                    
+                                    
+                        
+
      -->
 </body>
 </html>
