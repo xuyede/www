@@ -8,7 +8,12 @@
 </head>
 <body>
     <!-- 
-            前端模块化
+            前端模块化 
+                -> node.js -> commonJS规范 -> 同步加载，适合服务端不适用于浏览器 
+                -> AMD -> 异步加载，允许回调函数 -> require.js -> 推崇依赖提前 
+                -> CMD -> 推崇就近依赖 -> sea.js 
+                -> ES6
+
                 1.模块化实现
                     1) 函数
                         function add (a, b) {
@@ -105,7 +110,7 @@
                                     ->  require.config({
                                             baseUrl : 'js' -> 改变根目录,则下面paths不用加js/
                                             paths : {
-                                                //指定各个模块的加载路径,不用写后缀名
+                                                //指定各个模块的加载路径,不能写文件后缀名
                                                 'module1' : 'js/module1',
                                                 'module2' : 'js/module2'
                                             }
@@ -130,7 +135,8 @@
                             　　　　    alert(math.add(1,1));
                                 　  });
 
-                            ->  如果该模块还依赖于别的模块,那么define()函数的第一个参数，必须是一个数组，指明该模块的依赖性
+                            ->  如果该模块还依赖于别的模块,那么define()函数的第一个参数，必须是一个数组
+                                指明该模块的依赖性,并在main.js头部的require.config写明路径信息
                                 -> math.js
                                     define(['myLib'], function(myLib){
                                 　　　　function foo(){
@@ -142,7 +148,37 @@
                                 　　});
                                     
                                     
-                                    
+                    *重点 sea.js 
+                        ->   CMD异步加载，和AMD主要区别在于，AMD推崇依赖前置，提前加载依赖，
+                             而CMD推崇依赖就近，按需加载
+                             
+                        1.页面写法
+                            seajs.use()引入主模块
+                            -> index.html
+                                <script src="./js/sea.js"></script>
+                                <script>
+                                    seajs.use('./js/main');
+                                </script>
+                        
+                        2.主模块写法
+                            define()定义模块，里面需要用到模块时，用require()引入
+                            -> main.js
+                                define(function (require, exports, module) {
+                                    var math = require('math');
+                                    console.log(math.add(1, 2));
+                                })
+
+                        3.模块写法
+                            define()定义模块，用exports暴露出接口
+                            -> math.js
+                                define(function (require, exports, module) {
+                                    function add (a, b) {
+                                        return a + b;
+                                    }
+
+                                    exports.add = add;
+                                    exports.str = 'sunday';   -> exports实际为一个对象，可以添加属性到math.js模块上
+                                })
                         
 
      -->
