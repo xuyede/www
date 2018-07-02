@@ -227,7 +227,7 @@
                             -> module: 配置如何处理模块
                             
                                 rules: 配置模块的读取和解析规则,通常用来配置 Loader,为一个数组
-                                    1) 条件匹配：通过 test 、 include 、 exclude 三个配置项来命中 Loader 要应用规则的文件
+                                    1) 条件匹配：通过 test 、 include 、 exclude 三个配置项来命中 Loader 要应用规则的文件(如果值为数组则数组内容为或关系，只要命中一个即可)
                                         test : 正则表达式,匹配文件类型 (/\.js$/ 、 /\.css$/ 、...)
                                         include : 只命中符合条件的文件(include : path.resolve(__diename, 'src') -> 命中src目录下的某文件)
                                         exclude : 排除选中的目录(exclude : path.resolve(__dirname, 'src') -> 排除src目录下的文件)
