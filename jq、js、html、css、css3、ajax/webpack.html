@@ -204,17 +204,21 @@
 
                     3)  四个核心模块
                             -> 入口(entry: 默认为./src)
-                                页面入口文件配置(html文件引入唯一的js文件)
+                                页面入口文件配置
 
                             -> 输出(output: 默认为./dist)
-                                对应输出项配置(path:输出文件的位置, filename:输出文件的名称)
+                                对应输出项配置
+                                    path:输出文件的位置
+                                    filename:输出文件的名称
+                                    html页面引入输出文件
 
                             -> loader
                                 处理非js文件
 
                             -> 插件(plugins)
 
-                            配置webpack.config.js (修改完配置文件后要重新对项目进行打包)
+
+                            配置文件webpack.config.js (修改完配置文件后要重新对项目进行打包)
                                 -> webpack.config.js
 
                                     module.exports = {
@@ -224,6 +228,18 @@
                                             filename : 'demo.js'
                                         }，
                                         mode : 'development' -> 不压缩js文件  'production' -> 压缩
+                                    }
+
+                                    -> 当有多个入口文件时：
+                                    module.exports = {
+                                        entry : {
+                                            index : './src/js/index.js',
+                                            demo : './src/js/demo.js'
+                                        },
+                                        output : {
+                                            path : __dirname + '/out',
+                                            filename : '[name].bundle.js'
+                                        }
                                     }
 
                     4)
