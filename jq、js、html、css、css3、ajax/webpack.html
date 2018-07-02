@@ -211,22 +211,45 @@
                         webpack -w  -> webpack进行项目打包并实时监控(退出，Ctrl+C)
 
                     3)  四个核心模块
-                            -> entry: 页面入口文件配置,指定入口文件,可多个入口文件
+                            -> entry: 页面入口文件配置,指定入口文件,可多个入口文件(可以动态生成，new Promise())
                                 
                             -> output: html页面引入输出文件
-                                path:输出文件的位置
-                                filename:输出文件的名称，如果是多个入口文件(filename : '[name].js')
-                                publicPath:静态资源路径(图片，css)
+                                path: 配置输出文件存放在本地的目录(path : path.resolve(__dirname, 'out') / path : __dirname + '/out')
+                                filename: 输出文件的名称，如果是多个入口文件(filename : '[name].js')
+                                publicPath: 当浏览器需要引用输入静态资源文件时,这个配置项指定输入文件的公共URL地址
+                                crossOriginLoading: anonymous(默认) 在加载异步脚本(JSONP)资源时不会带上用户的Cookies；use-credentials带上
                                     
                             -> loader加载器
                                 1) loader 就像是一个翻译员，能把源文件经过转化后输出新的结果，并且一个文件还可以链式的经过多个翻译员翻译
                                 2) 一个 Loader 的职责是单一的，只需要完成一种转换
                                 3) 在module.rules中配置
 
-                            -> module
+                            -> module: 配置如何处理模块
                             
-                                rules: 里面数组配置了一组规则，告诉 Webpack 在遇到哪些文件时(test)使用(use)哪些 Loader 去加载和转换
-                                use : use 属性的值需要是一个由 Loader 名称组成的数组，Loader 的执行顺序是由后到前的
+                                rules: 配置模块的读取和解析规则,通常用来配置 Loader,为一个数组
+                                    1) 条件匹配：通过 test 、 include 、 exclude 三个配置项来命中 Loader 要应用规则的文件
+                                        test : 正则表达式,匹配文件类型 (/\.js$/ 、 /\.css$/ 、...)
+                                        include : 只命中符合条件的文件(include : path.resolve(__diename, 'src') -> 命中src目录下的某文件)
+                                        exclude : 排除选中的目录(exclude : path.resolve(__dirname, 'src') -> 排除src目录下的文件)
+
+                                    2) 应用规则：对选中后的文件通过 use 配置项来应用 Loader,可以只应用一个 Loader 或者按照从后往前的顺序应用一组 Loader
+                                        use : ['style-loader', 'css-loader?minimize'] -> 顺序从右往左
+                                        
+                                        在 Loader 需要传入很多参数时，你还可以通过一个 Object 来描述
+                                            use: [
+                                                {
+                                                    loader : 'babel-loader',
+                                                    options:{
+                                                        cacheDirectory:true,
+                                                    },
+                                                    // enforce:'post' 的含义是把该 Loader 的执行顺序放到最后
+                                                    // enforce 的值还可以是 pre，代表把 Loader 的执行顺序放到最前面
+                                                    enforce:'post'
+                                                },
+                                            ]
+
+                                    3) 重置顺序：一组 Loader 的执行顺序默认是从右到左执行，通过 enforce 选项可以让其中一个 Loader 的执行顺序放到最前或者最后
+
 
                                 module : {
                                     rules : [
@@ -242,6 +265,7 @@
                             配置文件webpack.config.js (修改完配置文件后要重新对项目进行打包)
                                 -> webpack.config.js
 
+                                    const path = require('path');
                                     module.exports = {
                                         entry : './src/js/index.js',
                                         output : {
