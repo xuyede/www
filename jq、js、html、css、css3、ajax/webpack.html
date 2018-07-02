@@ -180,7 +180,42 @@
                                     exports.str = 'sunday';   -> exports实际为一个对象，可以添加属性到math.js模块上
                                 })
                         
-
      -->
+     <!-- 
+            重点*  webpack
+
+                1. 前端工程化
+                    开发规范、模块化开发、组件化开发、组件仓库
+                    性能优化、部署、开发流程、开发工具
+
+                2. 前端自动化构建工具
+                    webpack、Grunt、Gulp
+
+                3. webpack的使用
+                    1) node.js、npm、git 支持
+
+                    2) 基本命令
+                        npm install webpack -g  -> 下载全局webpack
+                        npm init  -> 初始化npm配置，生成package.json文件
+                        npm install webpack --save-dev  -> 下载编写环境的webpack模块和配置文件(在自己电脑配置，传文件时不用传这个，只需传package.json)
+                        npm install webpack-cli -g  -> 下载webpack-cli插件
+                        webpack -> 运行webpack，生成出口文件main.js，在dist文件夹中(注意：需要在文件目录下创建src文件夹，src文件夹里面有个index.js的文件作为默认入口文件)
+                        webpack -w  -> webpack项目进行打包并实时监控
+                    3)  四个核心模块
+                            -> 入口(entry: 默认为./src)
+                                页面入口文件配置(html文件引入唯一的js文件)
+
+                            -> 输出(output: 默认为./dist)
+                                对应输出项配置(path:入口文件最终要输出到哪里, filename:输出文件的名称)
+
+                            -> loader
+                                处理非js文件
+
+                            -> 插件(plugins)
+                    4)
+                    5)
+
+
+      -->
 </body>
 </html>
