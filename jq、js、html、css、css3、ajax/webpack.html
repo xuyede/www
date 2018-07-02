@@ -199,20 +199,35 @@
                         npm init  -> 初始化npm配置，生成package.json文件
                         npm install webpack --save-dev  -> 下载编写环境的webpack模块和配置文件(在自己电脑配置，传文件时不用传这个，只需传package.json)
                         npm install webpack-cli -g  -> 下载webpack-cli插件
-                        webpack -> 运行webpack，生成出口文件main.js，在dist文件夹中(注意：需要在文件目录下创建src文件夹，src文件夹里面有个index.js的文件作为默认入口文件)
-                        webpack -w  -> webpack项目进行打包并实时监控
+                        webpack -> webpack项目打包，默认生成出口文件main.js，在dist文件夹中(注意：需要在文件目录下创建src文件夹，src文件夹里面有个index.js的文件作为默认入口文件)
+                        webpack -w  -> webpack进行项目打包并实时监控(退出，Ctrl+C)
+
                     3)  四个核心模块
                             -> 入口(entry: 默认为./src)
                                 页面入口文件配置(html文件引入唯一的js文件)
 
                             -> 输出(output: 默认为./dist)
-                                对应输出项配置(path:入口文件最终要输出到哪里, filename:输出文件的名称)
+                                对应输出项配置(path:输出文件的位置, filename:输出文件的名称)
 
                             -> loader
                                 处理非js文件
 
                             -> 插件(plugins)
+
+                            配置webpack.config.js (修改完配置文件后要重新对项目进行打包)
+                                -> webpack.config.js
+
+                                    module.exports = {
+                                        entry : './src/js/index.js',
+                                        output : {
+                                            path : __dirname + '/out'
+                                            filename : 'demo.js'
+                                        }，
+                                        mode : 'development' -> 不压缩js文件  'production' -> 压缩
+                                    }
+
                     4)
+
                     5)
 
 
