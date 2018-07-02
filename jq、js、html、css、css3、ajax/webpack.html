@@ -183,6 +183,14 @@
      -->
      <!-- 
             重点*  webpack
+                    -> 任何静态资源都可以视作模块，然后模块之间也可以相互依赖，通过webpack对模块进行处理后，可以打包成我们想要的静态资源
+
+                    1) 支持CommonJs/AMD/CMD模块，意思也就是我们基本可以无痛迁移旧项目。
+                    2) 支持模块加载器和插件机制，可对模块灵活定制。特别是我最爱的babel-loader，有效支持ES6。
+                    3) 可以通过配置，打包成多个文件。有效利用浏览器的缓存功能提升性能。
+                    4) 将样式文件和图片等静态资源也可视为模块进行打包。配合loader加载器，可以支持less等CSS预处理器。
+                    5) 内置有source map，即使打包在一起依旧方便调试
+
 
                 1. 前端工程化
                     开发规范、模块化开发、组件化开发、组件仓库
@@ -195,30 +203,39 @@
                     1) node.js、npm、git 支持
 
                     2) 基本命令
-                        npm install webpack -g  -> 下载全局webpack
+                        npm i webpack -g  -> 下载全局webpack
                         npm init  -> 初始化npm配置，生成package.json文件
-                        npm install webpack --save-dev  -> 下载编写环境的webpack模块和配置文件(在自己电脑配置，传文件时不用传这个，只需传package.json)
-                        npm install webpack-cli -g  -> 下载webpack-cli插件
+                        npm i -D webpack  -> npm i -D 是 npm install --save-dev 的简写，是指安装模块并保存到 package.json 的 devDependencies
+                        npm i webpack-cli -g  -> 下载webpack-cli插件
                         webpack -> webpack项目打包，默认生成出口文件main.js，在dist文件夹中(注意：需要在文件目录下创建src文件夹，src文件夹里面有个index.js的文件作为默认入口文件)
                         webpack -w  -> webpack进行项目打包并实时监控(退出，Ctrl+C)
 
                     3)  四个核心模块
-                            -> 入口(entry: 默认为./src)
-                                页面入口文件配置
-
-                            -> 输出(output: 默认为./dist)
-                                对应输出项配置
-                                    path:输出文件的位置
-                                    filename:输出文件的名称
-                                    publicPath:静态资源路径(图片，css)
-                                    html页面引入输出文件
-
-                            -> loader
-                                处理非js文件
-
-                            -> 插件(plugins)
+                            -> entry: 页面入口文件配置,指定入口文件,可多个入口文件
+                                
+                            -> output: html页面引入输出文件
+                                path:输出文件的位置
+                                filename:输出文件的名称，如果是多个入口文件(filename : '[name].js')
+                                publicPath:静态资源路径(图片，css)
+                                    
+                            -> loader加载器
+                                1) loader 就像是一个翻译员，能把源文件经过转化后输出新的结果，并且一个文件还可以链式的经过多个翻译员翻译
+                                2) 一个 Loader 的职责是单一的，只需要完成一种转换
+                                3) 在module.rules中配置
 
                             -> module
+                            
+                                rules: 里面数组配置了一组规则，告诉 Webpack 在遇到哪些文件时(test)使用(use)哪些 Loader 去加载和转换
+                                use : use 属性的值需要是一个由 Loader 名称组成的数组，Loader 的执行顺序是由后到前的
+
+                                module : {
+                                    rules : [
+                                        {
+                                            test : /\.css$/,
+                                            use : ['style-loader', 'css-loader?minimize']
+                                        }
+                                    ]
+                                }
                                 
 
 
