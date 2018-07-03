@@ -206,7 +206,7 @@
                         npm i webpack -g  -> 下载全局webpack
                         npm init  -> 初始化npm配置，生成package.json文件
                         npm i -D webpack  -> npm i -D 是 npm install --save-dev 的简写，是指安装模块并保存到 package.json 的 devDependencies
-                        npm i webpack-cli -g  -> 下载webpack-cli插件
+                        npm i webpack-cli -g  -> 下载命令行接口 webpack-cli 插件
                         webpack -> webpack项目打包，默认生成出口文件main.js，在dist文件夹中(注意：需要在文件目录下创建src文件夹，src文件夹里面有个index.js的文件作为默认入口文件)
                         webpack -w  -> webpack进行项目打包并实时监控(退出，Ctrl+C)
 
@@ -216,7 +216,7 @@
                             -> output: html页面引入输出文件
                                 path: 配置输出文件存放在本地的目录(path : path.resolve(__dirname, 'out') / path : __dirname + '/out')
                                 filename: 输出文件的名称，如果是多个入口文件(filename : '[name].js')
-                                publicPath: 当浏览器需要引用输入静态资源文件时,这个配置项指定输入文件的公共URL地址
+                                publicPath: 当浏览器需要引用输入静态资源文件时,这个配置项指定输入文件的公共URL地址(图片)
                                 crossOriginLoading: anonymous(默认) 在加载异步脚本(JSONP)资源时不会带上用户的Cookies；use-credentials带上
                                     
                             -> loader加载器
@@ -254,12 +254,18 @@
                                 module : {
                                     rules : [
                                         {
-                                            test : /\.css$/,
-                                            use : ['style-loader', 'css-loader?minimize']
+                                            test : /\.(jpg|png|gif|svg)$/,
+                                            use : ['url-loader?limit=8192&name=/[name].[ext]']
                                         }
                                     ]
                                 }
+                               
+                            -> DevServerDevServer:会启动一个 HTTP 服务器用于服务网页请求,同时会帮助启动 Webpack ,并接收 Webpack 发出的文件更变信号,通过 WebSocket 协议自动刷新网页做到实时预览
                                 
+                                npm i -D webpack-dev-server 下载DevServer
+                                webpack-dev-server 执行
+
+                                由于 DevServer 不会理会 webpack.config.js 里配置的 output.path 属性，所以要获取出口文件的正确URL是 http://localhost:8080/*.js 、*.js 
 
 
                             配置文件webpack.config.js (修改完配置文件后要重新对项目进行打包)
