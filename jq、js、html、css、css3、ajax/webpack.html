@@ -260,12 +260,30 @@
                                     ]
                                 }
                                
-                            -> DevServerDevServer:会启动一个 HTTP 服务器用于服务网页请求,同时会帮助启动 Webpack ,并接收 Webpack 发出的文件更变信号,通过 WebSocket 协议自动刷新网页做到实时预览
+                            -> plugin
+                                plugins 配置项接受一个数组，数组里每一项都是一个要使用的 Plugin 的实例，Plugin 需要的参数通过构造函数传入
                                 
-                                npm i -D webpack-dev-server 下载DevServer
-                                webpack-dev-server 执行
+                                const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin');
+                                module.exports = {
+                                    plugins: [
+                                        // 所有页面都会用到的公共代码提取到 common 代码块中
+                                        new CommonsChunkPlugin({
+                                            name: 'common',
+                                            chunks: ['a', 'b']
+                                        }),
+                                    ]
+                                };
+                                
+                                1) 开启本地服务器
+                                    DevServerDevServer:会启动一个 HTTP 服务器用于服务网页请求,同时会帮助启动 Webpack ,并接收 Webpack 发出的文件更变信号,通过 WebSocket 协议自动刷新网页做到实时预览
+                                    ->操作
+                                        npm i -D webpack-dev-server 下载DevServer
+                                        webpack-dev-server 执行
 
-                                由于 DevServer 不会理会 webpack.config.js 里配置的 output.path 属性，所以要获取出口文件的正确URL是 http://localhost:8080/*.js 、*.js 
+                                        由于 DevServer 不会理会 webpack.config.js 里配置的 output.path 属性，所以要获取出口文件的正确URL是 http://localhost:8080/*.js 、*.js 
+
+                                2) 压缩js
+                                    uglifyjs-webpack-plugin
 
 
                             配置文件webpack.config.js (修改完配置文件后要重新对项目进行打包)
@@ -293,11 +311,9 @@
                                         }
                                     }
 
-                    4)
-
-                    5)
-
-
       -->
+      <!-- 
+            less预处理语言 (编译生成css文件)
+       -->
 </body>
 </html>
