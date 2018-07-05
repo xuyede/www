@@ -216,7 +216,7 @@
                             -> output: html页面引入输出文件
                                 path: 配置输出文件存放在本地的目录(path : path.resolve(__dirname, 'out') / path : __dirname + '/out')
                                 filename: 输出文件的名称，如果是多个入口文件(filename : '[name].js')
-                                publicPath: 当浏览器需要引用输入静态资源文件时,这个配置项指定输入文件的公共URL地址(图片)
+                                publicPath: 当浏览器需要引用输入静态资源文件时,这个配置项指定输入文件的公共URL地址(图片),以 / 开头和结尾
                                 crossOriginLoading: anonymous(默认) 在加载异步脚本(JSONP)资源时不会带上用户的Cookies；use-credentials带上
                                     
                             -> loader加载器
@@ -319,8 +319,39 @@
        <!-- 
 
                     webpack-dev-server 设置反向代理解决跨域问题
-                        s
+                        
+                        webpack-dev-server配置代理非常的方便，只需要条件一个proxy属性，然后配置相关的参数就可以了
 
+                        devServer : {
+                            compress : true,   //一切服务都启用gzip 压缩
+                            
+                            contentBase : path.join(__dirname, './'),   //默认webpack dev server是从项目的根目录提供服务，如果要从不同的目录提供服务，可以通过contentBase来配置(推荐使用绝对路径)
+                            
+                            historyApiFallback : true,   //当使用 HTML5 History API 时，任意的 404 响应都可能需要被替代为 index.html
+
+                            inline: true,    //代码有变化，浏览器端刷新
+
+                            port : 8000,    //port: 默认webpack是用 8080端口起的，通过port可以配成其他的端口
+
+                            host : '127.0.0.1',     //指定使用一个 host,默认是 localhost,如果你希望服务器外部可访问则设置为 '0.0.0.0'
+
+                            hot : true,     //启用 webpack 的模块热替换特性
+
+                            https : true,   //默认情况下，dev-server 通过 HTTP 提供服务, 也可以选择带有 HTTPS 的 HTTP/2 提供服务
+
+                            noInfo: false,   //启用 noInfo 后(false)，诸如「启动时和每次保存之后，那些显示的 webpack 包(bundle)信息」的消息将被隐藏, 错误和警告仍然会显示
+                        
+                            open : true,    //启用 open 后，webpack-dev-server 后自动打开浏览器执行
+                        
+                            proxy: {
+                                '/getPics.php': {
+                                    target: 'http://localhost:80/getPics.php',      //把环境中的getPics.php代理到target的接口路径
+                                    secure: false,      //接受https
+                                }
+                            }
+                                -> 如果要将多个特定路径代理到同一目标，则可以使用具有context属性的一个或多个对象的数组
+                                    context : ["/auth", "/api"]
+                        }
 
 
         -->
