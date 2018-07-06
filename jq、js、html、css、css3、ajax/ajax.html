@@ -300,7 +300,7 @@
                                 flag = true;
 
                             oIframe.onload = function () {
-                                if (flag) {
+                                if (flag) {              -> 只是第一次换src，否则会一直触发onload事件，无限循环
                                     flag = false;
                                     oIframe.src = '与父窗口同源的url文件';              -> 父窗口与子窗口受同源策略限制，无法直接获取子窗口的数据，要使用一个同源的窗口间接获取
                                 }else {
