@@ -613,11 +613,56 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // var person = new Person()
         //  1.构造函数Person被new的时候，在头部创建 var this = Object.create(Person.prototype)
         //  2.构造函数自身执行,并在函数最后return this
         //  3.person拿到构造函数Person的this引用
         //  4.person.__proto__ === Person.prototype
+
+
+
+        // 构造函数本身的constructor指向Function.prototype.constructor
+        // 构造函数的原型的constructor指向构造函数本身
+        // 构造函数的实例化对象的constructor指向该实例化对象的构造函数(如果有继承，则为继承的构造函数)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
