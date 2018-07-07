@@ -76,19 +76,39 @@
     <!-- 文本操作 -->
     <!-- 
         1.文本对齐方式(水平)
-        text-align:left(canter、right);  
+            text-align:left(canter、right);  
         2.单行文本垂直居中
-        文本高度(line-height) = 容器高度(height)
+            文本高度(line-height) = 容器高度(height)
         3.文本高度
-        line-height
+            line-height
         4.文本缩进
-        text-indent:2em(一般)  1em:所在标签的字体的高度
+            text-indent:2em(一般)  1em:所在标签的字体的高度
         5.文本中间划线
-        text-decoration: line-through(中间划线) 
-                         underline(下面划线)
-                         none(消除下划线)
+            text-decoration: line-through(中间划线) 
+                            underline(下面划线)
+                            none(消除下划线)
         6.鼠标样式
-        cursor:pointer(手指) text(文本)
+            cursor:pointer(手指) text(文本)
+        7.多行文本垂直居中
+            display: table-cell;
+            vertical-align: middle;
+
+
+
+        不同文本居中方式
+            1.单行文本水平垂直居中
+                text-align: center
+                line-height = height
+
+            2.多行文本 + 定高容器
+                display: table-cell;
+                vertical-align: middle;
+
+            3.多行文本 + 不定高容器
+                padding 撑高上下边距
+
+            4.容器 + 容器
+                flex布局
     -->
 
     <!-- display -->
