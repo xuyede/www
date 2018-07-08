@@ -59,13 +59,13 @@
             2.  text-shadow -> 字体阴影
                     text-shadow: x-offset y-offset blur color
 
-        颜色
+        颜色/渐变
             1.  rgba  -> 颜色值
                     rgba(1, 2, 3, 4)
                     1, 2, 3: 0-255
                         4: 透明度 0-1
 
-            2.  gradient -> 背景颜色渐变
+            2.  gradient -> 背景颜色渐变 (色彩的逐渐变化，玩的是色彩)
                 1)线性渐变 (linear-to)
 
                     background: repeating-linear-gradient(deg, fir-color-start, fir-color-end, second-color-start,....);
@@ -76,14 +76,16 @@
                                             1)to top/to left/to right/to bottom/to top left/...
                                             2)角度值 deg
 
-                            color: red 10%, green 30%, yellow 100%
-                                    red 整体从0到10%为红色，10%到30%为绿色，30%到100%为黄色
+                            color: red , green 30%, yellow 
+                                    
 
                 2)径向渐变 (radial-at)
+                    background: repeating-radial-gradient(deg, fir-color-start, fir-color-end, second-color-start,....);
+
                     background: radial-gradient(shape at position, color, color, ...)
                         -> 
                             shape : 放射形状， 圆形 circle 椭圆 ellipse
-                                -> circle 100px at ... 规定圆的半径为100px
+                                -> circle 100px at 250px 205px  规定圆的半径为100px,圆心为250px 250px 的位置
 
                             position : 圆心位置 可以两个值也可以一个值(第二个值默认为center/50%), 数值可以为%、px、top、left...
                         
@@ -146,6 +148,23 @@
 
             复合写法：
                 background: color url repeat position/size origin clip
+
+                多重背景：类似ps中的图层 , 如下例子，url引入的图片在图层的最顶面，一直往下
+                    -> 
+                        .demo{
+                            width: 160px;
+                            height: 160px;
+                            margin: 100px auto;
+                            border-radius: 50%;
+                            padding: 20px;
+                            box-sizing: border-box;
+                            box-shadow: 0 10px 15px rgba(0,0,0,.2);
+                            background:
+                                url('./pause.png') no-repeat center, 
+                                linear-gradient(to top, #999, #666) content-box,
+                                linear-gradient(to top, #666, #999);
+                        }
+
      -->
     <!-- 
 
@@ -409,7 +428,7 @@
                 内容高度 （盒子）= width - padding - border
                 即设置width的数值就是element 的空间高度，width包含padding 和border
 
-            box-sizing : border-box/content-box
+            box-sizing : border-box/content-box 
                 ->
                     content-box为W3C标准盒子
                     border-box为IE6混杂模式的盒子
@@ -420,7 +439,7 @@
             默认带有margin的标签： body h* p ul dl ol dd
 
             margin：双飞翼布局
-            1. 中，左，右三部分全部左浮动,左右固定宽高，中间自适应
+            1. 中，左，右三部分全部左浮动,左右固定宽高，中间自适应 (结构顺序 -> 中 左 右)
             2. 中间部分只作为外壳，里面嵌套一层结构作为操作主体
             3. 左 -> margin-left：-100%
             4. 右 -> margin-left: -selfWidth
