@@ -82,13 +82,15 @@
                 2)径向渐变 (radial-at)
                     background: repeating-radial-gradient(deg, fir-color-start, fir-color-end, second-color-start,....);
 
-                    background: radial-gradient(shape at position, color, color, ...)
+                    background: radial-gradient(shape size at position, color, color, ...)
                         -> 
-                            shape : 放射形状， 圆形 circle 椭圆 ellipse
+                            shape : 放射形状， 圆形 circle 椭圆 ellipse 默认为椭圆
                                 -> circle 100px at 250px 205px  规定圆的半径为100px,圆心为250px 250px 的位置
 
                             position : 圆心位置 可以两个值也可以一个值(第二个值默认为center/50%), 数值可以为%、px、top、left...
                         
+                        立体小球
+                            background: radial-gradient(at 40px 40px, #f0f0f0, plum ,#f0f0f0);
         文字
             1.  文字边界换行
                 word-wrap: break-word
