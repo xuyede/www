@@ -65,11 +65,10 @@
                     1, 2, 3: 0-255
                         4: 透明度 0-1
 
-            2.  gradient -> 背景颜色渐变 (色彩的逐渐变化，玩的是色彩)
-                1)线性渐变 (linear-to)
+            2. currentColor : color的颜色值，先找自己的color，如果自己没有，则看父级的
 
-                    background: repeating-linear-gradient(deg, fir-color-start, fir-color-end, second-color-start,....);
-                
+            3.  gradient -> 背景颜色渐变 (色彩的逐渐变化，玩的是色彩)
+                1)线性渐变 (linear-to)
                     background: linear-gradient(dierction, color, color, ...)
                         -> 
                             direction : 渐变方向 
@@ -79,9 +78,7 @@
                             color: red , green 30%, yellow 
                                     
 
-                2)径向渐变 (radial-at)
-                    background: repeating-radial-gradient(deg, fir-color-start, fir-color-end, second-color-start,....);
-
+                2)径向渐变 (radial-at) 方向从圆心向外
                     background: radial-gradient(shape size at position, color, color, ...)
                         -> 
                             shape : 放射形状， 圆形 circle 椭圆 ellipse 默认为椭圆
@@ -91,6 +88,19 @@
                         
                         立体小球
                             background: radial-gradient(at 40px 40px, #f0f0f0, plum ,#f0f0f0);
+
+                3) 重复渐变
+
+                    background: repeating-radial-gradient(deg, fir-color-start, fir-color-end, second-color-start,....);
+                        -> 黑胶老唱片
+                            background: 
+                                radial-gradient(circle, darkgoldenrod, darkgoldenrod 10px, darkred 10px, darkred 40px, transparent 40px),
+                                repeating-radial-gradient(circle, #333 , #333 5px, #444 5px, #444 6px);
+
+                    
+                    background: repeating-linear-gradient(deg, fir-color-start, fir-color-end, second-color-start,....);
+                        -> 进度条
+                            background: repeating-linear-gradient(-45deg, green, green 5px, #333 5px, #333 10px)
         文字
             1.  文字边界换行
                 word-wrap: break-word
