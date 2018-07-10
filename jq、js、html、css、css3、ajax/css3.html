@@ -458,6 +458,12 @@
             5. 中 -> width:100%
             6. 中里面的 -> margin：0 left/right.width;
 
+            margin : auto的使用
+                -> 原理：块级元素具有独占一行的特性，说明存在的时候就带有了默认的占位空间，存在于水平方向，可以通过auto让浏览器自动分配占位空间
+                
+                模块右定位 -> margin-right : 0;
+                             margin-left : auto; 
+
      -->
     <!-- 
 
@@ -584,6 +590,12 @@
 
      -->            
     <!-- 
+            模拟移动端的meta标签
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    -> user-scalable=no     不支持页面缩放
+                    -> minimum-scala=1.0     最小缩放到 
+                    -> maximum-scala=1.0     最大缩放到
+
             媒体查询 -> 是向不同设备提供不同样式的一种方式，响应式布局
 
                 media type(媒体类型) -> 通过 media type 我们可以对不同的设备指定特定的样式 默认为all
@@ -599,6 +611,7 @@
                 用法：
                     1)  通过link标签
                         <link rel="stylesheet" media="screen and (max-width : 410px)" href="demo.css">
+                            -> 符合条件的才引入对应的css文件
                     
                     2)  在style标签中使用
                         <style>
