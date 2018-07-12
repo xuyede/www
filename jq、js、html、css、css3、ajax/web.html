@@ -62,5 +62,65 @@
                 发      第一次挥手（发完了）           第二次挥手（知道发完了）
                 收      第四次挥手（知道收完了）       第三次挥手（收完了）
      -->
+     <!-- 
+            常见HTTP协议转态码
+
+                200 数据交互完成
+
+                301 永久重定向 (搬家了)
+                302 暂时重定向 (家里没电,去酒店住了)
+                303 临时重定向,并且必须用GET方式请求
+                304 使用缓存内容 (懒得再弄，用之前的)
+
+                401 协议格式出现问题 (对错了暗号，http协议解析失败)
+                403 服务器拒绝请求 (服务器不想给原因时返回，女朋友生气)
+                404 找不到系统资源 (大名鼎鼎)
+
+                500 处理数据时发生错误 (暗号对完了，但是不认识拿到的数据)
+                503 服务器繁忙，负载 (女朋友没空理你)
+
+      -->
+      <!-- 
+            浏览器端储存
+
+                1. cookie (受同源策略)
+                    1) 只要用于标识用户，不用来存储本地数据
+                    2) cookie（一个唯一标识）由服务器端生成，发送给浏览器
+                    3) 浏览器将cookie以键值对的形式保到一个文本文件中，文件大小有限制
+                    4) 下次浏览器访问同一网站时，把cookie发送给服务端
+                    5) 每次操作cookie都会发送网络请求
+
+                    获取cookie
+                        -> document.cookie
+
+                    设置/修改cookie值: 只能一个一个设置，相同路径和域下同一个key只能有一个值
+                        -> document.cookie = 'key=value;...';
+                    
+                    设置/修改cookie保质期 (max-age 秒为单位):
+                        -> document.cookie = 'key=value;max-age=100';
+                           
+                    删除cookie (时间在保质期的过去时就会删除cookie(设置保质期为负数))： 
+                        ->  document.cookie = 'key=value;max-age=-1';
+                            
+
+
+
+                2. storage (受同源策略)
+                    1) 数据只在浏览器保存，不参与服务器的通信
+                    2) 只能储存字符串形式的数据 -> JSON.stringify / JSON.parse
+                    3) 可以存储5MB左右的数据
+                    4) 有友好的API
+
+                    localStorage    永久存在，除非手动删除
+                    sessionStorage  临时存在，窗口关闭就没了  -> 数据受窗口限制，不同窗口不能共享
+
+                    API：
+                        -> localStorage.setItem('name', 'sunday')
+                        -> localStorage.getItem('name')
+                        -> localStorage.removeItem('name')
+                        -> localStorage.clear() 清除所有
+
+
+       -->
 </body>
 </html>
