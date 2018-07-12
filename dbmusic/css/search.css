@@ -1,0 +1,83 @@
+#search{
+    position: relative;
+    height: 56px;
+    width: 500px;
+    margin-left: 160px;
+    
+}
+#search input{
+    float: left;
+    width: 93%;
+    height: 30px;
+    box-sizing: border-box;
+    padding: 10px; 
+    border: 0;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    outline: none;
+    box-shadow: 0px 3px 2px -1px rgb(213,213,213);
+    margin-top: 10px;
+}
+#search .input-show{
+    position: absolute;
+    width: 465px;
+    background-color: #fff;
+    top: 75%;
+    z-index: 1;
+    border: 1px solid #ddd;
+}
+#search .input-show li{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+#search .input-show li:hover{
+    background-color: rgb(249,249,249);
+}
+#search .input-show > :last-child{
+    border-bottom: 0;
+}
+#search .input-show li a{
+    position: relative;
+    background-color: inherit;
+    display: block;
+    width: 100%;
+}
+#search .input-show li a img{
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+}
+#search .input-show li a span {
+    position: absolute;
+    top: 0px;
+    left: 50px;
+    font-size: 13px;
+}
+#search .input-show .fir-txt{
+    color: rgb(51,102,153);
+}
+#search .input-show .sec-txt{
+    color: rgb(153,153,153);
+}
+#search .search-btn{
+    float: right;
+    height: 30px;
+    width: 7%;
+    margin-top: 10px; 
+    border: 0;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    box-shadow: 0px 3px 2px -1px rgb(213,213,213);
+    background: url(http://img3.doubanio.com/dae/accounts/resources/19507ad/music/assets/nav_mu_bg.png?s=1) 0 -40px no-repeat;
+    cursor: pointer;
+    outline: none;
+}
+#search:after{
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}

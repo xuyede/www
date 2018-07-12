@@ -1,0 +1,281 @@
+ul, li{
+    padding: 0;
+    margin: 0;
+    list-style:none; 
+}
+a{
+    text-decoration: none;
+}
+p{
+    padding: 0;
+    margin: 2px;
+}
+body{
+    padding: 0;
+    margin: 0;
+}
+div{
+    padding: 0;
+    margin: 0;
+}
+body, html{
+    height: 100%;
+}
+.head{
+    min-width: 1100px;
+    width: 100%;
+    background-color: rgb(84,86,82);
+}
+.head::after{
+    content: '';
+    display: block;
+    clear: both;
+}
+.head .head-left{
+    float: left;
+}
+.head .head-right{
+    float: right;
+}
+.head .head-left li,
+.head .head-right li{
+    display: inline-block;
+}
+.head-left li a,
+.head-right li a{
+    height: 28px;
+    width: 24px;
+}
+.head-left li a span,
+.head-right li a span{
+    color: rgb(213,213,213);
+    display: inline-block;
+    height: 100%;
+    font-size: 12px;
+    line-height: 28px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+.head .head-left li:hover a span,
+.head .head-right li:hover a span{
+    color: #fff;
+}
+.nva-box{
+    width: 100%;
+    min-width: 1100px;
+    background-color: rgb(240,243,239);
+    margin-bottom: 50px;
+}
+.nva-box .search-area{
+    width:100%;
+    border-bottom: 1px solid rgb(227,233,226);
+}
+/* height : 75px */
+.search-area .search-box{
+    width: 1040px;
+    margin: 0 auto;
+    padding-top: 10px;
+    padding-bottom: 8px;
+    /* overflow: hidden; */
+}
+.search-box::after{
+    content: '';
+    display: block;
+    clear: both;
+}
+.search-box .logo{
+    float: left;
+    width: 145px;
+    height: 56px;
+    background: url(http://img3.doubanio.com/dae/accounts/resources/19507ad/music/assets/lg_music_a12_2.png?s=1) 0 10px no-repeat;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.search-box .logo a{
+    text-decoration: none;
+    color: #333;
+    font-size: 13px;
+    line-height: 100em;
+}
+/* 27px */
+
+.nva-box .nva-area{
+    width: 100%;
+}
+.nva-area .nva-box{
+    width: 1040px;
+    margin: 0 auto;
+}
+.nva-box li{
+    display: inline-block;
+    padding: 10px 12px;
+}
+.nva-box > :first-child{
+    padding-left: 0;
+}
+.nva-box li a{
+    font-size: 14px;
+    color: #555;
+}
+.nva-box li:hover a{
+    color: #fff;
+    background-color: #555;
+}
+.content-area{
+    width: 1040px;
+    margin: 0 auto;
+}
+.content-area::after{
+    content: '';
+    display: block;
+    clear: both;
+}
+/* content-left : 675px content-right : 300px */
+.content-area .content-left{
+    float: left;
+    width: 675px;
+    height: 100%;
+}
+.content-area .content-right{
+    float: right;
+    width: 300px;
+    height: 100%;
+}
+
+.content-right .ad-pic{
+    position: relative;
+    width: 300px;
+    height: 250px;
+    margin-bottom: 20px;
+}
+.ad-pic a{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.ad-pic a img{
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+.ad-pic a .ad-tips{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    font-size: 12px;
+    padding: 0 5px;
+    color: #fff;
+    background-color: rgba(0,0,0,.2);
+}
+
+.content-right .join{
+    width: 300px;
+    margin-bottom: 30px;
+}
+.content-right .join > a{
+    display: block;
+    width: 100%;
+    height: 38px;
+    text-align: center;
+    line-height: 38px;
+    font-size: 17px;
+    color: #f0f0f0;
+    background-color: rgb(19,157,114);
+    border: 1px solid rgb(19,138,110);
+    border-radius: 5px;
+    margin-top: 3px;
+}
+.content-right .join > a:hover{
+    opacity: .8;
+}
+.content-right .join ul{
+    width: 100%;
+}
+.content-right .join ul::after{
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}
+.content-right .join ul li{
+    float: left;
+    height: 57px;
+    width: 98px;
+    background-color: rgb(245,247,248);
+    margin-right: 3px;
+    border-radius: 2px;
+    text-align: center;
+}
+.content-right .join ul > :nth-child(3){
+    margin-right: 0;
+}
+.content-right .join ul li a{
+    display: inline-block;
+    color: rgb(19,138,110);
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 9px;
+}
+.content-right .join ul li a:hover{
+    color: #f0f0f0;
+    background-color: rgb(19,138,110);
+}
+.content-right .join ul li p{
+    font-size: 15px;
+}
+.content-right .more-class{
+    width: 300px;
+}
+.more-class .class-title{
+    width: 100%;
+}
+.more-class .class-title::after{
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}
+.more-class .class-title span{
+    float: left;
+    font-size: 15px;
+}
+.more-class .class-title a{
+    float: right;
+    color: rgb(153,153,153);
+    font-size: 14px;
+}
+.more-class .class-title a:hover{
+    color: #f0f0f0;
+    background-color: rgb(153,153,153);
+}
+.more-class table{
+    border-collapse: collapse;
+    width: 100%;
+} 
+.more-class table tr{
+    display: table-row;
+}
+.more-class table td{
+    margin: 0;
+    width: 150px;
+    height: 36px;
+    box-sizing: border-box;
+    padding-left: 8px;
+}
+.more-class table td:hover{
+    background-color: rgb(245,247,248);
+}
+.more-class table td:nth-of-type(even){
+    border: 1px solid #f8f6f6;
+    border-left: 0;
+}
+.more-class table td:nth-of-type(odd){
+    border: 1px solid #f8f6f6;
+}
+.more-class table td a{
+    display: block;
+    width: 100%;
+    color: rgb(19,138,110);
+}

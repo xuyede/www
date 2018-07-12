@@ -1,0 +1,286 @@
+#music-tab{
+    position: relative;
+    width: 100%;
+}
+#music-tab .musican-title{
+    width: 100%;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+#music-tab .musican-title a{
+    display: inline-block;
+    font-size: 14px;
+    color: #999;
+}
+#music-tab .musican-title > :last-child{
+    padding-left: 5px;
+}
+#music-tab .musican-title > :last-child::before{
+    content: '|';
+    font-size: 12px;
+    margin-right: 8px;
+    color: #333;
+}
+#music-tab .musican-title .click-music{
+    font-size: 17px;
+    color: #333;
+}
+#music-tab .musican-content{
+    position: relative;
+    width: 100%;
+    background-color: rgb(245,247,248);
+    border-top: 2px solid rgb(19,157,114);
+}
+#music-tab .musican-content .fast-show{
+    width: 100%;
+    display: none;
+}
+#music-tab .fast-show li{
+    position: relative;
+    float: left;
+    width: 135px;
+    margin: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+#music-tab .fast-show::after{
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}
+#music-tab .fast-show li .musican-pic{
+    width: 135px;
+    height: 135px;
+    background-color: #FFF;
+    overflow: hidden;
+    box-shadow: 0 0 2px rgba(0,0,0,.2);
+}
+#music-tab .fast-show li .musican-pic img{
+    width: 125px;
+    height: 125px;
+    background-size: cover;
+    margin: 5px 5px;
+}
+#music-tab .fast-show li .musican-dec.hover{
+    position: absolute;
+    width: 125px;
+    height: 125px;
+    top: 5px;
+    left: 5px;
+    background-color: rgba(0,0,0,.5);
+    box-sizing: border-box;
+    padding: 5px;
+}
+#music-tab .fast-show li .musican-dec.hover p{
+    width: 7em;
+    font-size: 14px;
+    color: #f0f0f0;
+    margin: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    text-align: left;
+}
+#music-tab .fast-show li .musican-dec.hover p:nth-of-type(4){
+    margin-bottom: 0px;
+}
+#music-tab .fast-show li .musican-dec.hover span{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    opacity: .7;
+}
+#music-tab .fast-show li .musican-dec.hover span::after{
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 0 7px 10px;
+    border-color: transparent transparent transparent #333;
+}
+#music-tab .fast-show li .musican-dec {
+    position: absolute;
+    width: 125px;
+    height: 125px;
+    top: 5px;
+    left: 5px;
+    box-sizing: border-box;
+    padding: 5px;
+}
+#music-tab .fast-show li .musican-dec p{
+    color: transparent;
+}
+#music-tab .fast-show li .musican-dec span{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #333;
+    opacity: .7;
+}
+#music-tab .fast-show li .musican-dec span::after{
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 0 7px 10px;
+    border-color: transparent transparent transparent #f0f0f0;
+}
+#music-tab .fast-show li > :nth-child(2){
+    display: inline-block;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 10px auto 0px;
+    color: rgb(19,138,110);
+}
+#music-tab .fast-show li > :nth-child(2):hover{
+    background-color: rgb(19,138,110);
+    color:#f0f0f0;
+}
+#music-tab .fast-show li > :nth-child(3){
+    font-size: 12px;
+    color: rgb(153,153,153);
+}
+
+#music-tab .musican-content .week-show{
+    width: 100%;
+    /* display: none; */
+}
+#music-tab .week-show li{
+    position: relative;
+    float: left;
+    width: 135px;
+    margin: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+#music-tab .week-show::after{
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}
+#music-tab .week-show li .musican-pic{
+    width: 135px;
+    height: 135px;
+    background-color: #FFF;
+    overflow: hidden;
+    box-shadow: 0 0 2px rgba(0,0,0,.2);
+}
+#music-tab .week-show li .musican-pic img{
+    width: 125px;
+    height: 125px;
+    background-size: cover;
+    margin: 5px 5px;
+}
+#music-tab .week-show li .musican-dec.hover{
+    position: absolute;
+    width: 125px;
+    height: 125px;
+    top: 5px;
+    left: 5px;
+    background-color: rgba(0,0,0,.5);
+    box-sizing: border-box;
+    padding: 5px;
+}
+#music-tab .week-show li .musican-dec.hover p{
+    width: 7em;
+    font-size: 14px;
+    color: #f0f0f0;
+    margin: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    text-align: left;
+}
+#music-tab .week-show li .musican-dec.hover p:nth-of-type(4){
+    margin-bottom: 0px;
+}
+#music-tab .week-show li .musican-dec.hover span{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    opacity: .7;
+}
+#music-tab .week-show li .musican-dec.hover span::after{
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 0 7px 10px;
+    border-color: transparent transparent transparent #333;
+}
+#music-tab .week-show li .musican-dec {
+    position: absolute;
+    width: 125px;
+    height: 125px;
+    top: 5px;
+    left: 5px;
+    box-sizing: border-box;
+    padding: 5px;
+}
+#music-tab .week-show li .musican-dec p{
+    color: transparent;
+}
+#music-tab .week-show li .musican-dec span{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #333;
+    opacity: .7;
+}
+#music-tab .week-show li .musican-dec span::after{
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 3px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 0 7px 10px;
+    border-color: transparent transparent transparent #f0f0f0;
+}
+#music-tab .week-show li > :nth-child(2){
+    display: inline-block;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 10px auto 0px;
+    color: rgb(19,138,110);
+}
+#music-tab .week-show li > :nth-child(2):hover{
+    background-color: rgb(19,138,110);
+    color:#f0f0f0;
+}
+#music-tab .week-show li > :nth-child(3){
+    font-size: 12px;
+    color: rgb(153,153,153);
+}
