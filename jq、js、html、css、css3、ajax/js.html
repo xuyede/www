@@ -516,7 +516,7 @@
                 for in 循环遍历对象
 
                 1.obj.hasOwnProperty(prop)  --> 去除原型
-                2.A(obj) instanceof B(Func)    --> A的原型链上 有没有 B的原型 
+                2.A(obj) instanceof B(Func)    --> 如果函数在对象的原型链上，此时返回true，否则返回false
                 
                 for(var prop in obj){
                     if(obj.hasOwnProperty(prop)){
