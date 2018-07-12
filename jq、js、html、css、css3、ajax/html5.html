@@ -201,22 +201,23 @@
                     1) 主线程
                         var worker = new Worker('./worker.js');
                         -> 接收数据
-                        worker.addEventListener('message', function (e) {
-                            deal(e.data);
-                            // 结束worker
-                            worker.terminate();
-                        }, false);
+                            worker.addEventListener('message', function (e) {
+                                deal(e.data);
+                                // 结束worker
+                                worker.terminate();
+                            }, false);
+                            
                         -> 发送数据
-                        worker.postMessage(data);
-                        function deal (data) {}
+                            worker.postMessage(data);
+                            function deal (data) {}
 
                     2) worker.js
                         -> 接收数据
-                        addEventListener('message', function (e) {
-                            var result = deal(e.data);
-                            postMessage(result);
-                        }, false);
-                        function deal (data) {}
+                            addEventListener('message', function (e) {
+                                var result = deal(e.data);
+                                postMessage(result);
+                            }, false);
+                            function deal (data) {}
                         
           -->
 
