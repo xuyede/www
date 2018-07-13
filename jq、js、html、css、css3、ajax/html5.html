@@ -352,6 +352,16 @@
                                     <source src="成都.ogg" type='audio/ogg"'>
                                 </audio>
 
+                            -> readyState属性返回音频当前状态  4可以播放了
+                               
+                               networkState属性返回音频当前网络状态
+                                    0 ： 未初始化
+                                    1 ： 音频活动的，但未使用网络
+                                    2 ： 浏览器正在下载数据
+                                    3 ： 未找到音频来源
+                                
+                            
+
                         *脚本操作
                             var audio = new Audio('./....'); -> 没有 new Video()
                             var video = document.createElement('video');
@@ -391,6 +401,8 @@
                                 3) loadedmetadata -> 获取完元数据时触发
                                 4) ended -> 播放结束时触发
                                 5) timeupdate -> 播放时触发
+
+                            
             -->
             <!-- 
                     drag
