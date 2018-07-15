@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+
+<body>
+        <!--  
+            冒泡排序   
+                -> 两两比较
+            
+                var arr = [2,3,1,5,6,8,4,9,7];
+                for (var i = 0, len = arr.length; i < len; i ++) {
+                    for (var j = i; j < len ; j ++) {
+                        if (arr[j] < arr[i]) {
+                            var temp = arr[i];
+                            arr[i] = arr[j];
+                            arr[j] = temp;
+                        }
+                    }
+                }
+                console.log(arr)
+
+
+            插入排序
+                -> 找出没轮中最大数的索引值，再与最后一位换
+
+                var arr = [2,3,1,5,6,8,4,9,7];
+                var len = arr.length;
+                for (var i = 0; i < len; i ++) {
+                    var max = 0;
+                    for (var j = 0; j < len - i; j ++) {
+                        if (arr[j] > arr[max]) {
+                            max = j;
+                        }
+                    }
+                    var temp = arr[len - i - 1];
+                    arr[len - i - 1] = arr[max];
+                    arr[max] = temp;
+                }
+                console.log(arr)
+
+            链表顺序
+                -> 
+
+                function Node (data, next) {
+                    this.data = data;
+                    this.next = next;
+                }
+                function setData () {
+                    var first = new Node(1, null),
+                        nowNode = first;
+                    for (var i = 2; i < 5; i ++) {
+                        var temp = new Node(i , null);
+                        nowNode.next = temp;
+                        nowNode = temp;
+                    }
+                    return first;
+                }
+                var root = setData();
+                console.log(root);
+
+            链表逆序
+                -> 
+
+                function reverse (node, pre) {
+                    if (node.next) {
+                        var result = reverse(node.next, node);
+                        node.next = pre;
+                        return result;
+                    } else {
+                        node.next = pre;
+                        return node;
+                    }
+                }
+                var toor = reverse(root, null);
+                console.log(toor); 
+
+
+            快速排序
+                -> 随便找出一个中间数，比该数小的放在左边，大的放右边，递归执行，出口为数组为一个数或零个数 
+
+                var arr = [5, 8, 2, 4, 6, 3, 1, 9, 7];
+                function quickSort(arr) {
+                    var key = arr[0],
+                        left = [],
+                        right = [],
+                        middle = [],
+                        len = arr.length;
+                    if (arr.length < 2) {
+                        return arr;
+                    }
+                    for (var i = 0; i < len; i++) {
+                        if (arr[i] < arr[0]) {
+                            left.push(arr[i]);
+                        } else if (arr[i] > arr[0]) {
+                            right.push(arr[i]);
+                        } else {
+                            middle.push(arr[i]);
+                        }
+                    }
+                    return [].concat(quickSort(left), quickSort(middle), quickSort(right));
+                }
+                console.log(quickSort(arr));
+
+
+            归并排序
+                -> 只排序两个已经顺序的数组，用两个数组的第零位作比较，放入新数组，递归执行，出口为数组数小于二
+
+                var arr = [2,5,1,6,4,8,9,3,7];
+                function mergeSort (arr) {
+                    var mid = Math.floor(arr.length / 2);
+                    var left = arr.slice(0, mid);
+                    var right = arr.slice(mid);
+                    if (arr.length < 2) {
+                        return arr;
+                    } 
+                    return merge(mergeSort(left), mergeSort(right));
+                }
+                function merge (left, right) {
+                    var result = [];
+                    while (left.length && right.length) {
+                        if (left[0] < right[0]) {
+                            result.push(left.shift());
+                        } else {
+                            result.push(right.shift());
+                        }
+                    }
+                    return result.concat(left, right);
+                }
+                console.log(mergeSort(arr));
+            
+        -->
+</body>
+
+</html>
