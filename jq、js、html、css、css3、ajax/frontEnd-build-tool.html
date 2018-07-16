@@ -361,7 +361,51 @@
         -->
 
         <!-- 
-                * gulp
+                * gulp (Task runner) 底层为node.js, 所以文件的输入输出以 '流'(pipe) 的形式
+ 
+                API
+                    -> gulp.task(name[,array], callback)
+                        定义一个gulp任务，接收三个参数
+                            第一个参数：任务的名称
+                            第二个参数：定义该任务执行的依赖（可以不写）
+                                ->  gulp.task('css', ['html'], function () {}) 执行完html任务后（html为已定义的gulp任务）再执行css任务
+
+                            第三个参数：回调函数
+
+                    -> gulp.src(url) 过程用 pipe() 处理
+                        指定需要处理的源文件的路径，接收一个参数 (?)
+                            第一个参数：文件的路径
+                                ->  gulp.task('html', function () {
+                                        gulp.src(./src/js/*.js)
+                                            .pipe(gulp.dest(./build/js))
+                                    })
+
+                            通配符路径匹配示例：
+                                src/a.js：指定具体文件；
+                                *：匹配所有文件 -> src/*.js (包含src下的所有js文件)；
+                                **：匹配0个或多个子文件夹 -> src/**/*.js (包含src的0个或多个子文件夹下的js文件)；
+                                {}：匹配多个属性 -> src/{a,b}.js (包含a.js和b.js文件) / src/*.{jpg,png,gif} (src下的所有jpg/png/gif文件)；
+                                !：排除文件 -> !src/a.js (不包含src下的a.js文件)；
+
+                    -> gulp.dest(url)
+                        指定处理完后文件输出的路径,可以将文件 pipe 到多个文件夹，如果某文件夹不存在，将会自动创建它 接收一个参数 (?)
+                            第一个参数：文件的路径
+                                ->  gulp.task('html', function () {
+                                        gulp.src(./src/js/*.js)
+                                            .pipe(gulp.dest(./build/js))
+                                            .pipe(gulp.dest(./build/js/new))
+                                    })
+
+                    -> gul.watch(url, callback)
+                        监听文件变化，文件一修改就会执行指定的任务,接收两个参数
+                            第一个参数：文件的路径
+                            第二个参数：文件变化执行的回调函数(allback 会被传入一个名为 event 的对象,这个对象描述了所监控到的变动：event.path:触发该事件文件的路径 event.type:发生变动的类型)
+                                ->  gulp.task('watch2', function () {
+                                        gulp.watch('js/**/*.js', function (event) {
+                                            console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                                        });
+                                    });
+                                    
 
 
          -->
