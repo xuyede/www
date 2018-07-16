@@ -369,6 +369,8 @@
                             第一个参数：任务的名称
                             第二个参数：定义该任务执行的依赖（可以不写）
                                 ->  gulp.task('css', ['html'], function () {}) 执行完html任务后（html为已定义的gulp任务）再执行css任务
+                                ->  默认的 
+                                        gulp.task('default', ['html', 'images'], function () {}); 直接gulp
 
                             第三个参数：回调函数
 
@@ -407,6 +409,12 @@
                                     });
                                     
 
+                常用插件
+                    1)压缩图片  gulp-imagemin
+                    2)文件查重  gulp-newer 
+                    3)
+                    4)
+                    5)
 
          -->
 </body>
