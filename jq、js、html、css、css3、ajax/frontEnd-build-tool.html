@@ -398,23 +398,38 @@
                                             .pipe(gulp.dest(./build/js/new))
                                     })
 
-                    -> gul.watch(url, callback)
+                    -> gulp.watch(url, callback)/ gulp.watch(url, task)
                         监听文件变化，文件一修改就会执行指定的任务,接收两个参数
                             第一个参数：文件的路径
-                            第二个参数：文件变化执行的回调函数(allback 会被传入一个名为 event 的对象,这个对象描述了所监控到的变动：event.path:触发该事件文件的路径 event.type:发生变动的类型)
-                                ->  gulp.task('watch2', function () {
-                                        gulp.watch('js/**/*.js', function (event) {
-                                            console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                            第二个参数：
+                                1)文件变化执行的回调函数(allback 会被传入一个名为 event 的对象,这个对象描述了所监控到的变动：event.path:触发该事件文件的路径 event.type:发生变动的类型)
+                                    ->  gulp.task('watch2', function () {
+                                            gulp.watch('js/**/*.js', function (event) {
+                                                console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                                            });
                                         });
-                                    });
+                                
+                                2)文件变动后执行的一个或者多个通过 gulp.task() 创建的 task 的名字
+                                    ->  gulp.task('watch', function () {
+                                            gulp.watch('html/*', ['html']);
+                                            gulp.watch('css/*', ['css']);
+                                            gulp.watch('js/*', ['js']);
+                                        })
                                     
 
                 常用插件
-                    1)压缩图片  gulp-imagemin -> imagemin()
-                    2)文件查重  gulp-newer -> newer(path)
+                    1)文件查重  gulp-newer -> newer(path)
+
+                    2)压缩图片  gulp-imagemin -> imagemin()
                     3)html压缩  gulp-htmlclean -> htmlclean()
-                    4)
-                    5)
+                    4)js压缩    gulp-uglify() -> uglify()
+                    5)css兼容前缀及压缩   gulp-postcss、autoprefixer、cssnano
+                                            postcss(autoprefixer(), cssnano())
+
+                    6)拼接文件  gulp-concat -> concat(name)合并后的文件名字
+                    7)less转css     gulp-less -> less()
+                    8)去除js调试语句    gulp-strip-debug -> stripDegb()
+                    
 
          -->
 </body>
