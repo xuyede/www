@@ -428,11 +428,20 @@
 
                     6)拼接文件  gulp-concat -> concat(name)合并后的文件名字
                     7)less转css     gulp-less -> less()
+                      sass转css     gulp-sass -> sass()
                     8)去除js调试语句    gulp-strip-debug -> stripDegb()
                     9)本地server    gulp-connect -> connect.server({
                                                         port : "8081",
                                                         livereload : true
                                                     });
+                    10)编译出错时保持监听状态，而不是结束执行   gulp-plumber -> plumber
+                    11)自动加载插件     gulp-load-plugins 
+                                            -> var plugins = require('gulp-load-plugins')();
+                                               使用其他插件（已经下入package.json中），直接plugins.htmkclean(也就是原始插件名去掉gulp-前缀，之后再转换为驼峰命名)
+
+                                               注意:    1.没有gulp-前缀的不能这样用
+                                                        2. gulp-connect 不能这样玩
+                                    
                     
                 配置环境
                     运行 production
