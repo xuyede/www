@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+    <div class="header">
+        <div class="song-img">
+            <div class="img"></div>
+        </div>
+        <div class="song-info">
+            <span class="txt song-name"></span>
+            <span class="txt singer"></span>
+            <span class="txt album"></span>
+        </div>
+    </div>
+    <div class="content">
+        <span class="song-start">00:00</span>
+        <div class="bar-box">
+            <div class="bar"></div>
+            <div class="bar-circle"></div>
+        </div>
+        <span class="song-end"></span>
+    </div>
+    <div class="footer">
+        <ul class="control-list">
+            <li class="btn like"></li>
+            <li class="btn pre"></li>
+            <li class="btn play"></li>
+            <li class="btn next"></li>
+            <li class="btn list"></li>
+        </ul>
+    </div>
+    <div class="menu"></div>
+
+    <script src="../js/jquery.js"></script>
+    <script src="../js/index.js"></script>
+    <script src="../js/rander.js"></script>
+    <script src="../js/bindEvent.js"></script>
+    <script src="../js/bindBar.js"></script>
+    <script src="../js/dragBar.js"></script>
+    <script src="../js/menu.js"></script>
+    <script>
+        var main = new Main();
+    </script>
+</body>
+</html>
