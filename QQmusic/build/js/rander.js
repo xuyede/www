@@ -21,6 +21,13 @@
         this.target = main.arr[main.count];
         // 信息
         this.$img.css('background-image', 'url(' + this.target.image + ')');
+        // 高斯模糊
+        var img = new Image();
+        img.src = this.target.image;
+        img.onload = function () {
+            window.blurImg(img, $(document.body));
+        };
+
         this.$songName.html(this.target.song);
         this.$singer.html(this.target.singer);
         this.$album.html(this.target.album);
