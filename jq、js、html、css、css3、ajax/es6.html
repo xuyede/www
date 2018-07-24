@@ -61,6 +61,7 @@
                 let [x = 1, y = x] = [2, 3];    // x:2, y:3
                 let [x = y, y = 1] = [];        // ReferenceError，x引用y的值时，y还没声明
 
+
         2. 对象的解构赋值 -> 根据属性名进行映射，与顺序无关
             var { foo: foo, bar: bar } = { foo: "aaa", bar: "bbb" };    // 完整形式
             var { foo     , bar      } = { foo: "aaa", bar: "bbb" };    // 简写形式
@@ -77,9 +78,10 @@
                     let { first: f, last: l } = obj;                  // f:'hello', l:'world'
 
             默认值 : 默认值仅当右边找不到同名属性，或同名属性值为undefined时起效
-                var {x, y = 5} = {x: 1};            // x:1, y:5
-                var {x = 3} = {x: null};            // x:null
-                var {x = 3} = {x: undefined};       // x:3
+                ->
+                    var {x, y = 5} = {x: 1};            // x:1, y:5
+                    var {x = 3} = {x: null};            // x:null
+                    var {x = 3} = {x: undefined};       // x:3
 
             嵌套 : 嵌套的父属性如果不存在，则子元素没意义
             解构已声明的变量 : 用括号包裹，不能让花括号处于行首
@@ -89,8 +91,50 @@
                     ({x} = {x: 1});    // 正确的写法
 
             利用对象的解构赋值，可以很方便地将现有对象的方法，赋值到某个变量
-            let { random, sin, cos, floor } = Math;
+                -> 
+                    let { random, sin, cos, floor } = Math;
 
+
+        3. 字符串的解构赋值 -> 字符串作为类数组对象，同时具备了数组和对象的特性
+
+            字符串可以看做数组进行结构
+            ->
+                const [a, b, c, d, e] = 'hello';    // a:"h", b:"e", c:"l", d:"l", e:"o",
+
+            字符串作为类数组对象，拥有length属性。
+            -> 
+                let {length : len} = 'hello';       // len:5
+
+        4. 函数参数的解构赋值
+            -> add()的参数不是数组，而是[x,y] = [1,2]的解构，在函数内部，x和y可以直接访问，不需要索引
+                function add([x, y]){
+                    return x + y;
+                }
+                add([1, 2])     // 3    
+            
+            默认值 : 实参为空对象或者无参调用，函数形参使用默认值
+                -> 
+                    function move({x = 1, y = 1} = {x : 0, y : 0}) {
+                        return [x, y];
+                    }
+
+                    move({x: 3, y: 8});     // [3, 8]
+                    move({x: 3});           // [3, 1]，y使用默认值
+                    move({});               // [1, 1]，空对象，x、y均使用默认值
+                    move();                 // [0, 0], 无参调用时使用 {x : 0, y : 0} 解构 {x = 1, y = 1}
+
+                ->  无参调用
+                        下面的写法不是解构赋值，而是给函数的参数设定默认值，只有在无参调用时默认值才起效
+                        function move({x, y} = { x: 0, y: 0 }) {
+                            return [x, y];
+                        }
+
+                        move({x: 3, y: 8});     // [        3,         8]
+                        move({x: 3});           // [        3, undefined]，x正常赋值，默认值无效，y属性不存在，因此是undefined
+                        move({});               // [undefined, undefined]，空对象也是实参，默认值无效，x、y属性都不存在，都是undefined
+                        move();                 // [        0,         0]，无参调用，默认值起效
+            
+        5.
 
 
 
