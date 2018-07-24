@@ -28,14 +28,73 @@
             -> 不再属于全局变量,就算在全局中声明
 
             -> 声明时必须立即初始化，否则属于语法错误
-            -> 初始化后，不能修改值 (如果是引用值，则不能修改指向的地址)
+            -> 初始化后，不能代码修改值 (如果是引用值，则不能修改指向的地址)
             -> 使用 export 和 import 命令，我们可以让它在多个模块间共享
      -->
 
      <!-- 
-        赋值
+        解构赋值
 
-        1. 数组的解构赋值
+        1. 数组的解构赋值 -> 等号右边必须是数组(可遍历的结构，原始变量和{}不属于)
+            var [a, b, c] = [1, 2, 3];
+            var a = 1, b = 2, c = 3;    // 上面的代码等价于这行代码
+
+            let [a, [b], d] = [1, [2, 3], 4];    // a:1, b:2, d:4
+            let [x, , y]    = [1, 2, 3];         // x:1, y:3
+            let [foo]       = [];                // foo: undefined
+            let [bar, foo]  = [1];               // foo: undefined
+
+                -> 一一匹配，少的为undefined，多的舍去，空缺位自动跳过
+
+
+            默认值 : 仅当等号右边的元素是undefined时，默认值才起效
+                let [x = 10] = [20]             // x:20
+                let [x = 10] = [undefined]      // x:10  
+                var [x = 1]  = [null];          // x:null
+
+                function f() { console.log('aaa'); }
+                let [x = f()] = [1];            // 右边不等于undefined，因此f()不会调用, x：1
+
+                默认值可以引用其他变量，但必须声明
+                let [x = 1, y = x] = [];        // x:1, y:1
+                let [x = 1, y = x] = [2];       // x:2, y:2
+                let [x = 1, y = x] = [2, 3];    // x:2, y:3
+                let [x = y, y = 1] = [];        // ReferenceError，x引用y的值时，y还没声明
+
+        2. 对象的解构赋值 -> 根据属性名进行映射，与顺序无关
+            var { foo: foo, bar: bar } = { foo: "aaa", bar: "bbb" };    // 完整形式
+            var { foo     , bar      } = { foo: "aaa", bar: "bbb" };    // 简写形式
+
+            var { bar, foo } = { foo: "aaa", bar: "bbb" };    // foo:"aaa", bar:"bbb"
+            var { baz }      = { foo: "aaa", bar: "bbb" };    // baz:undefined
+
+            对象解构赋值的内部机制，是先找到同名属性，然后用等号右边的属性值给左边对应的属性值赋值。
+            真正被赋值的是冒号右边的属性值，而不是左边的属性名
+                -> 
+                    var { foo: baz } = { foo: "aaa", bar: "bbb" };    // baz:"aaa", foo:not defined
+                    
+                    let obj = { first: 'hello', last: 'world' };
+                    let { first: f, last: l } = obj;                  // f:'hello', l:'world'
+
+            默认值 : 默认值仅当右边找不到同名属性，或同名属性值为undefined时起效
+                var {x, y = 5} = {x: 1};            // x:1, y:5
+                var {x = 3} = {x: null};            // x:null
+                var {x = 3} = {x: undefined};       // x:3
+
+            嵌套 : 嵌套的父属性如果不存在，则子元素没意义
+            解构已声明的变量 : 用括号包裹，不能让花括号处于行首
+                -> 
+                    var x;
+                    {x} = {x: 1};     // 语法错误
+                    ({x} = {x: 1});    // 正确的写法
+
+            利用对象的解构赋值，可以很方便地将现有对象的方法，赋值到某个变量
+            let { random, sin, cos, floor } = Math;
+
+
+
+
+
 
 
 
