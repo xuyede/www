@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        body {
+            background-color: #000;
+        }
+        .box{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+        #myCanvas {
+            flex: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <canvas id="myCanvas"></canvas>
+    </div>
+    <script>
+
+        var myCanvas = document.getElementById('myCanvas');
+        myCanvas.width = '300';
+        myCanvas.height = '300';
+
+        var ctx = myCanvas.getContext('2d');
+
+        ctx.strokeStyle = '#00ffff';
+        ctx.lineWidth = 17;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = '#00ffff';
+
+        function rander() {
+            // bg
+            bg = ctx.createRadialGradient(150, 150, 5, 150, 150, 140);
+            bg.addColorStop(0, '#03303a');
+            bg.addColorStop(1, '#000');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, 300, 300);
+
+            // h, m, s
+            var date = new Date();
+            var time = date.toDateString();
+            var h = date.getHours();
+            var m = date.getMinutes();
+            var s = date.getSeconds();
+            var ms = date.getMilliseconds();
+
+            var newS = s + (ms / 1000);
+            var newM = m + (newS / 60);
+            var newH = h + (newM / 60);
+
+            // h
+            ctx.beginPath();
+            ctx.arc(150, 150, 140, deg(270), deg(newH * 30 - 90), false);
+            ctx.stroke();
+            // m
+            ctx.beginPath();
+            ctx.arc(150, 150, 110, deg(270), deg(newM * 6 - 90), false);
+            ctx.stroke();
+            // s
+            ctx.beginPath();
+            ctx.arc(150, 150, 80, deg(270), deg(newS * 6 - 90), false);
+            ctx.stroke();
+            // time
+            ctx.beginPath();
+            ctx.font = '12px Helvetica';
+            ctx.fillStyle = 'rgba(0, 255, 255, 1)';
+            ctx.fillText(time, myCanvas.width / 2 - 45, 140);
+            // date
+            ctx.beginPath();
+            hh = ('0' + h).slice(-2);
+            mm = ('0' + m).slice(-2);
+            ss = ('0' + s).slice(-2);
+            ctx.fillText(hh + ':' + mm + ':' + ss,  myCanvas.width / 2 - 20 , 160)
+        }
+
+        function deg(deg) {
+            var f = Math.PI / 180;
+            return f * deg;
+        }
+
+        setInterval(rander, 16);
+
+    </script>
+</body>
+
+</html>
