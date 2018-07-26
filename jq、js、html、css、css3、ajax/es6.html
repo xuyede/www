@@ -164,19 +164,219 @@
         
         解构赋值的用途
 
-            1. 
-            2. 
-            3. 
-            4. 
-            5. 
-            6. 
+            1. 交换变量的值
+                let x = 1, y = 2
+                [x, y] = [y, x]
+
+                
+            2. 从函数返回多个值
+                -> 
+                    // 返回一个数组
+                    function example() { return [1, 2, 3]; }
+                    var [a, b, c] = example();
+
+                    // 返回一个对象
+                    function example() { return { foo: 1, bar: 2 }; }
+                    var { foo, bar } = example();
+                    
+
+            3. 函数参数的默认值
+                -> 
+                    // bar, baz 等参数如果不指定，就用默认值代替，本质是对象的解构赋值
+                    // 避免了在函数体内再写 var bar = config.bar || true 等检测代码
+                    function func (foo, {
+                        bar = true,             -> func(1, {});
+                        baz = function () {},
+                        ......
+                    } = {
+                        bar : true              -> 兼容直接调用 func(1);
+                        baz : function () {}
+                    }) {
+                        // do something
+                    }
 
 
+            4. 提取json数据
+                -> 
+                    var jsonData = {
+                        "id" : 42,
+                        "status" : "OK",
+                        "data" : [867, 5309]
+                    }
+                    let { id, status, data: number } = jsonData;
+                    console.log(id, status, number)    // 42, OK, [867, 5309]
 
 
+            5. 遍历Map
+                -> 
+                    // Map 类型是 ES6 引入的集合类型，以键值对方式存储数据
+                    var map = new Map();
+                    map.set('first', 'hello');
+                    map.set('second', 'world');
 
+                    // for...of 是 ES6 引入的循环方式，类似 for...in
+                    for (let [key, value] of map) {
+                    console.log(key + " is " + value);
+                    }
+                    // first is hello
+                    // second is world
+
+                    // 也可以单独获取键，或者值
+                    for (let [key]     of map) { ... }
+                    for (let [, value] of map) { ... }    // 注意逗号不能省，这是数组的解构赋值
+
+
+            6. 输入模块的指定方法
+                ->
+                    // 加载模块时，往往需要指定输入哪些方法。解构赋值使得输入语句非常清晰。
+                    const { SourceMapConsumer, SourceNode } = require("source-map");
 
       -->
+
+      <!-- 
+          字符串的扩展
+
+            模板字符串 -> 特殊的字符串 (反引号 波浪符那个)
+            -> 
+                1. 可以按照想要的格式显示，不用换行转义符
+                    let str = `life is shit, 
+                                but fantastic.`
+
+                2. 可以在模板字符串中添加变量、表达式、函数 ( ${} )
+                    -> 变量
+                        let name = 'sunday';
+                        var str = `name = ${name}`;
+
+                    -> 表达式
+                        let a = 10, b = 1;
+                        var str = `a + b = ${a + b}`
+                        
+                    -> 函数 
+                        let arr = [1, 2, 3, 4, 5];
+                        let str = `${arr.map(function (ele) {
+                            return `${ele * 2}`;
+                        })}`;
+                
+            
+            标签模板 (函数调用的特殊形式)
+            -> 第一个参数是个数组，数组的内容是模板字符串中除了花括号表达式以外的内容 (最后补空字符串)*
+               从第二个参数起就是花括号表达式计算的结果
+            
+                function hello(s, v1, v2) {
+                    console.log(s[0]);          // "Hello "
+                    console.log(s[1]);          // " world "
+                    console.log(s[2]);          // ""
+                    console.log(v1);            // 15
+                    console.log(v2);            // 50
+
+                    return "OK";
+                }
+
+                var a = 5, b = 10;
+                hello`Hello ${ a + b } world ${ a * b}`;   // 相当于 -> hello(['Hello ', ' world ', ''], 15, 50)
+
+                
+                标签模板的应用 : 过滤html字符串
+
+                &quot -> """
+                &amp -> "&"
+                &lt -> "<"
+                &gt -> ">"
+                &nbsp -> " "
+
+                function safeHTML (data) {
+                    let str = data[0];
+                    for (let i = 1; i < arguments.length; i ++) {
+                        var arg = String(arguments[i]);
+                        str += arg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        str += data[i];
+                    }
+                }
+                var name = '<script>111<\/script>';
+                safeHTML`hello ${name}, welcome to beijing`;
+       -->
+       <!-- 
+            函数扩展
+                1. 函数参数的默认值 (可以和解构赋值一起使用)
+
+                    1) 普通用法
+                        ->  function log(x, y = 'World') {
+                                console.log(x, y);
+                            }
+
+                            log('Hello')          // Hello World
+                            log('Hello', 'China') // Hello China
+                            log('Hello', '')      // Hello
+
+                    2) 解构赋值
+                        ->  // 写法一
+                            function m1( {x = 0, y = 0} = {} ) {
+                                return [x, y];
+                            }
+
+                            // 写法二
+                            function m2( {x, y} = { x: 0, y: 0 } ) {
+                                return [x, y];
+                            }
+
+                            m1()                    // [0, 0]
+                            m2()                    // [0, 0]
+                            
+                            m1( {x: 3, y: 8} )      // [3, 8]
+                            m2( {x: 3, y: 8} )      // [3, 8]
+                            
+                            m1( {x: 3} )            // [3, 0]
+                            m2( {x: 3} )            // [3, undefined]
+                            
+                            m1( {} )                // [0, 0];
+                            m2( {} )                // [undefined, undefined]
+
+                            m1( {z: 3} )            // [0, 0]
+                            m2( {z: 3} )            // [undefined, undefined]
+
+                    ->  
+                        每个函数都有一个length属性，记录参数列表中参数的个数，
+                        如果指定了默认值的，将不计入length，即length表示期望接收到的参数的个数
+
+                    -> 
+                        如果参数的默认值也是一个参数或者一个函数，那么需要注意它的作用域：参数列表 > 函数外部
+                        eg:
+                            let x = 1;                                      let x = 1;
+                            function f(x, y = x) {                          function f(y = x) {
+                            console.log(y);                                     let x = 2;
+                            }                                                   console.log(y);
+                                                                            }
+                            // 先 x=2，然后 y=x 因而 y=2                     // 参数列表中没有x，因此只能从外围获取，x=1
+                            // let x=1在这里并没有起到作用                   // 之后 y=x 因而 y=1，这之后 x=2 只影响函数内部的 x，不影响 y      
+                            f(2)  // 2                                      f() // 1
+
+
+
+                2. REST参数 : 允许我们将一个不定数量的参数表示为一个数组
+
+                    -> 剩余参数和 arguments对象之间的区别主要有三个：
+                        1) 剩余参数只包含那些没有对应形参的实参，而 arguments 对象包含了传给函数的所有实参。
+                        2) arguments对象不是一个真正的数组，而剩余参数是真正的 Array实例，也就是说你能够在它上面直接使用所有的数组方法，比如 sort，map，forEach或pop。
+                        3) arguments对象还有一些附加的属性 （如callee属性）
+
+                    function add (a, ...arg) { 
+                        console.log(arg);   // [2, 3, 4]
+                        arg.forEach(function (ele) {
+                            do something ...
+                        })
+                        console.log(arg);
+                    }
+                    add(2, 2, 3, 4);
+
+                    * arr = [1, 2]  ->  ...arr = 1, 2
+
+
+
+                3. 箭头函数
+                
+
+        -->
+        
 </body>
 
 </html>
