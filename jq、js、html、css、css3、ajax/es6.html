@@ -27,7 +27,7 @@
             -> 块级作用域特性 (只在变量声明所在的代码块内有效 {...} )
             -> 不再属于全局变量,就算在全局中声明
 
-            -> 声明时必须立即初始化，否则属于语法错误
+            -> 声明时必须立即初始化，否则属于语法错误 *
             -> 初始化后，不能代码修改值 (如果是引用值，则不能修改指向的地址)
             -> 使用 export 和 import 命令，我们可以让它在多个模块间共享
      -->
@@ -138,12 +138,17 @@
         5. 圆括号问题
             -> 一个式子到底是模式，还是表达式，只有解析到（或解析不到）等号才能知道
 
+                        模式外面不能带括号，整个赋值语句可以
+
             1) 变量声明语句中，模式不能带有圆括号
                 -> 
-                    // 下面3中写法都会报错
-                    var [(a)] = [1];
-                    var { x: (c) } = {};
-                    var { o: ({ p: p }) } = { o: { p: 2 } };
+                    // 下面6种写法都会报错
+                    let [(a)] = [1];
+                    let {x: (c)} = {};
+                    let ({x: c}) = {};
+                    let {(x: c)} = {};
+                    let {(x): c} = {};
+                    let { o: ({ p: p }) } = { o: { p: 2 } };
 
             2) 函数参数中，模式不能带有圆括号
                 -> 
@@ -161,7 +166,12 @@
                     // 将嵌套模式的一层放在圆括号之中，会报错。
                     [({ p: a }), { x: c }] = [{}, {}];
 
-        
+            4) 可以使用圆括号的情况只有一种：赋值语句的非模式部分，可以使用圆括号
+                ->
+                    [(b)] = [3]; // 正确
+                    ({ p: (d) } = {}); // 正确
+                    [(parseInt.prop)] = [3]; // 正确
+                    
         解构赋值的用途
 
             1. 交换变量的值
@@ -236,6 +246,39 @@
       <!-- 
           字符串的扩展
 
+            新增的方法 : 
+                1) charAt()  ->  at() 返回字符串给定位置的字符,可以识别 Unicode 编号大于0xFFFF的字符，返回正确的字符
+                
+                2) indexOf()  确定一个字符串是否包含在另一个字符串中
+                    -> 
+                        includes()：返回布尔值，表示是否找到了参数字符串。
+                        startsWith()：返回布尔值，表示参数字符串是否在原字符串的头部。
+                        endsWith()：返回布尔值，表示参数字符串是否在原字符串的尾部。
+
+                        这三个方法都支持第二个参数，表示开始搜索的位置。
+                            let s = 'Hello world!';
+                            s.startsWith('world', 6) // true
+                            s.endsWith('Hello', 5) // true
+                            s.includes('Hello', 6) // false
+
+                            ->上面代码表示，使用第二个参数n时，endsWith的行为与其他两个方法有所不同。
+                            它针对前n个字符，而其他两个方法针对从第n个位置直到字符串结束。
+
+                3) repeat(n) 方法返回一个新字符串，表示将原字符串重复n次
+                    -> 
+                        如果n为小数，先Math.floor()
+                        如果n为字符串，先转为数字
+
+                4) padStart(), padEnd() 字符串补全长度的功能
+                    ->
+                        'x'.padStart(5, 'ab') // 'ababx'
+                        'x'.padStart(4, 'ab') // 'abax'
+
+                        'x'.padEnd(5, 'ab') // 'xabab'
+                        'x'.padEnd(4, 'ab') // 'xaba'
+
+                
+
             模板字符串 -> 特殊的字符串 (反引号 波浪符那个)
             -> 
                 1. 可以按照想要的格式显示，不用换行转义符
@@ -287,10 +330,11 @@
                 function safeHTML (data) {
                     let str = data[0];
                     for (let i = 1; i < arguments.length; i ++) {
-                        var arg = String(arguments[i]);
+                        let arg = String(arguments[i]);
                         str += arg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                         str += data[i];
                     }
+                    return str;
                 }
                 var name = '<script>111<\/script>';
                 safeHTML`hello ${name}, welcome to beijing`;
@@ -341,18 +385,39 @@
                     -> 
                         如果参数的默认值也是一个参数或者一个函数，那么需要注意它的作用域：参数列表 > 函数外部
                         eg:
-                            let x = 1;                                      let x = 1;
-                            function f(x, y = x) {                          function f(y = x) {
-                            console.log(y);                                     let x = 2;
-                            }                                                   console.log(y);
-                                                                            }
-                            // 先 x=2，然后 y=x 因而 y=2                     // 参数列表中没有x，因此只能从外围获取，x=1
-                            // let x=1在这里并没有起到作用                   // 之后 y=x 因而 y=1，这之后 x=2 只影响函数内部的 x，不影响 y      
-                            f(2)  // 2                                      f() // 1
+                            let x = 1;                                              let x = 1;
+                            function f(x, y = x) {                                  function f(y = x) {
+                                console.log(y);                                         let x = 2;
+                            }                                                           console.log(y);
+                                                                                    }
+                            // 先 x=2，然后 y=x 因而 y=2                            // 参数列表中没有x，因此只能从外围获取，x=1
+                            // let x=1在这里并没有起到作用                          // 之后 y=x 因而 y=1，这之后 x=2 只影响函数内部的 x，不影响 y      
+                            f(2)  // 2                                              f() // 1
+
+                        ----------------------------------------------------------------------------------------------------------------------------
+
+                            var x = 1;                                              var x = 1;
+                            function foo(x, y = function() { x = 2; }) {            function foo(x, y = function() { x = 2; }) {
+                                var x = 3;                                              x = 3;
+                                y();                                                    y();
+                                console.log(x);                                         console.log(x);
+                            }                                                       }
+
+                            foo() // 3                                              foo() // 2
+                            x // 1                                                  x // 1
+
+                    应用 : 参数为空时报错
+                        ->
+                            function throwInMissing () {
+                                throw new Error('Missing Parameter');
+                            }
+                            function func (param = throwInMissing()){
+                                console.log(param);
+                            }
+                            func();
 
 
-
-                2. REST参数 : 允许我们将一个不定数量的参数表示为一个数组
+                2. REST参数 : 允许我们将一个不定数量的参数表示为一个数组, 只能放在最后
 
                     -> 剩余参数和 arguments对象之间的区别主要有三个：
                         1) 剩余参数只包含那些没有对应形参的实参，而 arguments 对象包含了传给函数的所有实参。
@@ -372,11 +437,69 @@
 
 
 
-                3. 箭头函数
-                
+                3. 箭头函数     使用箭头 ( => ) 定义函数
+                    ->  var f = v => v;
+                        //  等同于
+                        var f = function (v) {
+                            return v;
+                        }
+
+                    1) 如果箭头函数不需要参数或需要多个参数，就使用一个圆括号代表参数部分
+
+                        var f = () => 5; -> var f = function () { return 5 }
+
+                        var sum = (num1, num2) => num1 + num2;
+                        // 等同于
+                        var sun = function(num1, num2) {
+                            return num1 + num2;
+                        }
+
+                    2) 如果箭头函数的代码块部分多于一条语句，就要使用大括号将它们括起来
+                    
+                        let f = (x, y) => {
+                            let result = x + y;
+                            return result * 2;
+                        }
+
+                    3) 如果函数执行返回一个对象，需要用（）包裹
+
+                        let f = id => ({ id : id, name : 'sunday'});
+
+
+                    注意点：
+                        -> 
+                            1) 箭头函数的 this 总是指向函数定义时所在的作用域，而不是指向运行时所在的作用域（即箭头函数的this为父函数的this）
+                            2) 箭头函数没有arguments，用rest参数替代
+                            3) 不能当做构造函数，因为没有独立的执行上下文
+                            4) 不可以使用yield命令，因此箭头函数不能用作 Generator 函数
+
+                        
+                        箭头函数this问题 ：
+                            ->
+                                function Timer() {
+                                    this.s1 = 0;
+                                    this.s2 = 0;
+                                    // 箭头函数
+                                    setInterval(() => this.s1++, 1000);  -> this指向Timer
+                                    // 普通函数
+                                    setInterval(function () {            -> this指向window
+                                        this.s2++;
+                                    }, 1000);
+                                }
+
+                                var timer = new Timer();
+
+                                setTimeout(() => console.log('s1: ', timer.s1), 3100);  //3
+                                setTimeout(() => console.log('s2: ', timer.s2), 3100);  //0
 
         -->
-        
+        <!--
+            数组的扩展
+
+
+
+
+          -->
 </body>
 
 </html>
