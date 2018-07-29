@@ -496,9 +496,193 @@
         <!--
             数组的扩展
 
+                1. 扩展运算符 ( ... ) rest参数的逆运算
+                     * ...[1, 2, 3] -> 1, 2, 3
+
+                    // ES5 的写法
+                    Math.max.apply(null, [14, 3, 77])
+                    // ES6 的写法
+                    Math.max(...[14, 3, 77])
+                    // 等同于
+                    Math.max(14, 3, 77);
+
+                    // ES5的 写法
+                    var arr1 = [0, 1, 2];
+                    var arr2 = [3, 4, 5];
+                    Array.prototype.push.apply(arr1, arr2);
+                    // ES6 的写法
+                    let arr1 = [0, 1, 2];
+                    let arr2 = [3, 4, 5];
+                    arr1.push(...arr2);
+
+                    扩展运算符的应用 : 
+                        1) 复制数组（深度复制）
+                            let arr = [1, 2]
+                            let arr1 = [...arr]
+
+                        2) 合并数组
+                            const arr1 = ['a', 'b'];
+                            const arr2 = ['c'];
+                            const arr3 = ['d', 'e'];
+
+                            // ES5 的合并数组
+                            arr1.concat(arr2, arr3);
+                            // [ 'a', 'b', 'c', 'd', 'e' ]
+
+                            // ES6 的合并数组
+                            [...arr1, ...arr2, ...arr3]
+                            // [ 'a', 'b', 'c', 'd', 'e' ]
+
+                        3) 字符串转数组 -> 能够正确识别四个字节的 Unicode 字符
+                            [...'hello']
+                            // [ "h", "e", "l", "l", "o" ]
+
+                        4) 具有 Iterator 接口的对象 -> 任何 Iterator 接口的对象，都可以用扩展运算符转为真正的数组（非类数组）
+                            
+                                let divList = document.getElementsByTagName('div');
+                                console.log(divList)
+                                let arrList = [...divList];
+                                console.log(arrList)
+
+                        5)  Map 和 Set 结构，Generator 函数
+
+                2. 新增的方法
+                    1)  Array.from() -> 类数组、具有Iterator接口的对象 转为 数组
+
+                        兼容 :  const toArray = (() => 
+                                    Array.from ? Array.from : obj => [].slice.call(obj)
+                                )();
+
+                        实际应用中，常见的类似数组的对象是 DOM 操作返回的 NodeList 集合
+
+                        以及函数内部的arguments对象。Array.from都可以将它们转为真正的数组。
+
+                        ->
+                            // NodeList对象
+                            let ps = document.querySelectorAll('p');
+                            Array.from(ps).filter(p => {
+                                return p.textContent.length > 100;
+                            });
+
+                            // arguments对象
+                            function foo() {
+                                var args = Array.from(arguments);
+                                // ...
+                            }
+
+                        .from()的第二个参数 : Array.from还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理，将处理后的值放入返回的数组
+                        
+                        ->
+                            Array.from(arrayLike, x => x * x);
+                            // 等同于
+                            Array.from(arrayLike).map(x => x * x);
+
+                            Array.from([1, 2, 3], (x) => x * x)
+                            // [1, 4, 9]
+                        ------------------------------------------------------------------------------------
+                            Array.from([1, , 2, , 3], (n) => n || 0)
+                            // [1, 0, 2, 0, 3]
+                        ------------------------------------------------------------------------------------
+                            function typesOf () {
+                                return Array.from(arguments, value => typeof value)
+                            }
+                            typesOf(null, [], NaN)
+                            // ['object', 'object', 'number']
+                
+                    2)  Array.of() -> 可以替代 Array() / new Array()
+
+                    3)  .find() -> 类似 .filter()
+
+                    4)  .findIndex() 
+                            -> 
+                            数组实例的findIndex方法的用法与find方法非常类似，返回第一个符合条件的数组成员的位置
+                            如果所有成员都不符合条件，则返回-1
+
+                    5)  .includes -> 方法返回一个布尔值，表示某个数组是否包含给定的值
+                        -> 兼容
+                            const contains = (() => 
+                                Array.prototype.includes 
+                                ? (arr, str) => arr.includes(str) 
+                                : (arr, str) => {
+                                    arr.some(ele => ele === str)
+                                }
+                            )();
+
+                    6)  .fill(n) -> 填充一个数组，fill方法用于空数组的初始化非常方便。数组中已有的元素，会被全部抹去
+
+                    7)  arr.entries()，arr.keys() 和 arr.values()
+                            keys()是对键名的遍历、values()是对键值的遍历，entries()是对键值对的遍历, 都返回一个 Iterator对象（有next() 方法开启迭代）
+
+                        ->
+                            for (let index of ['a', 'b'].keys()) {
+                                console.log(index);
+                            }
+                            // 0
+                            // 1
+
+                            for (let elem of ['a', 'b'].values()) {
+                                console.log(elem);
+                            }
+                            // 'a'
+                            // 'b'
+
+                            for (let [index, elem] of ['a', 'b'].entries()) {
+                                console.log(index, elem);
+                            }
+                            // 0 "a"
+                            // 1 "b"
+
+                3. 数组的空位
+                        ES6 基本统一把数组的空位转为字符串
+        
+
+                        ES5 对空位的处理，已经很不一致了，大多数情况下会忽略空位。
+                        -> 
+                            forEach(), filter(), reduce(), every() 和some()都会跳过空位。
+                            map()会跳过空位，但会保留这个值
+                            join()和toString()会将空位视为undefined，而undefined和null会被处理成空字符串。
+
+                            // forEach方法
+                            [,'a'].forEach((x,i) => console.log(i)); // 1
+
+                            // filter方法
+                            ['a',,'b'].filter(x => true) // ['a','b']
+
+                            // every方法
+                            [,'a'].every(x => x==='a') // true
+
+                            // reduce方法
+                            [1,,2].reduce((x,y) => x+y) // 3
+
+                            // some方法
+                            [,'a'].some(x => x !== 'a') // false
+
+                            // map方法
+                            [,'a'].map(x => 1) // [,1]
+
+                            // join方法
+                            [,'a',undefined,null].join('#') // "#a##"
+
+                            // toString方法
+                            [,'a',undefined,null].toString() // ",a,,"
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    
           -->
 </body>
 
