@@ -591,14 +591,14 @@
                 
                     2)  Array.of() -> 可以替代 Array() / new Array()
 
-                    3)  .find() -> 类似 .filter()
+                    3)  .find() -> 类似 .filter() ，差别 .find()找到一个符合条件的就停止, .filter()找到符合条件的全部数据
 
                     4)  .findIndex() 
                             -> 
                             数组实例的findIndex方法的用法与find方法非常类似，返回第一个符合条件的数组成员的位置
                             如果所有成员都不符合条件，则返回-1
 
-                    5)  .includes -> 方法返回一个布尔值，表示某个数组是否包含给定的值
+                    5)  .includes -> 方法返回一个布尔值，表示某个数组是否包含给定的值,可以判断NaN(indexOf不行，因为内部判断为===)
                         -> 兼容
                             const contains = (() => 
                                 Array.prototype.includes 
@@ -633,7 +633,7 @@
                             // 1 "b"
 
                 3. 数组的空位
-                        ES6 基本统一把数组的空位转为字符串
+                        ES6 基本统一把数组的空位转为undefined字符串
         
 
                         ES5 对空位的处理，已经很不一致了，大多数情况下会忽略空位。
@@ -665,25 +665,112 @@
 
                             // toString方法
                             [,'a',undefined,null].toString() // ",a,,"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     
           -->
+
+        <!-- 
+            对象的扩展
+
+                1. 对象的简写
+                    -> 
+                        let obj = {
+                            foo : foo，
+                            //等同于
+                            foo，
+
+                            add : function (x, y) {},
+                            //等同于
+                            add (x, y) {},
+                        }
+
+                2. 新增方法
+                    1) Object.assigns() -> 对象合并 浅拷贝(除了 null/undefined )
+
+                    2) Object.getOwnPropertyDescriptor(obj, prop) -> 获取对象某属性的描述对象
+                        ->
+                            let obj = { foo: 123 };
+                            Object.getOwnPropertyDescriptor(obj, 'foo')
+                            //  {
+                            //    value: 123,
+                            //    writable: true,   可修改  
+                            //    enumerable: true,     可枚举
+                            //    configurable: true        可删除
+                            //  }
+
+                            目前，有四个操作会忽略enumerable为false的属性
+                            ->
+                                for...in循环：只遍历对象自身的和继承的可枚举的属性
+                                Object.keys()：返回对象自身的所有可枚举的属性的键名
+                                JSON.stringify()：只串行化对象自身的可枚举的属性
+                                Object.assign()： 忽略enumerable为false的属性，只拷贝对象自身的可枚举的属性
+
+                    3) Object.is(first, second) -> 比较两个值是否相等   
+                        ->
+                            +0 === -0 //true
+                            NaN === NaN // false
+
+                            Object.is(+0, -0) // false
+                            Object.is(NaN, NaN) // true
+
+         -->
+        <!-- 
+            Symbol -> 第七种原始数据，不能 new, 独一无二的值
+                -> 
+                    let s = Symbol();
+                    typeof s; // symbol
+                    s // Symbol()
+
+                ->
+                    let x = Symbol('sunday');  参数只适用于描述，和 Symbol 的取值没有任何关系，两个参数相等的 Symbol 并不相等，事实上，就不存在任何两个 Symbol 是相等的。
+                    let y = Symbol('sunday');
+
+                ->
+                    Symbol 不能参与数值运算和字符串拼接，会报错  
+                    可以显式地把 Symbol 转换成字符串或布尔值（不能转换为数值）
+
+                -> 最主要的用途 : 作为属性名的symbol, 用 Symbol 定义属性时, 只能用[]的方式, 不能打点调用
+                        Symbol 最常见的用途就是解决对象属性名冲突的问题，因为 Symbol 绝对不会冲突
+
+                        let mySymbol = Symbol();
+
+                        // 第一种写法
+                        let o = {};
+                        o[mySymbol] = 'hello';
+
+                        // 第二种写法
+                        let o = {
+                        [mySymbol]: 'hello'
+                        };
+
+                        // 第三种写法
+                        let o = {};
+                        Object.defineProperty(o, mySymbol, {
+                        value: 'hello'
+                        });
+
+                        // 以上写法均得到此结果
+                        o[mySymbol] // hello
+
+                ->  Symbol.for()
+                        接受一个字符串参数，搜索是否已有以此为描述的 Symbol 存在，有则返回已有的，没有则新建并返回
+
+                        let s1 = Symbol.for('foo');
+                        let s2 = Symbol.for('foo');
+
+                        s1 === s2 // true
+
+                ->  Symbol.keyFor()
+                        Symbol.for()在创建的同时会在全局进行登记，以进行检查，而普通的 Symbol 并不会登记
+                        Symbol.keyFor()用于检查 Symbol 是否被注册过，注册过的正常返回注册用的参数，否则返回undefined
+
+                        let s1 = Symbol.for('foo');
+                        let s2 = Symbol('foo');
+
+                        Symbol.keyFor(s1) // 'foo'
+                        Symbol.keyFor(s2) // undefined
+                        
+
+         -->
 </body>
 
 </html>
