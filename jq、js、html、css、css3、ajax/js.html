@@ -638,8 +638,8 @@
 
 
         // var person = new Person()
-        //  1.构造函数Person被new的时候，在头部创建 var this = Object.create(Person.prototype) + constructor属性(当一个函数被声明时，解析器会自动添加一个 constructor 属性，这是 function 创建时的专属操作)
-        //  2.构造函数自身执行,并在函数最后return this
+        //  1.构造函数Person被new的时候，在头部创建 var instance = Object.create(Person.prototype) + constructor属性(当一个函数被声明时，解析器会自动添加一个 constructor 属性，这是 function 创建时的专属操作)
+        //  2.Person.call(instance, ...)
         //  3.person拿到构造函数Person的this引用
         //  4.person.__proto__ === Person.prototype
 
