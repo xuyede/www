@@ -649,6 +649,29 @@
         // 构造函数的原型的constructor指向构造函数的原型链的第二位
         // 构造函数的实例化对象的constructor指向该实例化对象的构造函数(如果有继承，则为继承的构造函数)
 
+        // 内置对象的继承方式
+        Object.setPrototypeOf = Object.setPrototypeOf ||
+			function (obj, proto) {
+				obj.__proto__ = proto;
+				return obj;
+			};
+
+		function MyDate() {
+			var instance = new (Function.prototype.bind.apply(Date, [Date].concat(Array.prototype.slice(arguments)))) ();
+
+			Object.setPrototypeOf(instance, MyDate.prototype);
+
+			return instance;
+		}
+		Object.setPrototypeOf(MyDate.prototype, Date.prototype);
+
+		MyDate.prototype.getTest = function () {
+			console.log(this.getTime())
+		}
+
+		var date = new MyDate();
+		date.getTest();
+
 
 
 
