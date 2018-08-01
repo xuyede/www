@@ -2204,8 +2204,52 @@
                     console.log(func('time'))
         */
         /*
-                函数式编程之柯里化
-        
+                函数式编程之柯里化 -> 常用于ajax请求时类型，url， data相似的情况，可以统一一个类型
+                    
+                    function fixedParamCurry (fn) {
+                        var args = [].slice.call(arguments, 1);
+
+                        return function () {
+                            var _args = [].slice.call(arguments, 0);
+                            return fn.apply(this, args.concat(_args));
+                        }
+                    }
+
+                    function currie (fn, length) {
+                        var length = length || fn.length;
+                        
+                        return function () {
+                            var args = [].slice.call(arguments, 0);
+
+                            if (args.length < length) {
+                                return currie(fixedParamCurry.apply(this, [fn].concat(args)), length - args.length);
+                            } else {
+                                return fn.apply(this, args);
+                            }
+                        }
+                    }
+
+                    function add (a,b,c,d) {
+                        return a + b + c + d;
+                    } 
+
+                    var newAdd = currie(add);
+
+                    newAdd(1)(2)(3)(4);
+                    newAdd(1)(2, 3)(4);
+                    newAdd(1, 2)(3)(4);
+
+                    // es6
+                    const FixedParamCurry = (fn, ...args) => (..._args) => fn.apply(null, _args.concat(args))
+
+                    const curry = (fn, length = fn.length) => (...args) => {
+                        if (args.length < length) {
+                            return curry(FixedParamCurry.apply(null, [fn].concat(args)), length - args.length);
+                        } else {
+                            return fn.apply(null, args)
+                        }
+                    }
+
         
         
         */
