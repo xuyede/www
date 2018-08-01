@@ -2172,22 +2172,40 @@
        
         */
         /*
-                    浏览器渲染原理：
+                浏览器渲染原理：
 
-                    1.处理HTML 生成DOM树
-                    2.处理CSS 生成CSSDOM树
-                    3.将两树合并成render 树
-                    4.对render树进行布局计算
-                    5.将render树中的每一个节点绘制到屏幕上
+                1.处理HTML 生成DOM树
+                2.处理CSS 生成CSSDOM树
+                3.将两树合并成render 树
+                4.对render树进行布局计算
+                5.将render树中的每一个节点绘制到屏幕上
 
-                    重绘（repaints）当render tree中的一些元素需要更新属性，而这些属性只是影响元素的外观，风格，而不会影响布局的，
-                    比如background-color。则就叫称为重绘。
+                重绘（repaints）当render tree中的一些元素需要更新属性，而这些属性只是影响元素的外观，风格，而不会影响布局的，
+                比如background-color。则就叫称为重绘。
 
-                    重排（回流）当render tree中的一部分(或全部)因为元素的规模尺寸，布局，隐藏等改变而需要重新构建。也会回流
+                重排（回流）当render tree中的一部分(或全部)因为元素的规模尺寸，布局，隐藏等改变而需要重新构建。也会回流
         
         */
         /* 
-                    Math.random() -> [0, 1)
+                Math.random() -> [0, 1)
+        
+        */
+        /*
+                函数式编程之函数组合
+                    const toUpperCase = str => str.toUpperCase()
+                    const split = str => str.split('')
+                    const reverse = arr => arr.reverse()
+                    const join = arr => arr.join('-')
+
+                    const compose = (...args) => str => args.reduceRight((baton, curVal) => curVal(baton), str)
+
+                    let func = compose( join, reverse, split, toUpperCase)
+
+                    console.log(func('time'))
+        */
+        /*
+                函数式编程之柯里化
+        
         
         
         */
