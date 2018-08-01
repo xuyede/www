@@ -1,0 +1,42 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+.stage{
+    position: relative;
+    width: 1200px;
+    height: 300px;
+    margin: 150px auto;
+    perspective: 600px;
+    transform-style: preserve-3d;
+}
+.stage img{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 200px;
+    height: 150px;
+    margin: -75px 0 0 -100px;
+    border-radius: 15px;
+}
+.stage .img0{
+    transform-origin: left;
+    transform: translate3d(-300px, 0, 100px) rotateY(45deg);
+}
+.stage .img1{
+    transform-origin: left;
+    transform: translate3d(-150px, 0, 200px) rotateY(30deg);
+}
+.stage .img2{
+    transform: translate3d(0, 0, 300px) rotateY(0);
+}
+.stage .img3{
+    transform-origin: right;
+    transform: translate3d(150px, 0, 200px) rotateY(-30deg);
+}
+.stage .img4{
+    transform-origin: right;
+    transform: translate3d(300px, 0, 100px) rotateY(-45deg);
+}
+

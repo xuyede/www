@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="stage" id="slideshow">
+    </div>
+    <script src="./jquery.js"></script>
+    <script src="./index.js"></script>
+    <script>
+        $('#slideshow').slide({
+            image : [
+                './img/1.jpg',
+                './img/2.jpg',
+                './img/3.jpg',
+                './img/4.jpg',
+                './img/5.jpg'
+            ],
+            autoplay : true,
+            interval : 3000,
+            animateTime : 600
+        });
+    </script>
+</body>
+
+</html>
