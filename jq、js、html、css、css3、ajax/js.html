@@ -2204,7 +2204,7 @@
                     console.log(func('time'))
         */
         /*
-                函数式编程之柯里化 -> 常用于ajax请求时类型，url， data相似的情况，可以统一一个类型
+                函数式编程之柯里化 -> 降低代码的重复，提高代码的适应性，常用于ajax请求时类型，url， data相似的情况，可以统一一个类型
                     
                     function fixedParamCurry (fn) {
                         var args = [].slice.call(arguments, 1);
@@ -2250,6 +2250,62 @@
                         }
                     }
 
+        */
+        /*
+                    函数编程之数组扁平化 -> 把多维的数组转变为一维的
+                        
+                        Array.prototype.flatten = function () {
+                            var resArr = [];
+
+                            this.forEach(function (ele) {
+                                Object.prototype.toString.call(ele) == '[object Array]' ? resArr = resArr.concat(ele.flatten()) : resArr.push(ele);
+                            });
+
+                            return resArr;
+                        }
+
+                        function flatten1 (arr) {
+                            return arr.reduce(function (baton, curVal) {
+                                return baton.concat(Array.isArray(curval)' ? flatten(curVal) : curVal)
+                            }, []);
+                        }
+
+                        const flatten2 = arr => arr.reduce( (baton, curVal) => Object.prototype.toString.call(curVal) == '[object Array]' ? baton.concat(flatten2(curVal)) : baton.concat(curVal), [])
+        
+        */
+        /*
+                    函数编程之惰性函数 -> 具有记录初次调用行为的功能，并改变函数适应调用习惯
+
+                        把函数内容改写成首次调用的内容，以适应调用的习惯，不用每次都判断
+
+                        // 下面例子，首次调用时判断绑定事件方式，之后，直接用首次判断的结果，不用每次都判断
+                        function addEvent (ele, prop, handle) {
+                            if (ele.addEventListener) {
+                                ele.addEventListener(prop, handle, false);
+
+                                addEvent = function (ele, prop, handle) {
+                                    ele.addEventListener(prop, handle, false);
+                                }
+                            } else if (ele.attachEvent) {
+                                ele.attachEvent('on' + prop, function () {
+                                    handle.call(this);
+                                })
+
+                                addEvent = function (ele, prop, handle) {
+                                    ele.attachEvent('on' + prop, function () {
+                                        handle.call(this);
+                                    })
+                                }
+                            } else {
+                                ele['on' + prop] = handle;
+
+                                addEvent = function (ele, prop, handle) {
+                                    ele['on' + prop] = handle;
+                                }
+                            }
+                        }
+
+        
         
         
         */
