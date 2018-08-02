@@ -2266,11 +2266,11 @@
 
                         function flatten1 (arr) {
                             return arr.reduce(function (baton, curVal) {
-                                return baton.concat(Array.isArray(curval)' ? flatten(curVal) : curVal)
+                                return baton.concat(Array.isArray(curval) ? flatten(curVal) : [curVal])
                             }, []);
                         }
 
-                        const flatten2 = arr => arr.reduce( (baton, curVal) => Object.prototype.toString.call(curVal) == '[object Array]' ? baton.concat(flatten2(curVal)) : baton.concat(curVal), [])
+                       const flatten = arr => arr.reduce( (baton, curVal) => baton.concat( Array.isArray(curVal) ? flatten(curVal) : [curVal] ), []);
         
         */
         /*
