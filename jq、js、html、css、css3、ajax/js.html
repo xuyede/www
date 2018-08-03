@@ -1169,6 +1169,8 @@
         /*
             try/catch  -->  在try里面的代码发生错误，不会执行错误后的try里面的代码
 
+            catch代码块里会新加一个变量对象e，插入到该执行环境的最前端，catch执行完后，销毁
+
             try{
                 console.log('a')
                 console.log(b)
@@ -2188,6 +2190,8 @@
         */
         /* 
                 Math.random() -> [0, 1)
+                Math.atan2(y, x) -> 求点的弧度    -180 ~ 180
+                180/Math.PI * 弧度 -> 弧度转角度 
         
         */
         /*
@@ -2304,10 +2308,58 @@
                                 }
                             }
                         }
+        */
+       /*
+                js数学之美-鼠标位置判断
+                    
+                    // 判断鼠标位置函数
+                    var oDiv = document.getElementById('box');
+                    function getDire (e) {
+                        var direction = null,
+                            w = oDiv.offsetWidth,
+                            h = oDiv.offsetHeight,
+                            l = oDiv.offsetLeft,
+                            t = oDiv.offsetTop,
+                            x = event.clientX - l - w / 2,
+                            y = event.clientY - t - h / 2;
 
+                        direction = (Math.round((Math.atan2(y, x) * (180 / Math.PI) + 180) / 90) + 3) % 4;
+
+                        // 1.获取点的弧度  2.弧度乘以(180/Math.PI)转为角度,范围为[-180, 180]  3.角度加180转为[0, 360] 
+                        // 4.转化后的角度除以90取整,获取每条边的数字,上:1,右:2,下:3,左:0/4  5.把边的数字乘以3后对4求余,得到上:0,右:1,下:2,左:3
+                        // 所以，上:0,右:1,下:2,左:3，判断数字即可
+
+                        return direction;
+                    }
+       
+       */
+        /*
+                js数学之美-图片放大镜
+
+                    //  获取显示图片宽高，位置，获取大图宽高，计算出两者的比例差scaleX、scaleY。
+                    //  获取鼠标的位置。
+                    //  改变<span>的scrollTop和scrollLeft值为鼠标位置*比例差
+
+                    $(document.body).on('mousemove', function (e) {
+                        var bigPicWidth = $('.magnifying').find('img').get(0).offsetWidth,
+                            bigPicHeight = $('.magnifying').find('img').get(0).offsetHeight,
+                            scaleW = Math.floor(bigPicWidth / imgWidth),
+                            scaleH = Math.floor(bigPicHeight / imgHeight),
+                            posX = e.clientX - imgLeft - (1 / scaleW) * imgWidth / 2,
+                            posY = e.clientY - imgTop - (1 / scaleH) * imgHeight / 2;
+
+                        $('.magnifying').get(0).scrollLeft = posX * scaleW;
+                        $('.magnifying').get(0).scrollTop = posY * scaleH;
+                    });
         
-        
-        
+        */
+        /*
+                js数学之美-随机数的应用  
+                    Math.random() -> [0, 1)
+                    
+                    如果想取到指定范围的随机数 -> (20 ~ 89)
+                    -> Math.randomm()*(89 - 20) + 20
+
         */
     </script>
 
