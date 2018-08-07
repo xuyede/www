@@ -28,6 +28,7 @@
                  填充矩形：ctx.fillRect(startX, startY, width, height) 相对于原点
     恢复改变canvas前的状态：ctx.restore();
 
+
               画笔移动到：ctx.moveTo(x, y)
    从当前点绘制直线到x, y：ctx.lineTo(x, y)
                 描边大小：ctx.lineWidth = 10
@@ -42,14 +43,18 @@
                 直角弧形：ctx.arcTo(startX, startY, endX, endY, r) -> 起点和终点在同一x/y上
               填充背景图：ctx.drawImage(image, clipX, clipY, clipW, clipH, X, Y, W, H)  -> 不裁剪的话不用写clip*参数
                 写入文字：ctx.fillText(content, posX, posY)
-            渐变背景颜色：var bg = ctx.createLinearGradient(startX, startY, endX, endY);
+              导出canvas: canvas.toDataUrl() canvas的API，不是canvas上下文的API，受同源策略影响
+            
+             渐变背景颜色：var bg = ctx.createLinearGradient(startX, startY, endX, endY);
                          bg.addColorStop(%, color);
                          ctx.fillStyle = bg;
                          ctx.fillRect(0, 0, oCanvasW, oCanvasH);
 
                          -> 45deg,#6fc7b5 0%,#13bdce, 20%,#0094d9 40%, #5a3694 60%, #ee4d74 80%, #f58c58 100%
 
-                         
+            高斯模糊:
+                  获取canvas像素信息: ctx.getImageData(x, y, dx, dy) 同源策略
+                   将图像数据放回画布: ctx.putImageData(img, x, y)     
      -->
      <!-- 
 

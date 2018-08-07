@@ -8,10 +8,84 @@
 </head>
 <body>
     <!-- 
-            
+            微信小程序
+                生命周期
+                    Page实例的生命周期
+                    
+                    UI层                        交互层
+
+                    start                       start
+                        init                        creat (onLoad + onShow)
+
+                    inited                      created
+
+                                                waiting notity
+                                  notity->          
+
+                    waiting data
+                                  
+                                  <-send initial data
+                                                
+                                                waiting notity
+
+                    ready(first renter)
+                                
+                                  notity->
+
+                                                active (onReady)
+
+                                  <-send data
+
+                    render
+                                                      ...
+                                  <-send data
+
+                    render
+
+                                                            <-set to background(切换在别的页面)
+                                                alive(onHide)
+                    ...
+                                                            <-set to foreground(切换回当前页面)
+                                                active(onShow)
+
+                                                            <-destroy(关闭当前页面)
+                    end                         end(onUnload)
 
 
+                    onReady函数只是在页面第一次渲染成功后执行，如果是使用navigateTo来跳转页面的话，最好把相关函数写入onShow中
 
+                    
+
+                常用接口:
+                    wx.getLocation({ success: (res) => {} }) 获取定位信息
+                    wx.getSystemInfo({ success: (res) => {} }) 获取手机基本信息
+                    wx.createMapContext(mapId) 创建一个map上下文 -> mapctx.moveToLocation() 返回定位点
+                    wx.scanCode({ success: (res) => {} }) 调用微信扫码接口
+                    wx.request({ url : '', data : '', success : (res) => {}, fail : () => {} }) 请求
+                    wx.showLoading({ title: '' }) 显示 loading 提示框
+                    wx.hideLoading() 关闭 loading 提示框
+                    wx.redirectTo({ url : '', success : () => {} }) 关闭当前页面，跳转到应用内的某个页面
+                    wx.navigateTo({ url : '', success : () => {} }) 保留当前页面，跳转到应用内的某个页面，使用wx.navigateBack可以返回到原页面。  
+                    wx.showToast({ title : '', duration : 1000 }) 显示信息提示框
+                    wx.getStorage() 获取本地缓存
+                    wx.setStorage() 设置本地缓存
+
+
+                1. 数据绑定 （UI -> JS）
+                    形式：在 wxml 中用 {{name}} 表示要绑定数据的名称
+                          在 js 中的 data 属性中初始化数据
+                    
+                    改变 data 的值：this.setData({name : '...', age : '...'})
+
+                2. map组件
+                    常用属性:   
+                        latitude 维度
+                        longitude 经度
+                        scale 地图显示比例（5~18）   
+                        show-location 显示当前坐标点
+
+                    使用cover-view创建相关组件
+                     
      -->
 </body>
 </html>

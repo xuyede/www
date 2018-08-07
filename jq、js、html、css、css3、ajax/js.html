@@ -1085,7 +1085,8 @@
         /*
             数组的方法(改变原数组)
                 --> push() 在数组最后添加
-                    unshift() 在数组前面添加
+                    pop() 把数组最后一位剪切
+                    
 
                     Array.prototype.push = function(){
                         for(var k in arguments){
@@ -1094,7 +1095,7 @@
                         return this.length;
                     }
                     
-                --> pop() 把数组最后一位剪切
+                --> unshift() 在数组前面添加
                     shift() 把最前一位剪切
                 --> reverse() 逆转数组顺序并返回
                 
