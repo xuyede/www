@@ -639,8 +639,8 @@
 
         // var person = new Person()
         //  1.构造函数Person被new的时候，在头部创建 var instance = Object.create(Person.prototype) + constructor属性(当一个函数被声明时，解析器会自动添加一个 constructor 属性，这是 function 创建时的专属操作)
-        //  2.Person.call(instance, ...)
-        //  3.person拿到构造函数Person的this引用
+        //  2.Person函数执行，Person.call(instance, ...)
+        //  3.person拿到构造函数Person的 this(instance) 引用
         //  4.person.__proto__ === Person.prototype
 
 
@@ -1474,6 +1474,27 @@
                 index: index
                 self: self
                 initialVal: 接力棒，每次
+
+
+                // 判断一个字符串 '(' 和 ')' 是否相等  
+                // eg：str = '((Math.atan2(y, x) * (180 / Math.PI) + 180) / 90 + 3) % 4'
+
+                baton初始值为0，curVal为 '(' 的话baton++，curVal为 ')' 的话baton--
+
+                function checkStr (str) {
+                    return !str.split('').reduce( (baton, curVal) => {
+                        if (baton < 0) {
+                            return baton;
+                        }
+                            
+                        if (curVal == '(') {
+                            baton ++;
+                        } else if (curVal == ')') {
+                            baton --;
+                        }
+                        return baton;
+                    }, 0)
+                }
         */
 
 
