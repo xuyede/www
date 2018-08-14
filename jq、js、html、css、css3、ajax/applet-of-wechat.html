@@ -10,46 +10,50 @@
     <!-- 
             微信小程序
                 生命周期
-                    Page实例的生命周期
+                              Page实例的生命周期
                     
-                    UI层                        交互层
+                    UI层                            交互层
 
-                    start                       start
-                        init                        creat (onLoad + onShow)
-
-                    inited                      created
-
-                                                waiting notity
-                                  notity->          
-
-                    waiting data
-                                  
-                                  <-send initial data
-                                                
-                                                waiting notity
-
-                    ready(first renter)
-                                
-                                  notity->
-
-                                                active (onReady)
-
-                                  <-send data
-
-                    render
-                                                      ...
-                                  <-send data
-
-                    render
-
-                                                            <-set to background(切换在别的页面)
-                                                alive(onHide)
-                    ...
-                                                            <-set to foreground(切换回当前页面)
-                                                active(onShow)
-
-                                                            <-destroy(关闭当前页面)
-                    end                         end(onUnload)
+                    start                           start
+                      |                               |
+                      |  init                         |   creat (*onLoad + *onShow)
+                      |                               |
+                    inited                         created
+                      |                               |
+                      |                         waiting notity
+                      |                               |
+                      |           notity->            |
+                      |                               |
+                 waiting data                         |
+                      |                               |
+                      |     <-send initial data       |
+                      |                               |
+                      |                         waiting notity
+                      |                               |
+              ready(first renter)                     |
+                      |                               |
+                      |           notity->            |
+                      |                               |
+                      |                         active (onReady)
+                      |                               |                                                      
+                      |           <-send data         |
+                      |                               |                                                      
+                    render                            |
+                      |                               |                                                      
+                      |          <-send data         ...
+                      |                               |                                                     
+                    render                            |
+                      |                               |    <-set to background(切换在别的页面)                                                 
+                      |                               |                                                      
+                      |                          alive (onHide)
+                     ...                              |
+                      |                               |    <-set to foreground(切换回当前页面)
+                      |                               |
+                      |                         active (onShow)
+                      |                               |
+                      |                               |    <-destroy(关闭当前页面)
+                      |                               |                                                      
+                     end                         end (onUnload)
 
 
                     onReady函数只是在页面第一次渲染成功后执行，如果是使用navigateTo来跳转页面的话，最好把相关函数写入onShow中
