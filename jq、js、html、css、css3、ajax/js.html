@@ -2312,15 +2312,13 @@
                     newAdd(1, 2)(3)(4);
 
                     // es6
-                    const FixedParamCurry = (fn, ...args) => (..._args) => fn.apply(null, _args.concat(args))
+                    const FixedParamCurry = (fn, ...args) => (..._args) => fn(..._args.concat(args))
 
-                    const curry = (fn, length = fn.length) => (...args) => {
-                        if (args.length < length) {
-                            return curry(FixedParamCurry.apply(null, [fn].concat(args)), length - args.length);
-                        } else {
-                            return fn.apply(null, args)
-                        }
-                    }
+                    const curry = (func, length = func.length) => (...args) => 
+                        args.length < length ? 
+                        currie( requireAssignParam(...[func].concat(args)), length - args.length ) :
+                        func(...args)
+                    
 
         */
         /*
