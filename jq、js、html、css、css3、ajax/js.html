@@ -667,12 +667,27 @@
 
 
 
-
+        // js中，new 是用来继承的
         // var person = new Person()
         //  1.构造函数Person被new的时候，在头部创建 var instance = Object.create(Person.prototype) + constructor属性(当一个函数被声明时，解析器会自动添加一个 constructor 属性，这是 function 创建时的专属操作)
         //  2.Person函数执行，Person.call(instance, ...)
         //  3.person拿到构造函数Person的 this(instance) 引用
         //  4.person.__proto__ === Person.prototype
+          
+        function Person(name, age) {
+			this.name = name;
+			this.age = age;
+		}
+        Person.prototype.lastName = 'xu';
+        
+        var person = Mynew(Person, 'xuyede', 19);
+
+        function Mynew() {
+			var func = [].shift.call(arguments);  
+			var instance = Object.create(func.prototype);
+			func.apply(instance, arguments);
+			return instance;
+		}
 
 
         // 函数(Array(), RegExp(), String(), Number(), Object(), Function())都是Function的实例化对象
@@ -2413,6 +2428,39 @@
                     如果想取到指定范围的随机数 -> (20 ~ 89)
                     -> Math.randomm()*(89 - 20) + 20
 
+        */
+
+        /*
+        
+                插件的封装结构
+
+                    (function (global, factory, plug) {
+
+                        factory.call(global, global.jQuery, plug);
+
+                    } (typeof window !== 'undefined' ? window : this , function ($, plug) {
+                        //真正被创建的闭包并且只执行一次的内存结构
+                        
+                        //默认配置
+                        var __DEFS__ = {
+
+                        }
+
+                        $.fn[plug] = function (ops) {
+                            if (this.is('div')) {
+                                //合并配置项
+                                $.extend(this, __DEFS__, ops);
+                                console.log('ok')
+                            } else {
+                                throw new Error('element is not div');
+                            }
+                        };
+
+                    }, 'plugName'));
+
+                    $('#div).plugName(option);
+                    
+        
         */
     </script>
 
