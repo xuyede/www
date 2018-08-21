@@ -55,6 +55,30 @@
             高斯模糊:
                   获取canvas像素信息: ctx.getImageData(x, y, dx, dy) 同源策略
                    将图像数据放回画布: ctx.putImageData(img, x, y)    
+                   function blurImg(img, ele) {
+                        var w = img.width,
+                            h = img.height,
+                            canvasW = 40,
+                            canvasH = 40;
+
+                        var canvas = document.createElement('canvas'),
+                            ctx = canvas.getContext('2d');
+
+                        canvas.width = canvasW;
+                        canvas.height = canvasH;
+
+                        ctx.drawImage(img, 0, 0, w, h, 0, 0, canvasW, canvasH);
+
+                        var pixel = ctx.getImageData(0, 0, canvasH, canvasH);
+
+                        gaussBlur(pixel);
+
+                        ctx.putImageData(pixel, 0, 0);
+
+                        var imageData = canvas.toDataURL();
+
+                        ele.css('background-image', 'url(' + imageData + ')');
+                    }
                    
                 原理：
                     传入一个容器元素，一张图片
