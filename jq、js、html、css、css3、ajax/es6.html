@@ -518,7 +518,7 @@
         <!--
             数组的扩展
 
-                1. 扩展运算符 ( ... ) rest参数的逆运算
+                1. 扩展运算符 ( ... ) -> 内部使用 for ... of 循环
                      * ...[1, 2, 3] -> 1, 2, 3
 
                     // ES5 的写法
@@ -702,7 +702,7 @@
 
                             add : function (x, y) {},
                             //等同于
-                            add (x, y) {},
+                            add (x, y) {},  -> 会绑定一个[[homeObject]]指向自身，然后才能使用super关键字
                         }
 
                 2. 新增方法
@@ -1084,33 +1084,56 @@
                         return obj;
                     }
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           -->
+          <!-- 
+                Set / Map 数据结构
+
+                1. Set -> 类似于数组，当结构内的值是唯一的，不允许存在重复的值，具有 iterable 接口
+
+                    1)  const s = new Set();
+                        [2, 3, 5, 4, 5, 2, 2].forEach(x => s.add(x));
+                        for (let i of s) {
+                            console.log(i); // 2 3 5 4
+                        }
+
+                    2)  Set内部用类似(===)判断两个值是否相等(NaN等于自身，两个对象总是不相等)
+
+                    3)  Set的实例属性和方法
+                         
+                            实例属性：
+                                Set.prototype.constructor：构造函数，默认就是Set函数。
+                                Set.prototype.size：返回Set实例的成员总数。
+
+                            实例方法：
+                                add(value)：添加某个值，返回 Set 结构本身。
+                                delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。
+                                has(value)：返回一个布尔值，表示该值是否为Set的成员。
+                                clear()：清除所有成员，没有返回值。
+
+                                // 遍历操作，按插入顺序
+                                keys()：返回键名的遍历器
+                                values()：返回键值的遍历器
+                                entries()：返回键值对的遍历器
+                                forEach()：使用回调函数遍历每个成员
+
+                                    Set 结构的实例默认可遍历，它的默认遍历器生成函数就是它的values方法
+                                    ->  let set = new Set(['red', 'green', 'blue']);
+                                        for (let x of set) {
+                                            console.log(x); // red green blue
+                                        }
+
+                            应用： 
+                                1) 与扩展运算符结合(内部为 for ... of 循环)，进行数组去重
+                                    let arr = [3, 5, 2, 2, 5, 5];
+                                    let unique = [...new Set(arr)]; // [3, 5, 2]
+                                    
+
+
+
+                    
+
+
+           -->
 </body>
 
 </html>
