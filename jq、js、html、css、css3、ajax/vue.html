@@ -8,9 +8,444 @@
 </head>
 <body>
     <!-- 
+            * vue的生命周期
+                                    new Vue()
+                                        
+                               init Event&Lifecycle
+                                        |
+             *beforeCreate  <-          |
+                                        |
+                               init injections&reactivity
+                                        |
+                   *Create  <-          |
+                                        |           
+                                 Has 'el' option?   ——————————————>   no
+                                        |                             |  
+                                yes     |                 when vm.$mount(el) is called
+                                        |                             |
+                              Has 'template' option?  <———————————————|                  
+                                        |
+                    ____________________|____________________
+                   |                                         |
+                  yes                                        no
+                                                          
+            compile template                            compile el's
+                  into                                    outerHTML
+            render function*                            as template*
+
+                   |                                         |
+                   |_________________________________________|
+                                        |
+                 *beforeMount  <-       |          
+                                        |
+                                   Create vm.$el
+                                    and replace
+                                   'el' with it
+                                        |
+                                        |
+                 *mounted      <-       |     
+                                        |            >   when data changes  
+                                        |           /                      \
+                                     _________     /                        \   -> *beforeUpdate
+                                    |         |   /                          \   
+                                    | Mounted |                               > _____________
+                                    |_________|                                |             |
+                                        |     <                                | Virtual DOM |   
+                                        |      \                               |   re-render |
+                                        |       \                              |  and patch  |
+                                        |        \                             |_____________|
+                                        |         \___________________________/
+                                        |                  *updated
+                                        |
+                                        | 
+                            when vm.$destroy() is called  
+                                        |
+            *beforeDestroy <-           |                         
+                                        |
+
+                        Teardown watchers, child components
+                                and event listeners
+                                        |
+                                        |
+                                   ___________
+                                  |           |
+                                  | Destroyed |     -> *destroyed
+                                  |___________|
+
+                1) 数据绑定，事件绑定
+                2) 渲染DOM节点（用template还是已有的结构？）
+                3) 数据监听
+                4) 销毁事件监听，数据绑定
+
+
+            1.数据绑定 : {{ 变量 }}  Object.defineProperty()在底层通过get / set，利用观察者模式对数据进行监听
+
+            2.指令 -> 指令后面接一个js表达式
+                1.绑定事件指令
+                    v-on:eventType = 'func'  ->  缩写 @eventType = 'func'
+                        v-on:click = 'countIncrease' -> @click = 'countIncrease'
+
+                    v-on:click = "doThis" //函数名
+                    v-on:click = "attach = !attach" //表达式  
+                    v-on = "{mousedown : doThis, mouseup : doThat}" //对象，一组事件绑定
+
+
+                2.绑定属性指令
+                    v-bind:prop = 'variate'  ->  缩写 :prop = 'variate'
+                        v-bind:href = 'ImageUrl' -> :href = 'imageUrl'
+
+                    v-bind:src = "imageSrc" //属性名
+                    v-bind:src = "'/path/to/images/' + fileName" //内联字符串拼接
+
+                    //class 绑定
+                    v-bind:class="{ red: isRed }" //isRed为true时添加
+                    v-bind:class="classObj" //绑定一个返回对象的computed属性
+                    v-bind:class="classA" //绑定一个属性
+                    v-bind:class="[classA, classB]" //绑定一个数组，数组的元素为属性
+                    v-bind:class="[isActive ? activeClass : '', errorClass]" //数组加三目表达式组合
+                    v-bind:class="[{ active: isActive }, errorClass]" //数组加对象组合
+
+                    //style 绑定
+                    v-bind:style="{ fontSize: size + 'px' }" //绑定单个
+                    v-bind:style="styleObject" //styleObject为一个样式对象属性
+                    v-bind:style="[styleObject1, styleObject2]" //绑定多个样式对象属性
+
+
+                3.双向数据绑定指令 常用于 <input>、<textarea> 及 <select> 也可以用 
+
+                    <input v-model = 'variables'> 
+                    //简写
+                    <input :value = 'variables'
+                           @input = 'variables = $event.target.value'
+                    >
+
+                4.元素显示隐藏指令
+                    1) 条件渲染元素 v-if / v-self- if / v-self / v-show
+                        
+                        -> 元素的显示隐藏为 append/remove 操作
+                            v-if = 'isTrue' //根据表达式的值的真假条件渲染元素(remove)
+                            v-else-if = 'isTrue' //v-if 的 else if 块
+                            v-else //为 v-if 或者 v-else-if 添加 else 块
+                                ->可以使用 <template> 元素包裹, <template> 元素不显示在DOM节点中
+
+                        -> 元素的显示隐藏为 display: block/none 操作
+                            v-show = 'isTrue' //根据表达式之真假值，切换元素的 display CSS 属性
+                                -> v-show 不支持 <template> 元素，也不支持 v-else
+
+                        -> key -> 管理可复用的元素
+                        
+
+                    2) 列表渲染元素 v-for
+                        
+                        -> 一个数组的v-for
+                            v-for = "item in items" //item为数组元素迭代的别名
+                            v-for = "(item, index) in items" //index为每位数组的索引
+
+
+                        -> 一个对象的v-for -> 按照Object.keys()的结果遍历的
+                            v-for="value in object" //value为对象的属性值
+                            v-for="(value, key) in object" //key为对象的属性名
+                            v-for="(value, key, index) in object" //index为参数的索引
+
+                            数组更新检测:
+                                数组、对象为引用值，如果单纯改变数值而不改变引用值的话，vue是不会更新视图的
+
+                                vue把一些数组的方法重写，使得这些方法执行时可以更新视图
+                                    push / pop / shift / unshift / splice / sort / reverse
+
+                                利用索引直接设置一个项时，不能检测数组的变动
+                                    Vue.set(vm.items, indexOfItem, newValue)
+
+                            对象更新检测
+                                Vue 不能检测对象属性的添加或删除(对象的修改可以检测)
+                                    Vue.set(object, key, value)
+                                    vm.$set(object, key, value)
+
+                                    添加多项属性时，用一个新对象做为新载体
+                                    vm.userProfile = Object.assign({}, vm.userProfile, {
+                                        age: 27,
+                                        favoriteColor: 'Vue Green'
+                                    })
+
+
+                        -> 遍历的时候给每一项添加一个key值作为唯一的标识,解决模板复用的问题
+                            v-for="item in items" :key="item.id"
+
+            3.指令修饰符：
+                .stop 取消冒泡
+                .prevent 取消默认事件
+                .once 只调用一次
+                .enter 回车调用
+                .space 空格调用
+                .esc esc调用
+
+
+            4.属性： get set
+                1)methods : {}  ->  方法，定义的函数如果放进该属性中，则会实时更新，每当有事件触发时都是执行，不管作用的数据是否在函数里
+                    
+                2)computed : {}  -> 计算属性，基于函数和属性的依赖进行缓存的，计算属性只有在它的相关依赖属性发生改变时才会重新求值, （根据已有属性派生出的新属性，计算属性由已有属性决定）
+                
+                3)watch : {}  ->  侦听属性，监听已经定义的属性(data中)，如果有改变，则触发对应的函数,否则不触发
+
+                4)data : {}  ->  数据定义及初始化
+
+
+            5.实例属性：
+                1) vm.$refs -> 存放dom节点 (当一个普通元素加上ref属性后，会把该元素存放到实例的$refs对象上,可以进行DOM操作，但不应该用在数据绑定上)
+
+                2) vm.$data -> 存放Vue实例的data对象属性
+
+            6.实例方法:
+                1) vm.$mount(ele) 
+                    如果 Vue 实例在实例化时没有收到 el 选项，则它处于“未挂载”状态，没有关联的 DOM 元素
+                    可以使用vm.$mount(ele)手动挂载一个未挂载的实例
+
+            7.全局方法：
+                1) Vue.component( id, [definition] ) -> 注册/获取全局组件
+                    ->
+                    // 注册组件，传入一个扩展过的构造器
+                    Vue.component('my-component', Vue.extend({ /* ... */ }))
+
+                    // 注册组件，传入一个选项对象 (自动调用 Vue.extend)
+                    Vue.component('my-component', { /* ... */ })
+
+                    // 获取注册的组件 (始终返回构造器)
+                    var MyComponent = Vue.component('my-component')
+
+                2) 
+             
+            8.Vue component
+                1) Gobal Component
+                        //basic writing
+                        Vue.component('xyd-counter', {
+                            template : `<button @click = 'count ++'>You clicked me {{ count }} times</button>`,
+                            data() {
+                                return {
+                                    count : 0
+                                }
+                            },
+                            methods : {}
+                            ...
+                        })
+
+                        //mounted element
+                        <div id="app">
+                            <xyd-counter></xyd-counter>
+                        </div>
+                        ___________________________________
+                        <div id="app"></div>
+
+                        
+                        //mount to mounted element
+                        new Vue({ el : '#app' })
+                        ___________________________________
+                        
+                        new Vue({
+                            el : '#app',
+                            template : '<xyd-counter></xyd-counter>'
+                        })
+                    
+
+                    *warning
+                    1) data in component -> Must Be a Function
+                        data() {
+                            return {
+                                count : 0
+                            }
+                        }
+
+                    2) every component must have a single root element
+
+
+
+
+                2) Local Component
+                        //Define A Components
+                        const xydCounter = {
+                            template : `<button @click="count++">you clicked me {{ count }} times</button>`,
+                            data() {
+                                return {
+                                    count : 0
+                                }
+                            },
+                            ...
+                        }
+
+                        new Vue({
+                            el: '#app',
+                            components : {
+                                xydCounter,
+                                ...
+                            }
+                        })
+
+                        //main template
+                        <div id="app">
+                            <xyd-counter></xyd-counter>
+                        </div>
+
+            9. props -> set into child component
+                1)  basic writing
+                    //set in component
+                    Vue.component('xyd-counter', {
+                        template : <button @click="count++">  {{name}} clicked me {{count}} times</button>`,
+                        props : {
+                            myname : String  //rule the name to be a String type 
+                        },
+                        data() {
+                            return {
+                                name : this.myname,
+                                count : 0
+                            }
+                        },
+                        methods : {
+                            change() {
+                                this.myname = 'Sunday';  -> Error:don't change the props's prop, but if it is a object, you can do that
+                            }
+                        }
+                    })
+
+                    //set in Vue
+                    new Vue({
+                        el : '#app',
+                        data : {
+                            name : 'xuyede'
+                        }
+                    });
+
+                    //set in element
+                    <div id="app">
+                        <xyd-counter
+                            :myname='name' 
+                        ></xyd-counter>
+                    </div>
+                
+                2)step of parent transfer data to child
+                    first : defined the props in the component, and defined a variable to accept the data
+                        props : {
+                            myname : String
+                        }
+
+                    second : bind the props's variable by v-bind with the appoint data from parent
+                        <xyd-counter
+                            :myname = 'name' 
+                        ></xyd-counter>
+
+                3)props usage
+                    parent can transfer own data by v-bind to child
+                    child can accept parent's data in the props, and
+                    you can deal the props's prop by this, like useing data  
+
+                    you can list props as an object to rule every prop to be a specific type of value
+                    props: {
+                        title: {
+                            type : String,  //rule the title is the type of String
+                            required : true,  //must transfer the data for title
+                            default : 'title',  //defaults data
+                        },
+                        likes: Number,
+                        isPublished: Boolean,
+                        commentIds: Array,
+                        author: Object
+                    }
+                
+                4)props is the One-Way Data Flow
+                    when the parent prop updates, it will flow down to the
+                    child, but noe the other wat around.
+                    
+            10. $emit -> set into component
+                1)basic writing
+                    //set in element
+                    <div id='app'>
+                        <xyd-name
+                            :myname = 'name'
+                            @change-name = 'changeName'
+                        ></xyd-name>
+                    </div>
+
+                    //set in component
+                    Vue.component('xyd-name', {
+                        props : {
+                            myname : String
+                        },
+                        template : `<button @click='$emit("change-name", "xudeye")'>{{bindName}}</button>`,
+                        computed : {
+                            bindName() {
+                                return this.myname;
+                            }
+                        },
+                        // you can watch the attr change and call this.$emit('', '');
+                    })
+
+                    //set in Vue
+                    new Vue({
+                        el : '#app',
+                        data : {
+                            name : 'xyd'
+                        },
+                        methods : {
+                            changeName(event) {
+                                this.name = event;
+                            }
+                        }
+                    })
+                    
+                2)step of transfer data from component
+                    first : bind event by v-on in the template and use $emit to create a selfEvent and set the data
+                        @click='$emit("change-name", "xudeye")
+
+                    second : bind the selfEvent in the selfTag and deal as the normal event
+                        <div>
+                            <xyd-name
+                                @change-name = '...' / '$event'
+                            ></xyd-name>
+                        </div> 
+
+                    thrid : the data from component is storage in the methods first params name $event($event can also use in the point)
+                    
+            11. using v-model on cpmponent
+                1)normal v-model
+                    <input type='text' v-model = 'variables'>
+                    //you can use v-on and v-bind to imitate v-model
+                    <input type='text'
+                        :value = 'variables'
+                        @input = 'variables = $event.target.value'
+                    >
+
+                2)component v-model
+                    <xyd-input type='text'
+                        :value = 'variables'
+                        @input = 'variables = $event'
+                    ></xyd-input>
+
+                    //make sure it can work though, the <input> inside the component must
+                    Vue.component('xyd-input', {
+                        props : {
+                            value : {
+                                type : String,
+                                required : true
+                            }
+                        },
+                        template : `
+                            <input type='text
+                                :value = 'value'
+                                @input = '$emit("input", $event.target.value)'
+                            >
+                        `,
+                    })
+
+                    //then you can use the v-model on component
+                    <xyd-input type='text'
+                        v-model = 'variables'
+                    ></xyd-input>
+                
+                3)step of using v-model on component
+                    first : bind the value attr to a value prop in props
+                    second : on input, emit its own custom input event with the new value
+
+
+
             
-
-
      -->
 </body>
 </html>
