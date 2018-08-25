@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 
-<body>
+<body> 
     <!-- 
         变量声明
         1. let  变量声明
@@ -514,7 +514,7 @@
                                 setTimeout(() => console.log('s1: ', timer.s1), 3100);  //3
                                 setTimeout(() => console.log('s2: ', timer.s2), 3100);  //0
 
-        -->
+        --> 
         <!--
             数组的扩展
 
@@ -1085,10 +1085,10 @@
                     }
                 
           -->
-          <!-- 
+          <!--  
                 Set / Map 数据结构
 
-                1. Set -> 类似于数组，当结构内的值是唯一的，不允许存在重复的值，具有 iterable 接口
+                1. Set -> es6的数组，当结构内的值是唯一的，不允许存在重复的值，具有 iterable 接口
 
                     1)  const s = new Set();
                         [2, 3, 5, 4, 5, 2, 2].forEach(x => s.add(x));
@@ -1114,7 +1114,7 @@
                                 keys()：返回键名的遍历器
                                 values()：返回键值的遍历器
                                 entries()：返回键值对的遍历器
-                                forEach()：使用回调函数遍历每个成员
+                                forEach((value, key) => {})：使用回调函数遍历每个成员
 
                                     Set 结构的实例默认可遍历，它的默认遍历器生成函数就是它的values方法
                                     ->  let set = new Set(['red', 'green', 'blue']);
@@ -1126,11 +1126,153 @@
                                 1) 与扩展运算符结合(内部为 for ... of 循环)，进行数组去重
                                     let arr = [3, 5, 2, 2, 5, 5];
                                     let unique = [...new Set(arr)]; // [3, 5, 2]
-                                    
-
-
-
                     
+                    4) WeakSet 
+                        -> WeakSet的成员只能是对象, 不能是其他类型的值
+                        -> WeakSet中的对象成员都是弱引用
+
+                        基本用法:
+                            const ws = new WeakSet(); //参数可以为数组或者类数组
+
+                            const a = [[1, 2], [3, 4]]; //如果参数为一个数组,则数组需要为二维数组以上
+                            const ws = new WeakSet(a);
+                            // WeakSet {[1, 2], [3, 4]}
+
+                            const b = [3, 4]; //参数为一维数组,错误
+                            const ws = new WeakSet(b);
+                            // Uncaught TypeError: Invalid value used in weak set(…)
+
+                        方法:
+                            ws.add(value)
+                            ws.delete(value)
+                            ws.has(value)
+
+                        WeakSet没有size属性, 所以也没有 forEach 属性
+
+                        应用:
+                            用于存储 DOM 节点,不用担心节点从文档移除后,会引起内存泄漏
+
+                        
+                        const foos = new WeakSet()
+                        class Foo {
+                            constructor() {
+                                foos.add(this)  //如果通过 Foo 实例化的实例, 会被加入 foos
+                            }
+                            method () {
+                                if (!foos.has(this)) {  //如果 foos 没有该实例, 抛出错误
+                                    throw new TypeError('Foo.prototype.method 只能在Foo的实例上调用！');
+                                }
+                            }
+                        }           
+                    
+                
+                2. map -> es6的对象, 传统的对象只能用字符串当作键, 但在 map中各种类型的值（包括对象）都可以当作键
+                    
+                    1) 基本写法
+                        // new Map不传参, 通过 set向 Map添加成员, get获取对应键的值
+                        const map = new Map;
+                        const obj = {p : 'hello world'};
+                        map.set(obj, 'content');
+                        map.get(obj);  //'content'
+
+                        // Map接受一个数组作为参数, 数组的成员是一个个表示键值对的数组
+                        const map = new Map([
+                            ['name', 'xuyede'],
+                            ['age', 18]
+                        ]);
+                        map.size  //2
+                        map.get('name')  //'xuyede'
+                        map.has('age')  //true
+ 
+                        当 Map构造函数的参数为数组时,实际上进行了以下操作
+                        const items = [
+                            ['name', 'xuyede'],
+                            ['age', 18]
+                        ];
+                        const map = new Map;
+                        items.forEach(
+                            ([key, value]) => map.set(key, value)  //解构赋值
+                        )
+
+                    2) 读取一个未知键, 返回 undefined   
+                        new Map().get('asfddfsasadf')  // undefined
+
+                        const map = new Map();
+                        map.set(['a'], 555);
+                        map.get(['a'])  //undefined,每个数组,对象都是不同引用值的
+
+                        如果键为引用值,则每个键都是不同的,即使他们的内容一样
+                            const map = new Map();
+
+                            const k1 = ['a'];
+                            const k2 = ['a'];
+
+                            map
+                            .set(k1, 111)
+                            .set(k2, 222);
+
+                            map.get(k1) // 111
+                            map.get(k2) // 222
+
+                        如果键为原始值,则只有在两个值严格相等(===),Map才将其视为一个键
+                            let map = new Map();
+
+                            map.set(-0, 123);  // -0 === +0 -> true
+                            map.get(+0) // 123
+
+                            map.set(true, 1);  //true === 'true' -> false
+                            map.set('true', 2);
+                            map.get(true) // 1
+
+                            map.set(undefined, 3);  //undefined === null -> false
+                            map.set(null, 4);
+                            map.get(undefined) // 3
+
+                            map.set(NaN, 123);  //NaN === NaN -> true 在 es6中,大部分对比都把 NaN等于 NaN
+                            map.get(NaN) // 123
+
+                    3) 方法
+                        const map = new Map;
+
+                        map.size  //返回 Map成员个数
+                        map.set(key, value)  //设置键名 key对应的键值为value
+                        map.get(key)  //根据键名 key获取对应的键值 value
+                        map.has(key)  //返回布尔值,表示某键是否在当前 Map中
+                        map.delete(key)  //删除某个键,返回布尔值
+                        map.clear()  //清除所有成员
+
+                        keys()：返回键名的遍历器
+                        values()：返回键值的遍历器      ->返回一个具有 iterator属性的值 
+                        entries()：返回所有成员的遍历器
+                        forEach()：遍历 Map 的所有成员
+                        //Map 的遍历顺序就是插入顺序
+                            for (let item of map.keys()/map.values()/map.entries()) {
+
+                            }
+
+                            // 等同于使用map.entries()
+                            for (let [key, value] of map) {
+                                console.log(key, value);
+                            }
+                        
+                    4) WeakMap 
+                        -> WeakMap只接受对象作为键名( null除外)
+                        -> WeakMap的键名所指向的对象,不计入垃圾回收机制
+
+                        使用场景: 它的键所对应的对象,能会在将来消失,有助于防止内存泄漏
+
+                        const wm = new WeakMap();
+                        let key = {};
+                        let obj = {foo: 1};
+
+                        wm.set(key, obj);
+                        obj = null;
+                        wm.get(key) //Object{foo : 1}  
+                        //只影响键名,不影响键值的正常引用
+
+                        方法:
+                        get()、set()、has()、delete()
+                        
 
 
            -->
