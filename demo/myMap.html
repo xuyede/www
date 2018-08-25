@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="demo"></div>
+    <script>
+
+        function MyMap(...arg) {
+            this.init();
+            if (arg[0] && arg[0].length !== 0) {
+                arg[0].forEach(
+                    ([key, value]) => this.set(key, value)
+                )
+            }
+        }
+
+        MyMap.prototype.bucket = [];
+        MyMap.prototype.bucketLen = 8;
+        MyMap.prototype.lastNode = null;
+        MyMap.prototype.size = 0;
+        MyMap.prototype.init = function () {
+            for (let i = 0; i < this.bucketLen; i++) {
+                this.bucket[i] = { next: null }
+            }
+        }
+        MyMap.prototype.set = function (key, value) {
+            let hash = this.makeHash(key),
+                bucket = this.bucket[hash % this.bucketLen],
+                node = bucket;
+
+            while (node.next) {
+                if (node.key === key) {
+                    node.value = value;
+                    return;
+                } else {
+                    node = node.next;
+                }
+            }
+
+            node.next = {
+                key, value, next: null
+            }
+            this.size ++;
+        }
+        MyMap.prototype.get = function (key) {
+            let hash = this.makeHash(key),
+                bucket = this.bucket[hash % this.bucketLen],
+                node = bucket.next;
+
+            while (node !== null && node.key) {
+                if (node.key === key) {
+                    return node.value;
+                } else {
+                    node = node.next;
+                }
+            }
+
+            return undefined;
+        }
+        MyMap.prototype.delete = function (key) {
+            let hash = this.makeHash(key),
+                bucket = this.bucket[hash % this.bucketLen],
+                node = bucket.next;
+                this.lastNode = bucket;
+
+            while (node !== null && node.key) {
+                if (node.key === key) {
+                    this.lastNode.next = node.next;
+                    this.size --;
+                    return true;
+                } else {
+                    this.lastNode = node;
+                    node = node.next;
+                }
+            }
+
+            return false;
+        }
+        MyMap.prototype.clear = function () {
+            this.init();
+            this.size = 0;
+        }
+        MyMap.prototype.makeHash = function (key) {
+            let hash = 0;
+
+            if (typeof key === 'string') {
+                let len = key.length > 3 ? key.length : 3;
+                for (let i = len - 3; i < len; i++) {
+                    hash += (key[i] !== undefined) ? key[i].charCodeAt() : 0;
+                }
+            } else {
+                hash = +key;
+            }
+
+            return hash;
+        }
+
+        let map = new MyMap([['name', 'xyd'], ['age', 18]]);
+
+    </script>
+</body>
+
+</html>
