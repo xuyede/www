@@ -16,7 +16,7 @@
                 var img = new Image();
                 img.src = image[i];
                 img.onload = function () {
-                    self.body.append(this);
+                    self.body.append(this); 
                     doneNum++;
 
                     if (doneNum === self.len) {
@@ -38,12 +38,12 @@
             var self = this;
             this.body.on('click', 'img', function () {
                 var index = Number($(this).attr('class').split('img')[1]),
-                    disL = Math.floor(self.len / 2) - index;
+                    disLen = Math.floor(self.len / 2) - index;
 
                 for (let i = 0; i < self.len; i++) {
                     // 当前的class名
                     var nowIndex = Number($('img', $(self.body)).eq(i).attr('class').split('img')[1]);
-                    var pos = nowIndex + disL;
+                    var pos = nowIndex + disLen;
                     if (pos < 0) {
                         pos = self.len + pos;
                     } else if (pos > self.len - 1) {
