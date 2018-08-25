@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-</head>
+</head> 
 
 <body>
     <script type="text/javascript">
@@ -2207,19 +2207,21 @@
 
         */
         /*
+                渲染过程
+                    解析 html 从而构建 Dom Tree -> CSS Rule Tree -> 构建 Render Tree -> 布局 Render Tree -> 绘制 Render Tree
+
                 渲染模式
+                    标准模式、怪异模式
+                        --> 添加/不添加<!DOCTYPE html>
+    
+                        区别：
+                            1) 怪异模式：document.compatMode === 'BackCompat'
+                            标准模式：document.compatMode === 'CSS1Compat'
+                            
+                            2) 盒模型解析不同
 
-                标准模式、怪异模式
-                    --> 添加/不添加<!DOCTYPE html>
-   
-                    区别：
-                        1) 怪异模式：document.compatMode === 'BackCompat'
-                           标准模式：document.compatMode === 'CSS1Compat'
-                        
-                        2) 盒模型解析不同
-
-                        3) 怪异模式内联(行级)元素可以设置宽高
-                        ...
+                            3) 怪异模式内联(行级)元素可以设置宽高
+                            ...
        
         */
         /*
@@ -2430,11 +2432,12 @@
 
         /*
         
-                插件的封装结构
+                jq插件的封装结构
 
                     (function (global, factory, plug) {
-
-                        factory.call(global, global.jQuery, plug);
+                        typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+                        typeof define === 'function' && define.amd ? define(factory) :
+                        (factory.call(global, global.jQuery, plug));
 
                     } (typeof window !== 'undefined' ? window : this , function ($, plug) {
                         //真正被创建的闭包并且只执行一次的内存结构
