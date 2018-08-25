@@ -183,11 +183,13 @@
             4.属性： get set
                 1)methods : {}  ->  方法，定义的函数如果放进该属性中，则会实时更新，每当有事件触发时都是执行，不管作用的数据是否在函数里
                     
-                2)computed : {}  -> 计算属性，基于函数和属性的依赖进行缓存的，计算属性只有在它的相关依赖属性发生改变时才会重新求值, （根据已有属性派生出的新属性，计算属性由已有属性决定）
+                2)computed : {}  -> 计算属性，基于函数和属性的依赖进行缓存的，计算属性只有在它的相关依赖属性发生改变时才会重新求值, （根据已有属性派生出的新属性，计算属性由已有属性决定, 可以缓存数据）
                 
                 3)watch : {}  ->  侦听属性，监听已经定义的属性(data中)，如果有改变，则触发对应的函数,否则不触发
 
                 4)data : {}  ->  数据定义及初始化
+
+                5)filters : {}  ->  过滤器, 一个函数, 第一个参数默认为要处理的字符串, {{ meg | myFilter }} / v-bind:id = 'fId | Sid'
 
 
             5.实例属性：
@@ -284,7 +286,7 @@
                             <xyd-counter></xyd-counter>
                         </div>
 
-            9. props -> set into child component
+            9. props -> set into child component  parent to child
                 1)  basic writing
                     //set in component
                     Vue.component('xyd-counter', {
@@ -334,9 +336,9 @@
                 3)props usage
                     parent can transfer own data by v-bind to child
                     child can accept parent's data in the props, and
-                    you can deal the props's prop by this, like useing data  
+                    you can deal the props's attr by this, like useing data attr
 
-                    you can list props as an object to rule every prop to be a specific type of value
+                    you can list props as an object to rule every attr to be a specific type of value
                     props: {
                         title: {
                             type : String,  //rule the title is the type of String
@@ -350,10 +352,10 @@
                     }
                 
                 4)props is the One-Way Data Flow
-                    when the parent prop updates, it will flow down to the
-                    child, but noe the other wat around.
+                    when the parent attr updates, it will flow down to the
+                    child, but noe the other way around.
                     
-            10. $emit -> set into component
+            10. $emit -> set into component    child to parent
                 1)basic writing
                     //set in element
                     <div id='app'>
@@ -391,13 +393,13 @@
                     })
                     
                 2)step of transfer data from component
-                    first : bind event by v-on in the template and use $emit to create a selfEvent and set the data
-                        @click='$emit("change-name", "xudeye")
+                    first : use $emit to create a selfEvent and set the data
+                       this.$emit('self-event', data)
 
                     second : bind the selfEvent in the selfTag and deal as the normal event
                         <div>
                             <xyd-name
-                                @change-name = '...' / '$event'
+                                @self-event = '...' / '$event'
                             ></xyd-name>
                         </div> 
 
@@ -418,7 +420,7 @@
                         @input = 'variables = $event'
                     ></xyd-input>
 
-                    //make sure it can work though, the <input> inside the component must
+                    //make sure it can work though, the <input> inside the component must like 
                     Vue.component('xyd-input', {
                         props : {
                             value : {
@@ -443,7 +445,8 @@
                     first : bind the value attr to a value prop in props
                     second : on input, emit its own custom input event with the new value
 
-
+            
+                    
 
             
      -->
