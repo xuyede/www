@@ -836,14 +836,18 @@
 
             call原理:
             Function.prototype.myCall = function (context) {
-                var ctx = context || window,
+
+                var ctx = context ? JSON.parse(JSON.stringify(context)) : window,
                     arg = arguments,
                     len = arg.length,
                     args = [];
+
                 ctx.fn = this;
+                
                 for (var i = 1; i < len; i++) {
                     args.push('arg[' + i + ']');
                 }
+
                 var result = eval('ctx.fn(' + args.join(',') + ')');
                 delete ctx.fn;
                 return result;
@@ -2463,6 +2467,30 @@
                     
         
         */
+        /*
+                js事件流
+
+                一个完整的 JS事件流是从 window开始，最后回到 window的一个过程
+
+                window 10
+                1
+
+                        document 9
+                        2
+
+                                body 8
+                                3
+
+                                        div 7
+                                        4
+
+                                                (text) 6
+                                                5
+
+                事件流被分为三个阶段(1~ 5)捕获过程、(5~ 6)事件触发过程、(6~ 10)冒泡过程
+        
+        */
+        
     </script>
 
 
