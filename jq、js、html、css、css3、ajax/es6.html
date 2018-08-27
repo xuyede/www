@@ -612,6 +612,7 @@
                             // ['object', 'object', 'number']
                 
                     2)  Array.of() -> 可以替代 Array() / new Array()
+                            -> Array.of(3, 11, 8) // [3,11,8]
 
                     3)  .find() -> 类似 .filter() ，差别 .find()找到一个符合条件的就停止,返回符合条件的元素  .filter()找到符合条件的全部数据,返回一个数组
 
@@ -621,14 +622,23 @@
                             如果所有成员都不符合条件，则返回-1
 
                     5)  .includes -> 方法返回一个布尔值，表示某个数组是否包含给定的值,可以判断NaN(indexOf不行，因为内部判断为===)
-                        -> 兼容
-                            const contains = (() => 
-                                Array.prototype.includes 
-                                ? (arr, str) => arr.includes(str) 
-                                : (arr, str) => {
-                                    arr.some(ele => ele === str)
-                                }
-                            )();
+                            includes(target [,start])
+                            -> 兼容
+                                const contains = (() => 
+                                    Array.prototype.includes 
+                                    ? (arr, str) => arr.includes(str) 
+                                    : (arr, str) => {
+                                        arr.some(ele => ele === str)
+                                    }
+                                )();
+                        
+                        .startsWith(target [,len]) len从 1开始
+                            -> 填入第二个参数, 从第 len位开始
+                                'you were, are and will be in my heart'.startsWith('were', 4) //true
+                        .endsWidth(target [,len]) len从 1开始
+                            -> 填入第二个参数, 截取前 len位(包括第 len位)为操作目标
+                                'you were, are and will be in my heart'.endsWith('were', 8) //true  操作目标变为 'you were'
+                            
 
                     6)  .fill(n) -> 填充一个数组，fill方法用于空数组的初始化非常方便。数组中已有的元素，会被全部抹去
 
@@ -1088,7 +1098,7 @@
           <!--  
                 Set / Map 数据结构
 
-                1. Set -> es6的数组，当结构内的值是唯一的，不允许存在重复的值，具有 iterable 接口
+                1. Set -> es6的数组，结构内的值是唯一的，不允许存在重复的值，具有 iterable 接口
 
                     1)  const s = new Set();
                         [2, 3, 5, 4, 5, 2, 2].forEach(x => s.add(x));
@@ -1168,6 +1178,12 @@
                 
                 2. map -> es6的对象, 传统的对象只能用字符串当作键, 但在 map中各种类型的值（包括对象）都可以当作键
                     
+                    map底层查找实现 : 桶  -> 邻接链表(next)
+                    根据哈希算法,把数据放入不同的桶里
+                    当邻接链表过长时,用红黑树的结构存储
+                    设有 8个桶,当第 6/7个桶的储存数据超过一定数量时,添加原有桶的一半,重新排列,保证查找效率
+
+
                     1) 基本写法
                         // new Map不传参, 通过 set向 Map添加成员, get获取对应键的值
                         const map = new Map;
