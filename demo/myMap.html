@@ -95,6 +95,12 @@
                 for (let i = len - 3; i < len; i++) {
                     hash += (key[i] !== undefined) ? key[i].charCodeAt() : 0;
                 }
+            } else if (Object.prototype.toString.call(key) === '[object Object]') {
+                hash = 7;
+            } else if (Object.is(key, NaN)) {
+                hash = 6;
+            } else if (key === undefined) {
+                hash = 8;
             } else {
                 hash = +key;
             }
