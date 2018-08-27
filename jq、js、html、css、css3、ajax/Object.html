@@ -8,10 +8,51 @@
 </head>
 <body>
     <!-- 
+        js对象机制
+                    * 一切皆对象 -> 封装 继承 多态 -> 原型链(伪实现)
+                    
+                    1. 对象是一系列属性和方法的综合体,不存在某个单独的属性或方法
+                    2. 对象可以自由地扩展静态的属性和方法(自己本身的属性和方法,可以继承给子级)
+
+                    给对象扩展静态属性和方法:
+                        extend({}, ...)
+                            -> 第一个参数是要扩展的对象
+                            -> 第二及第二个以上的参数是要遍历的对象
+
+
+
+        
 
         内置对象 Object 的常用方法
 
         1. Object.create(obj) -> 创建一个新对象，使用obj为新对象的__proto__ (obj可为null)
+
+            一个参数 var obj = Object.create( _prototype )
+            
+            两个参数 var obj = Object.create( _prototype, {
+                        name : {
+                            value : 'xuyede',
+                            enumerable : true,
+                            configurable : false,
+                            writable : true
+                        },
+                        age : {
+                            enumerable : true,                      set/get 和  writable/value  只能存在一组
+                            configurable : false,
+                            get() {
+                                return 10
+                            },
+                            set(value) {
+                                age = value
+                            }
+                        }
+                    } )
+                ->
+                    obj = {
+                        name : 'xuyede',
+                        age : 10
+                    }
+
 
         2. Object.assign(target, sources ...) -> 将所有可枚举属性的值从一个或多个源对象复制(不可枚举和继承属性不能)到目标对象，返回目标对象
             -> 如果需要深拷贝，则
@@ -25,7 +66,15 @@
                     enumerable : prop是否可枚举(true/false),
                     configurable : prop是否可删除(true/false),  -> 这三个默认为false
                     writable : prop是否可更改值(true/false),
+                    get() {
+                        return 
+                    },
+                    set(value) {
+
+                    }
                 }
+
+                get/set 和  value/writable  成组存在,且只能同时存在一组
 
         4. Object.entries(obj) -> 把对象转化为数组 [[key,value], ...]，返回数组
         
