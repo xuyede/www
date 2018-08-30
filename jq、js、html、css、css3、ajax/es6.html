@@ -250,1048 +250,1594 @@
                     // 加载模块时，往往需要指定输入哪些方法。解构赋值使得输入语句非常清晰。
                     const { SourceMapConsumer, SourceNode } = require("source-map");
 
-      -->
+    -->
 
-      <!-- 
-          字符串的扩展
+    <!-- 
+        字符串的扩展
 
-            新增的方法 : 
-                1) charAt()  ->  at() 返回字符串给定位置的字符,可以识别 Unicode 编号大于0xFFFF的字符，返回正确的字符
-                
-                2) indexOf()  确定一个字符串是否包含在另一个字符串中
-                    -> 
-                        includes()：返回布尔值，表示是否找到了参数字符串。
-                        startsWith()：返回布尔值，表示参数字符串是否在原字符串的头部。
-                        endsWith()：返回布尔值，表示参数字符串是否在原字符串的尾部。
-
-                        这三个方法都支持第二个参数，表示开始搜索的位置。
-                            let s = 'Hello world!';
-                            s.startsWith('world', 6) // true
-                            s.endsWith('Hello', 5) // true
-                            s.includes('Hello', 6) // false
-
-                            ->上面代码表示，使用第二个参数n时，endsWith的行为与其他两个方法有所不同。
-                            它针对前n个字符，而其他两个方法针对从第n个位置直到字符串结束。
-
-                3) repeat(n) 方法返回一个新字符串，表示将原字符串重复n次
-                    -> 
-                        如果n为小数，先Math.floor()
-                        如果n为字符串，先转为数字
-
-                4) padStart(), padEnd() 字符串补全长度的功能
-                    ->
-                        'x'.padStart(5, 'ab') // 'ababx'
-                        'x'.padStart(4, 'ab') // 'abax'
-
-                        'x'.padEnd(5, 'ab') // 'xabab'
-                        'x'.padEnd(4, 'ab') // 'xaba'
-
-                
-
-            模板字符串 -> 特殊的字符串 (反引号 波浪符那个)
-            -> 
-                1. 可以按照想要的格式显示，不用换行转义符
-                    let str = `life is shit, 
-                                but fantastic.`
-
-                2. 可以在模板字符串中添加变量、表达式、函数 ( ${} )
-                    -> 变量
-                        let name = 'sunday';
-                        var str = `name = ${name}`;
-
-                    -> 表达式
-                        let a = 10, b = 1;
-                        var str = `a + b = ${a + b}`
-                        
-                    -> 函数 
-                        let arr = [1, 2, 3, 4, 5];
-                        let str = `${arr.map(function (ele) {
-                            return `${ele * 2}`;
-                        })}`;
-                
+        新增的方法 : 
+            1) charAt()  ->  at() 返回字符串给定位置的字符,可以识别 Unicode 编号大于0xFFFF的字符，返回正确的字符
             
-            标签模板 (函数调用的特殊形式)
-            -> 第一个参数是个数组，数组的内容是模板字符串中除了花括号表达式以外的内容 (最后补空字符串)*
-               从第二个参数起就是花括号表达式计算的结果
-            
-                function hello(s, v1, v2) {
-                    console.log(s[0]);          // "Hello "
-                    console.log(s[1]);          // " world "
-                    console.log(s[2]);          // ""
-                    console.log(v1);            // 15
-                    console.log(v2);            // 50
-
-                    return "OK";
-                }
-
-                var a = 5, b = 10;
-                hello`Hello ${ a + b } world ${ a * b}`;   // 相当于 -> hello(['Hello ', ' world ', ''], 15, 50)
-
-                
-                标签模板的应用 : 过滤html字符串
-
-                &quot -> """
-                &amp -> "&"
-                &lt -> "<"
-                &gt -> ">"
-                &nbsp -> " "
-
-                function safeHTML (data) {
-                    let str = data[0];
-                    for (let i = 1; i < arguments.length; i ++) {
-                        let arg = String(arguments[i]);
-                        str += arg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                        str += data[i];
-                    }
-                    return str;
-                }
-                var name = '<script>111<\/script>';
-                safeHTML`hello ${name}, welcome to beijing`;
-       -->
-       <!-- 
-            函数扩展
-                1. 函数参数的默认值 (可以和解构赋值一起使用)
-
-                    1) 普通用法
-                        ->  function log(x, y = 'World') {
-                                console.log(x, y);
-                            }
-
-                            log('Hello')          // Hello World
-                            log('Hello', 'China') // Hello China
-                            log('Hello', '')      // Hello
-
-                    2) 解构赋值
-                        ->  // 写法一
-                            function m1( {x = 0, y = 0} = {} ) {
-                                return [x, y];
-                            }
-
-                            // 写法二
-                            function m2( {x, y} = { x: 0, y: 0 } ) {
-                                return [x, y];
-                            }
-
-                            m1()                    // [0, 0]
-                            m2()                    // [0, 0]
-                            
-                            m1( {x: 3, y: 8} )      // [3, 8]
-                            m2( {x: 3, y: 8} )      // [3, 8]
-                            
-                            m1( {x: 3} )            // [3, 0]
-                            m2( {x: 3} )            // [3, undefined]
-                            
-                            m1( {} )                // [0, 0];
-                            m2( {} )                // [undefined, undefined]
-
-                            m1( {z: 3} )            // [0, 0]
-                            m2( {z: 3} )            // [undefined, undefined]
-
-                    ->  
-                        每个函数都有一个length属性，记录参数列表中参数的个数，
-                        如果指定了默认值的，将不计入length，即length表示期望接收到的参数的个数
-
-                    -> 
-                        如果参数的默认值也是一个参数或者一个函数，那么需要注意它的作用域：参数列表 > 函数外部
-
-                        一旦设置了参数的默认值，函数进行声明初始化时，参数会形成一个单独的作用域（context）
-                        等到初始化结束，这个作用域就会消失。这种语法行为，在不设置参数默认值时，是不会出现的
-
-                        eg:
-                            let x = 1;                                              let x = 1;
-                            function f(x, y = x) {                                  function f(y = x) {
-                                console.log(y);                                         let x = 2;
-                            }                                                           console.log(y);
-                                                                                    }
-                            // 先 x=2，然后 y=x 因而 y=2                            // 参数列表中没有x，因此只能从外围获取，x=1
-                            // let x=1在这里并没有起到作用                          // 之后 y=x 因而 y=1，这之后 x=2 只影响函数内部的 x，不影响 y      
-                            f(2)  // 2                                              f() // 1
-
-                        ----------------------------------------------------------------------------------------------------------------------------
-
-                            var x = 1;                                              var x = 1;
-                            function foo(x, y = function() { x = 2; }) {            function foo(x, y = function() { x = 2; }) {
-                                var x = 3;                                              x = 3;
-                                y();                                                    y();
-                                console.log(x);                                         console.log(x);
-                            }                                                       }
-
-                            foo() // 3                                              foo() // 2
-                            x // 1                                                  x // 1
-
-                            上面代码中，函数foo的参数形成一个单独作用域。这个          如果将var x = 3的var去除，函数foo的内部变量x就指向
-                            作用域里面，首先声明了变量x，然后声明了变量y，y的          第一个参数x，与匿名函数内部的x一致，所以最后输出2，而
-                            默认值是一个匿名函数。这个匿名函数内部的变量x，指          外部的全局变量x依然不受影响
-                            向同一个作用域的第一个参数x。函数foo内部又声明了
-                            一个内部变量x，该变量与第一个参数x由于不是同一个作
-                            用域，所以不是同一个变量，因此执行y后，内部变量x和
-                            外部全局变量x的值都没变。
-                            
-
-                    应用 : 参数为空时报错
-                        ->
-                            function throwInMissing () {
-                                throw new Error('Missing Parameter');
-                            }
-                            function func (param = throwInMissing()){
-                                console.log(param);
-                            }
-                            func();
-
-
-                2. REST参数 : 允许我们将一个不定数量的参数表示为一个数组, 只能放在最后
-
-                    -> 剩余参数和 arguments对象之间的区别主要有三个：
-                        1) 剩余参数只包含那些没有对应形参的实参，而 arguments 对象包含了传给函数的所有实参。
-                        2) arguments对象不是一个真正的数组，而剩余参数是真正的 Array实例，也就是说你能够在它上面直接使用所有的数组方法，比如 sort，map，forEach或pop。
-                        3) arguments对象还有一些附加的属性 （如callee属性）
-
-                    function add (a, ...arg) { 
-                        console.log(arg);   // [2, 3, 4]
-                        arg.forEach(function (ele) {
-                            do something ...
-                        })
-                        console.log(arg);
-                    }
-                    add(2, 2, 3, 4);
-
-                    * arr = [1, 2]  ->  ...arr = 1, 2
-
-
-
-                3. 箭头函数     使用箭头 ( => ) 定义函数
-                    ->  var f = v => v;
-                        //  等同于
-                        var f = function (v) {
-                            return v;
-                        }
-
-                    1) 如果箭头函数不需要参数或需要多个参数，就使用一个圆括号代表参数部分
-
-                        var f = () => 5; -> var f = function () { return 5 }
-
-                        var sum = (num1, num2) => num1 + num2;
-                        // 等同于
-                        var sun = function(num1, num2) {
-                            return num1 + num2;
-                        }
-
-                    2) 如果箭头函数的代码块部分多于一条语句，就要使用大括号将它们括起来
-                    
-                        let f = (x, y) => {
-                            let result = x + y;
-                            return result * 2;
-                        }
-
-                    3) 如果函数执行返回一个对象，需要用（）包裹
-
-                        let f = id => ({ id : id, name : 'sunday'});
-
-
-                    注意点：
-                        -> 
-                            1) 箭头函数的 this 总是指向函数定义时所在的作用域，而不是指向运行时所在的作用域（即箭头函数的this为父函数的this）
-                            2) 箭头函数没有arguments，用rest参数替代
-                            3) 不能当做构造函数，因为没有独立的执行上下文
-                            4) 不可以使用yield命令，因此箭头函数不能用作 Generator 函数
-
-                        
-                        箭头函数this问题 ：
-                            ->
-                                function Timer() {
-                                    this.s1 = 0;
-                                    this.s2 = 0;
-                                    // 箭头函数
-                                    setInterval(() => this.s1++, 1000);  -> this指向Timer
-                                    // 普通函数
-                                    setInterval(function () {            -> this指向window
-                                        this.s2++;
-                                    }, 1000);
-                                }
-
-                                var timer = new Timer();
-
-                                setTimeout(() => console.log('s1: ', timer.s1), 3100);  //3
-                                setTimeout(() => console.log('s2: ', timer.s2), 3100);  //0
-
-        --> 
-        <!--
-            数组的扩展
-
-                1. 扩展运算符 ( ... ) -> 内部使用 for ... of 循环
-                     * ...[1, 2, 3] -> 1, 2, 3
-
-                    // ES5 的写法
-                    Math.max.apply(null, [14, 3, 77])
-                    // ES6 的写法
-                    Math.max(...[14, 3, 77])
-                    // 等同于
-                    Math.max(14, 3, 77);
-
-                    // ES5的 写法
-                    var arr1 = [0, 1, 2];
-                    var arr2 = [3, 4, 5];
-                    Array.prototype.push.apply(arr1, arr2);
-                    // ES6 的写法
-                    let arr1 = [0, 1, 2];
-                    let arr2 = [3, 4, 5];
-                    arr1.push(...arr2);
-
-                    扩展运算符的应用 : 
-                        1) 复制数组（深度复制）
-                            let arr = [1, 2]
-                            let arr1 = [...arr]
-
-                        2) 合并数组
-                            const arr1 = ['a', 'b'];
-                            const arr2 = ['c'];
-                            const arr3 = ['d', 'e'];
-
-                            // ES5 的合并数组
-                            arr1.concat(arr2, arr3);
-                            // [ 'a', 'b', 'c', 'd', 'e' ]
-
-                            // ES6 的合并数组
-                            [...arr1, ...arr2, ...arr3]
-                            // [ 'a', 'b', 'c', 'd', 'e' ]
-
-                        3) 字符串转数组 -> 能够正确识别四个字节的 Unicode 字符
-                            [...'hello']
-                            // [ "h", "e", "l", "l", "o" ]
-
-                        4) 具有 Iterator 接口的对象 -> 任何 Iterator 接口的对象，都可以用扩展运算符转为真正的数组（非类数组）
-                            
-                                let divList = document.getElementsByTagName('div');
-                                console.log(divList)
-                                let arrList = [...divList];
-                                console.log(arrList)
-
-                        5)  Map 和 Set 结构，Generator 函数
-
-                2. 新增的方法
-                    1)  Array.from() -> 类数组、具有Iterator接口的对象 转为 数组
-
-                        兼容 :  const toArray = (() => 
-                                    Array.from ? Array.from : obj => [].slice.call(obj)
-                                )();
-
-                        实际应用中，常见的类似数组的对象是 DOM 操作返回的 NodeList 集合
-
-                        以及函数内部的arguments对象。Array.from都可以将它们转为真正的数组。
-
-                        ->
-                            // NodeList对象
-                            let ps = document.querySelectorAll('p');
-                            Array.from(ps).filter(p => {
-                                return p.textContent.length > 100;
-                            });
-
-                            // arguments对象
-                            function foo() {
-                                var args = Array.from(arguments);
-                                // ...
-                            }
-
-                        .from()的第二个参数 : Array.from还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理，将处理后的值放入返回的数组
-                        
-                        ->
-                            Array.from(arrayLike, x => x * x);
-                            // 等同于
-                            Array.from(arrayLike).map(x => x * x);
-
-                            Array.from([1, 2, 3], (x) => x * x)
-                            // [1, 4, 9]
-                        ------------------------------------------------------------------------------------
-                            Array.from([1, , 2, , 3], (n) => n || 0)
-                            // [1, 0, 2, 0, 3]
-                        ------------------------------------------------------------------------------------
-                            function typesOf () {
-                                return Array.from(arguments, value => typeof value)
-                            }
-                            typesOf(null, [], NaN)
-                            // ['object', 'object', 'number']
-                
-                    2)  Array.of() -> 可以替代 Array() / new Array()
-                            -> Array.of(3, 11, 8) // [3,11,8]
-
-                    3)  .find() -> 类似 .filter() ，差别 .find()找到一个符合条件的就停止,返回符合条件的元素  .filter()找到符合条件的全部数据,返回一个数组
-
-                    4)  .findIndex() 
-                            -> 
-                            数组实例的findIndex方法的用法与find方法非常类似，返回第一个符合条件的数组成员的位置
-                            如果所有成员都不符合条件，则返回-1
-
-                    5)  .includes -> 方法返回一个布尔值，表示某个数组是否包含给定的值,可以判断NaN(indexOf不行，因为内部判断为===)
-                            includes(target [,start])
-                            -> 兼容
-                                const contains = (() => 
-                                    Array.prototype.includes 
-                                    ? (arr, str) => arr.includes(str) 
-                                    : (arr, str) => {
-                                        arr.some(ele => ele === str)
-                                    }
-                                )();
-                        
-                        .startsWith(target [,len]) len从 1开始
-                            -> 填入第二个参数, 从第 len位开始
-                                'you were, are and will be in my heart'.startsWith('were', 4) //true
-                        .endsWidth(target [,len]) len从 1开始
-                            -> 填入第二个参数, 截取前 len位(包括第 len位)为操作目标
-                                'you were, are and will be in my heart'.endsWith('were', 8) //true  操作目标变为 'you were'
-                            
-
-                    6)  .fill(n) -> 填充一个数组，fill方法用于空数组的初始化非常方便。数组中已有的元素，会被全部抹去
-
-                    7)  arr.entries()，arr.keys() 和 arr.values()
-                            keys()是对键名的遍历、values()是对键值的遍历，entries()是对键值对的遍历, 都返回一个 Iterator对象（有next() 方法开启迭代）
-
-                        ->
-                            for (let index of ['a', 'b'].keys()) {
-                                console.log(index);
-                            }
-                            // 0
-                            // 1
-
-                            for (let elem of ['a', 'b'].values()) {
-                                console.log(elem);
-                            }
-                            // 'a'
-                            // 'b'
-
-                            for (let [index, elem] of ['a', 'b'].entries()) {
-                                console.log(index, elem);
-                            }
-                            // 0 "a"
-                            // 1 "b"
-
-                3. 数组的空位
-                        ES6 基本统一把数组的空位转为undefined字符串
-        
-
-                        ES5 对空位的处理，已经很不一致了，大多数情况下会忽略空位。
-                        -> 
-                            forEach(), filter(), reduce(), every() 和some()都会跳过空位。
-                            map()会跳过空位，但会保留这个值
-                            join()和toString()会将空位视为undefined，而undefined和null会被处理成空字符串。
-
-                            // forEach方法
-                            [,'a'].forEach((x,i) => console.log(i)); // 1
-
-                            // filter方法
-                            ['a',,'b'].filter(x => true) // ['a','b']
-
-                            // every方法
-                            [,'a'].every(x => x==='a') // true
-
-                            // reduce方法
-                            [1,,2].reduce((x,y) => x+y) // 3
-
-                            // some方法
-                            [,'a'].some(x => x !== 'a') // false
-
-                            // map方法
-                            [,'a'].map(x => 1) // [,1]
-
-                            // join方法
-                            [,'a',undefined,null].join('#') // "#a##"
-
-                            // toString方法
-                            [,'a',undefined,null].toString() // ",a,,"
-                    
-          -->
-
-        <!-- 
-            对象的扩展
-
-                1. 对象的简写
-                    -> 
-                        let obj = {
-                            foo : foo，
-                            //等同于
-                            foo，
-
-                            add : function (x, y) {},
-                            //等同于
-                            add (x, y) {},  -> 会绑定一个[[homeObject]]指向自身，然后才能使用super关键字
-                        }
-
-                2. 新增方法
-                    1) Object.assigns() -> 对象合并 浅拷贝(除了 null/undefined )
-
-                    2) Object.getOwnPropertyDescriptor(obj, prop) -> 获取对象某属性的描述对象
-                        ->
-                            let obj = { foo: 123 };
-                            Object.getOwnPropertyDescriptor(obj, 'foo')
-                            //  {
-                            //    value: 123,
-                            //    writable: true,   可修改  
-                            //    enumerable: true,     可枚举
-                            //    configurable: true        可删除
-                            //  }
-
-                            目前，有四个操作会忽略enumerable为false的属性
-                            ->
-                                for...in循环：只遍历对象自身的和继承的可枚举的属性
-                                Object.keys()：返回对象自身的所有可枚举的属性的键名
-                                JSON.stringify()：只串行化对象自身的可枚举的属性
-                                Object.assign()： 忽略enumerable为false的属性，只拷贝对象自身的可枚举的属性
-
-                    3) Object.is(first, second) -> 比较两个值是否相等   
-                        ->
-                            +0 === -0 //true
-                            NaN === NaN // false
-
-                            Object.is(+0, -0) // false
-                            Object.is(NaN, NaN) // true
-
-         -->
-        <!-- 
-            Symbol -> 第七种原始数据，不能 new, 独一无二的值
+            2) indexOf()  确定一个字符串是否包含在另一个字符串中
                 -> 
-                    let s = Symbol();
-                    typeof s; // symbol
-                    s // Symbol()
+                    .includes()：返回布尔值，表示是否找到了参数字符串。
 
+                    .startsWith(target [,len]) len从 1开始
+                        -> 填入第二个参数, 从第 len位开始
+                            'you were, are and will be in my heart'.startsWith('were', 4) //true
+                    
+                    .endsWidth(target [,len]) len从 1开始
+                        -> 填入第二个参数, 截取前 len位(包括第 len位)为操作目标
+                            'you were, are and will be in my heart'.endsWith('were', 8) //true  操作目标变为 'you were'
+            
+                    应用 : 前后缀比较
+
+            3) repeat(n) 方法返回一个新字符串，表示将原字符串重复n次
+                -> 
+                    如果n为小数，先Math.floor()
+                    如果n为字符串，先转为数字
+
+            4) padStart(), padEnd() 字符串补全长度的功能
                 ->
-                    let x = Symbol('sunday');  参数只适用于描述，和 Symbol 的取值没有任何关系，两个参数相等的 Symbol 并不相等，事实上，就不存在任何两个 Symbol 是相等的。
-                    let y = Symbol('sunday');
+                    'x'.padStart(5, 'ab') // 'ababx'
+                    'x'.padStart(4, 'ab') // 'abax'
 
-                ->
-                    Symbol 不能参与数值运算和字符串拼接，会报错  
-                    可以显式地把 Symbol 转换成字符串或布尔值（不能转换为数值）
+                    'x'.padEnd(5, 'ab') // 'xabab'
+                    'x'.padEnd(4, 'ab') // 'xaba'
 
-                -> 最主要的用途 : 作为属性名的symbol, 用 Symbol 定义属性时, 只能用[]的方式, 不能打点调用
-                        Symbol 最常见的用途就是解决对象属性名冲突的问题，因为 Symbol 绝对不会冲突
+            
 
-                        let mySymbol = Symbol();
+        模板字符串 -> 特殊的字符串 (反引号 波浪符那个)
+        -> 
+            1. 可以按照想要的格式显示，不用换行转义符
+                let str = `life is shit, 
+                            but fantastic.`
 
-                        // 第一种写法
-                        let o = {};
-                        o[mySymbol] = 'hello';
+            2. 可以在模板字符串中添加变量、表达式、函数 ( ${} )
+                -> 变量
+                    let name = 'sunday';
+                    var str = `name = ${name}`;
 
-                        // 第二种写法
-                        let o = {
-                        [mySymbol]: 'hello'
-                        };
+                -> 表达式
+                    let a = 10, b = 1;
+                    var str = `a + b = ${a + b}`
+                    
+                -> 函数 
+                    let arr = [1, 2, 3, 4, 5];
+                    let str = `${arr.map(function (ele) {
+                        return `${ele * 2}`;
+                    })}`;
+            
+        
+        标签模板 (函数调用的特殊形式)
+        -> 第一个参数是个数组，数组的内容是模板字符串中除了花括号表达式以外的内容 
+            从第二个参数起就是花括号表达式计算的结果
+        
+            function hello(s, v1, v2) {
+                console.log(s[0]);          // "Hello "
+                console.log(s[1]);          // " world "
+                console.log(s[2]);          // ""
+                console.log(v1);            // 15
+                console.log(v2);            // 50
 
-                        // 第三种写法
-                        let o = {};
-                        Object.defineProperty(o, mySymbol, {
-                        value: 'hello'
+                return "OK";
+            }
+
+            var a = 5, b = 10;
+            hello`Hello ${ a + b } world ${ a * b}`;   // 相当于 -> hello(['Hello ', ' world ', ''], 15, 50)
+
+            
+            标签模板的应用 : 过滤html字符串
+
+            &quot -> """
+            &amp -> "&"
+            &lt -> "<"
+            &gt -> ">"
+            &nbsp -> " "
+
+            function safeHTML (data) {
+                let str = data[0];
+                for (let i = 1; i < arguments.length; i ++) {
+                    let arg = String(arguments[i]);
+                    str += arg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    str += data[i];
+                }
+                return str;
+            }
+            var name = '<script>111<\/script>';
+            safeHTML`hello ${name}, welcome to beijing`;
+    -->
+    <!-- 
+        函数扩展
+            1. 函数参数的默认值 (可以和解构赋值一起使用)
+
+                1) 普通用法
+                    ->  function log(x, y = 'World') {
+                            console.log(x, y);
+                        }
+
+                        log('Hello')          // Hello World
+                        log('Hello', 'China') // Hello China
+                        log('Hello', '')      // Hello
+
+                2) 解构赋值
+                    ->  // 写法一
+                        function m1( {x = 0, y = 0} = {} ) {
+                            return [x, y];
+                        }
+
+                        // 写法二
+                        function m2( {x, y} = { x: 0, y: 0 } ) {
+                            return [x, y];
+                        }
+
+                        m1()                    // [0, 0]
+                        m2()                    // [0, 0]
+                        
+                        m1( {x: 3, y: 8} )      // [3, 8]
+                        m2( {x: 3, y: 8} )      // [3, 8]
+                        
+                        m1( {x: 3} )            // [3, 0]
+                        m2( {x: 3} )            // [3, undefined]
+                        
+                        m1( {} )                // [0, 0];
+                        m2( {} )                // [undefined, undefined]
+
+                        m1( {z: 3} )            // [0, 0]
+                        m2( {z: 3} )            // [undefined, undefined]
+
+                ->  
+                    每个函数都有一个length属性，记录参数列表中参数的个数，
+                    如果指定了默认值的，将不计入length，即length表示期望接收到的参数的个数
+
+                -> 
+                    如果参数的默认值也是一个参数或者一个函数，那么需要注意它的作用域：参数列表 > 函数外部
+
+                    一旦设置了参数的默认值，函数进行声明初始化时，参数会形成一个单独的作用域（context）
+                    等到初始化结束，这个作用域就会消失。这种语法行为，在不设置参数默认值时，是不会出现的
+
+                    eg:
+                        let x = 1;                                              let x = 1;
+                        function f(x, y = x) {                                  function f(y = x) {
+                            console.log(y);                                         let x = 2;
+                        }                                                           console.log(y);
+                                                                                }
+                        // 先 x=2，然后 y=x 因而 y=2                            // 参数列表中没有x，因此只能从外围获取，x=1
+                        // let x=1在这里并没有起到作用                          // 之后 y=x 因而 y=1，这之后 x=2 只影响函数内部的 x，不影响 y      
+                        f(2)  // 2                                              f() // 1
+
+                    ----------------------------------------------------------------------------------------------------------------------------
+
+                        var x = 1;                                              var x = 1;
+                        function foo(x, y = function() { x = 2; }) {            function foo(x, y = function() { x = 2; }) {
+                            var x = 3;                                              x = 3;
+                            y();                                                    y();
+                            console.log(x);                                         console.log(x);
+                        }                                                       }
+
+                        foo() // 3                                              foo() // 2
+                        x // 1                                                  x // 1
+
+                        上面代码中，函数foo的参数形成一个单独作用域。这个          如果将var x = 3的var去除，函数foo的内部变量x就指向
+                        作用域里面，首先声明了变量x，然后声明了变量y，y的          第一个参数x，与匿名函数内部的x一致，所以最后输出2，而
+                        默认值是一个匿名函数。这个匿名函数内部的变量x，指          外部的全局变量x依然不受影响
+                        向同一个作用域的第一个参数x。函数foo内部又声明了
+                        一个内部变量x，该变量与第一个参数x由于不是同一个作
+                        用域，所以不是同一个变量，因此执行y后，内部变量x和
+                        外部全局变量x的值都没变。
+                        
+
+                应用 : 参数为空时报错
+                    ->
+                        function throwInMissing () {
+                            throw new Error('Missing Parameter');
+                        }
+                        function func (param = throwInMissing()){
+                            console.log(param);
+                        }
+                        func();
+
+
+            2. REST参数 : 允许我们将一个不定数量的参数表示为一个数组, 只能放在最后
+
+                -> 剩余参数和 arguments对象之间的区别主要有三个：
+                    1) 剩余参数只包含那些没有对应形参的实参，而 arguments 对象包含了传给函数的所有实参。
+                    2) arguments对象不是一个真正的数组，而剩余参数是真正的 Array实例，也就是说你能够在它上面直接使用所有的数组方法，比如 sort，map，forEach或pop。
+                    3) arguments对象还有一些附加的属性 （如callee属性）
+
+                function add (a, ...arg) { 
+                    console.log(arg);   // [2, 3, 4]
+                    arg.forEach(function (ele) {
+                        do something ...
+                    })
+                    console.log(arg);
+                }
+                add(2, 2, 3, 4);
+
+                * arr = [1, 2]  ->  ...arr = 1, 2
+
+
+
+            3. 箭头函数     使用箭头 ( => ) 定义函数
+                ->  var f = v => v;
+                    //  等同于
+                    var f = function (v) {
+                        return v;
+                    }
+
+                1) 如果箭头函数不需要参数或需要多个参数，就使用一个圆括号代表参数部分
+
+                    var f = () => 5; -> var f = function () { return 5 }
+
+                    var sum = (num1, num2) => num1 + num2;
+                    // 等同于
+                    var sun = function(num1, num2) {
+                        return num1 + num2;
+                    }
+
+                2) 如果箭头函数的代码块部分多于一条语句，就要使用大括号将它们括起来
+                
+                    let f = (x, y) => {
+                        let result = x + y;
+                        return result * 2;
+                    }
+
+                3) 如果函数执行返回一个对象，需要用（）包裹
+
+                    let f = id => ({ id : id, name : 'sunday'});
+
+
+                注意点：
+                    -> 
+                        1) 箭头函数的 this 总是指向函数定义时所在的作用域，而不是指向运行时所在的作用域（即箭头函数的this为父函数的this）
+                        2) 箭头函数没有arguments，用rest参数替代
+                        3) 不能当做构造函数，因为没有独立的执行上下文
+                        4) 不可以使用yield命令，因此箭头函数不能用作 Generator 函数
+
+                    
+                    箭头函数this问题 ：
+                        ->
+                            function Timer() {
+                                this.s1 = 0;
+                                this.s2 = 0;
+                                // 箭头函数
+                                setInterval(() => this.s1++, 1000);  -> this指向Timer
+                                // 普通函数
+                                setInterval(function () {            -> this指向window
+                                    this.s2++;
+                                }, 1000);
+                            }
+
+                            var timer = new Timer();
+
+                            setTimeout(() => console.log('s1: ', timer.s1), 3100);  //3
+                            setTimeout(() => console.log('s2: ', timer.s2), 3100);  //0
+
+    --> 
+    <!--
+        数组的扩展
+
+            1. 扩展运算符 ( ... ) -> 内部使用 for ... of 循环
+                    * ...[1, 2, 3] -> 1, 2, 3
+
+                // ES5 的写法
+                Math.max.apply(null, [14, 3, 77])
+                // ES6 的写法
+                Math.max(...[14, 3, 77])
+                // 等同于
+                Math.max(14, 3, 77);
+
+                // ES5的 写法
+                var arr1 = [0, 1, 2];
+                var arr2 = [3, 4, 5];
+                Array.prototype.push.apply(arr1, arr2);
+                // ES6 的写法
+                let arr1 = [0, 1, 2];
+                let arr2 = [3, 4, 5];
+                arr1.push(...arr2);
+
+                扩展运算符的应用 : 
+                    1) 复制数组（深度复制）
+                        let arr = [1, 2]
+                        let arr1 = [...arr]
+
+                    2) 合并数组
+                        const arr1 = ['a', 'b'];
+                        const arr2 = ['c'];
+                        const arr3 = ['d', 'e'];
+
+                        // ES5 的合并数组
+                        arr1.concat(arr2, arr3);
+                        // [ 'a', 'b', 'c', 'd', 'e' ]
+
+                        // ES6 的合并数组
+                        [...arr1, ...arr2, ...arr3]
+                        // [ 'a', 'b', 'c', 'd', 'e' ]
+
+                    3) 字符串转数组 -> 能够正确识别四个字节的 Unicode 字符
+                        [...'hello']
+                        // [ "h", "e", "l", "l", "o" ]
+
+                    4) 具有 Iterator 接口的对象 -> 任何 Iterator 接口的对象，都可以用扩展运算符转为真正的数组（非类数组）
+                        
+                            let divList = document.getElementsByTagName('div');
+                            console.log(divList)
+                            let arrList = [...divList];
+                            console.log(arrList)
+
+                    5)  Map 和 Set 结构，Generator 函数
+
+            2. 新增的方法
+                1)  Array.from() -> 类数组、具有Iterator接口的对象 转为 数组
+
+                    兼容 :  const toArray = (() => 
+                                Array.from ? Array.from : obj => [].slice.call(obj)
+                            )();
+
+                    实际应用中，常见的类似数组的对象是 DOM 操作返回的 NodeList 集合
+
+                    以及函数内部的arguments对象。Array.from都可以将它们转为真正的数组。
+
+                    ->
+                        // NodeList对象
+                        let ps = document.querySelectorAll('p');
+                        Array.from(ps).filter(p => {
+                            return p.textContent.length > 100;
                         });
 
-                        // 以上写法均得到此结果
-                        o[mySymbol] // hello
+                        // arguments对象
+                        function foo() {
+                            var args = Array.from(arguments);
+                            // ...
+                        }
 
-                ->  Symbol.for()
-                        接受一个字符串参数，搜索是否已有以此为描述的 Symbol 存在，有则返回已有的，没有则新建并返回
+                    .from()的第二个参数 : Array.from还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理，将处理后的值放入返回的数组
+                    
+                    ->
+                        Array.from(arrayLike, x => x * x);
+                        // 等同于
+                        Array.from(arrayLike).map(x => x * x);
 
-                        let s1 = Symbol.for('foo');
-                        let s2 = Symbol.for('foo');
+                        Array.from([1, 2, 3], (x) => x * x)
+                        // [1, 4, 9]
+                    ___________________________________________________________________________________
+                        Array.from([1, , 2, , 3], (n) => n || 0)
+                        // [1, 0, 2, 0, 3]
+                    ___________________________________________________________________________________
+                        function typesOf () {
+                            return Array.from(arguments, value => typeof value)
+                        }
+                        typesOf(null, [], NaN)
+                        // ['object', 'object', 'number']
+            
+                2)  Array.of() -> 可以替代 Array() / new Array()
+                        -> Array.of(3, 11, 8) // [3,11,8]
 
-                        s1 === s2 // true
+                3)  .find() -> 类似 .filter() ，差别 .find()找到一个符合条件的就停止,返回符合条件的元素  .filter()找到符合条件的全部数据,返回一个数组
 
-                ->  Symbol.keyFor()
-                        Symbol.for()在创建的同时会在全局进行登记，以进行检查，而普通的 Symbol 并不会登记
-                        Symbol.keyFor()用于检查 Symbol 是否被注册过，注册过的正常返回注册用的参数，否则返回undefined
+                4)  .findIndex() 
+                        -> 
+                        数组实例的findIndex方法的用法与 find方法非常类似，返回第一个符合条件的数组成员的位置
+                        如果所有成员都不符合条件，则返回-1
 
-                        let s1 = Symbol.for('foo');
-                        let s2 = Symbol('foo');
+                5)  .includes -> 方法返回一个布尔值，表示某个数组是否包含给定的值,可以判断NaN(indexOf不行，因为内部判断为===)
+                        includes(target [,start])
+                        -> 兼容
+                            const contains = (() => 
+                                Array.prototype.includes 
+                                ? (arr, str) => arr.includes(str) 
+                                : (arr, str) => {
+                                    arr.some(ele => ele === str)
+                                }
+                            )();            
 
-                        Symbol.keyFor(s1) // 'foo'
-                        Symbol.keyFor(s2) // undefined
-                        
-         -->
+                6)  .fill(n) -> 填充一个数组，fill方法用于空数组的初始化非常方便。数组中已有的元素，会被全部抹去
 
-         <!-- 
-            es6 class 类
+                7)  arr.entries()，arr.keys() 和 arr.values()
+                        keys()是对键名的遍历、values()是对键值的遍历，entries()是对键值对的遍历, 都返回一个 Iterator对象（有next() 方法开启迭代）
 
-            1.  写法：
-                es5:
-                ->
-                    function Point(x, y) {
-                        this.x = x;
-                        this.y = y;
+                    ->
+                        for (let index of ['a', 'b'].keys()) {
+                            console.log(index);
+                        }
+                        // 0
+                        // 1
+
+                        for (let elem of ['a', 'b'].values()) {
+                            console.log(elem);
+                        }
+                        // 'a'
+                        // 'b'
+
+                        for (let [index, elem] of ['a', 'b'].entries()) {
+                            console.log(index, elem);
+                        }
+                        // 0 "a"
+                        // 1 "b"
+
+            3. 数组的空位
+                    ES6 基本统一把数组的空位转为undefined字符串
+    
+
+                    ES5 对空位的处理，已经很不一致了，大多数情况下会忽略空位。
+                    -> 
+                        forEach(), filter(), reduce(), every() 和some()都会跳过空位。
+                        map()会跳过空位，但会保留这个值
+                        join()和toString()会将空位视为undefined，而undefined和null会被处理成空字符串。
+
+                        // forEach方法
+                        [,'a'].forEach((x,i) => console.log(i)); // 1
+
+                        // filter方法
+                        ['a',,'b'].filter(x => true) // ['a','b']
+
+                        // every方法
+                        [,'a'].every(x => x==='a') // true
+
+                        // reduce方法
+                        [1,,2].reduce((x,y) => x+y) // 3
+
+                        // some方法
+                        [,'a'].some(x => x !== 'a') // false
+
+                        // map方法
+                        [,'a'].map(x => 1) // [,1]
+
+                        // join方法
+                        [,'a',undefined,null].join('#') // "#a##"
+
+                        // toString方法
+                        [,'a',undefined,null].toString() // ",a,,"
+                
+    -->
+
+    <!-- 
+        对象的扩展
+
+            1. 对象的简写
+                -> 
+                    let obj = {
+                        foo : foo，
+                        //等同于
+                        foo，
+
+                        add : function (x, y) {},
+                        //等同于
+                        add (x, y) {},  -> 会绑定一个[[homeObject]]指向自身，然后才能使用super关键字
                     }
 
-                    Point.prototype.toString = function () {
-                        return '(' + this.x + ', ' + this.y + ')';
-                    };
-                    
+            2. 新增方法
+                1) Object.assigns() -> 对象合并 浅拷贝(除了 null/undefined )
 
-                es6:
+                2) Object.getOwnPropertyDescriptor(obj, prop) -> 获取对象某属性的描述对象
+                    ->
+                        let obj = { foo: 123 };
+                        Object.getOwnPropertyDescriptor(obj, 'foo')
+                        //  {
+                        //    value: 123,
+                        //    writable: true,   可修改  
+                        //    enumerable: true,     可枚举
+                        //    configurable: true        可删除
+                        //  }
+
+                        目前，有四个操作会忽略enumerable为false的属性
+                        ->
+                            for...in循环：只遍历对象自身的和继承的可枚举的属性
+                            Object.keys()：返回对象自身的所有可枚举的属性的键名
+                            JSON.stringify()：只串行化对象自身的可枚举的属性
+                            Object.assign()： 忽略enumerable为false的属性，只拷贝对象自身的可枚举的属性
+
+                3) Object.is(first, second) -> 比较两个值是否相等   
+                    ->
+                        +0 === -0 //true
+                        NaN === NaN // false
+
+                        Object.is(+0, -0) // false
+                        Object.is(NaN, NaN) // true
+
+    -->
+    <!-- 
+        Symbol -> 第七种原始数据，不能 new, 独一无二的值
+            -> 
+                let s = Symbol();
+                typeof s; // symbol
+                s // Symbol()
+
+            ->
+                let x = Symbol('sunday');  参数只适用于描述，和 Symbol 的取值没有任何关系，两个参数相等的 Symbol 并不相等，事实上，就不存在任何两个 Symbol 是相等的。
+                let y = Symbol('sunday');
+
+            ->
+                Symbol 不能参与数值运算和字符串拼接，会报错  
+                可以显式地把 Symbol 转换成字符串或布尔值（不能转换为数值）
+
+            -> 最主要的用途 : 作为属性名的symbol, 用 Symbol 定义属性时, 只能用[]的方式, 不能打点调用
+                    Symbol 最常见的用途就是解决对象属性名冲突的问题，因为 Symbol 绝对不会冲突
+
+                    let mySymbol = Symbol();
+
+                    // 第一种写法
+                    let o = {};
+                    o[mySymbol] = 'hello';
+
+                    // 第二种写法
+                    let o = {
+                    [mySymbol]: 'hello'
+                    };
+
+                    // 第三种写法
+                    let o = {};
+                    Object.defineProperty(o, mySymbol, {
+                    value: 'hello'
+                    });
+
+                    // 以上写法均得到此结果
+                    o[mySymbol] // hello
+
+            ->  Symbol.for()
+                    接受一个字符串参数，搜索是否已有以此为描述的 Symbol 存在，有则返回已有的，没有则新建并返回
+
+                    let s1 = Symbol.for('foo');
+                    let s2 = Symbol.for('foo');
+
+                    s1 === s2 // true
+
+            ->  Symbol.keyFor()
+                    Symbol.for()在创建的同时会在全局进行登记，以进行检查，而普通的 Symbol 并不会登记
+                    Symbol.keyFor()用于检查 Symbol 是否被注册过，注册过的正常返回注册用的参数，否则返回undefined
+
+                    let s1 = Symbol.for('foo');
+                    let s2 = Symbol('foo');
+
+                    Symbol.keyFor(s1) // 'foo'
+                    Symbol.keyFor(s2) // undefined
+                    
+    -->
+
+    <!-- 
+    es6 class 类
+
+    1.  写法：
+        es5:
+        ->
+            function Point(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+
+            Point.prototype.toString = function () {
+                return '(' + this.x + ', ' + this.y + ')';
+            };
+            
+
+        es6:
+        ->
+            class Point{
+                constructor (x, y) {
+                    this.x = x;
+                    this.y = y;
+                }
+                toString () {
+                    return '(' + this.x + ', ' + this.y + ')';
+                }
+            }
+            var point = new Point(); 使用的时候，也是直接对类使用new命令，跟构造函数的用法完全一致
+                
+    2. 构造函数的prototype属性，在es6中，类的所有方法都定义在类的prototype属性上面,直接改写prototype
+        class Point{
+            constructor () {
+                // ...
+            }
+            toString () {
+                // ...
+            }
+            toValue () {
+                // ...
+            }
+        }
+        等同于
+        Point.prototype = {
+            constructor(){},
+            toString(){},
+            toValue(){}
+        }
+
+        因为类的方法都定义在prototype对象上，所以可以通过Object.assign(Point.prototype, {})添加多个方法
+        Object.assign(Point.prototype, {
+            show() {},
+            say() {}
+        })
+    
+    3. 类内部定义的方法是不可枚举的，用Object.assign()添加的方法可以枚举
+        class Point{
+            constructor () {
+                // ...
+            }
+            toString () {
+                // ...
+            }
+        }
+
+        Object.assign(Point.prototype, {
+            show() {},
+            say() {}
+        })
+
+        Object.keys(Point.prototype) //['show', 'say']
+
+    4. 类和模块内部，默认为严格模式
+
+    5. class表达式
+        写法：
+        ->
+            const MyClass = class Me {
+                getClassName () {
+                    return Me.name
+                }
+            };
+            let inst = new MyClass();
+            inst.getClassName() // Me
+            Me.name // ReferenceError: Me is not defined
+
+            //这个类的名字是MyClass而不是Me，Me只在 Class 的内部代码可用，指代当前类
+
+
+        如果类的内部没用到，可以省略
+        ->
+            const MyClass = class { /* ... */ };
+
+
+        采用class表达式，可以写出立即执行的Class，该类就只能实例化一次了
+        ->
+            let person = new class {
+                constructor(name) {
+                    this.name = name;
+                }
+                sayName() {
+                    console.log(this.name);
+                }
+            }('Sunday');
+
+            person.sayName(); //Sunday
+        
+        
+    6. class的静态方法 -> 只能由类本身调用,静态方法会被子类继承
+        -> 
+            如果在一个方法前，加上static关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为 '静态方法'
+
+            class Foo {
+                static classMethod() {
+                    return 'hello';
+                }
+            }
+
+            Foo.classMethod() // 'hello'
+
+            var foo = new Foo();
+            foo.classMethod()
+            // TypeError: foo.classMethod is not a function
+
+    
+    7. new.target属性 -> 只能在类里使用
+        -> 
+            确定构造函数是怎么被调用的,如果构造函数不是通过new命令调用的，new.target会返回undefined
+
+            用法:
                 ->
-                    class Point{
-                        constructor (x, y) {
+                    function Person(name) {
+                        if (new.target === Person) {
+                            this.name = name;
+                        } else {
+                            throw new Error('必须使用 new 命令生成实例');
+                        }
+                    }
+
+                    var person = new Person('张三'); // 正确
+                    var notAPerson = Person.call(person, '张三');  // 报错
+
+                    // 确保构造函数只能通过new命令调用
+
+
+            当一个类被继承时，new.target指向子类
+            应用:
+                使某个类不能被实例化，只能用于继承
+
+                ->
+                    class Human{
+                        constructor () {
+                            if (new.target === Human) {
+                                throw new Error('本类不能被实例化');
+                            }
+                        }
+                    }
+
+                    class Male extends Human{
+                        constructor (name, age) {
+                            super();
+                            this.name = name;
+                            this.age = age;
+                        }
+                    }
+
+                    var test = new Human() //报错:本类不能被实例化
+                    var test1 = new Male('Sunday', 18); //正确
+        
+                    
+    8. class 的继承 -> 子类实例的构建，基于父类实例
+    
+            1)  父子类通过extends实现继承
+                ->
+                    class Point {}
+                    class ColorPoint extends Point {}      
+            
+            2)  子类通过super调用父类的方法,继承的子类一定要在constructor中写上super()
+                ->
+                    class ColorPoint extends Point {
+                        constructor() {
+                            super(); //调用父类的constructor()
+                        }
+                        toString() {
+                            return super.toString() //调用父类的toString()
+                        }
+                    }    
+
+            3)  es5和es6继承的差别
+                -> 
+                    es5: ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面
+                    es6: ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this
+
+            4)  在子类的构造函数中，只有调用super之后，才可以使用this关键字，否则会报错
+                这是因为子类实例的构建，基于父类实例，只有super方法才能调用父类实例
+                ->
+                    class Point {
+                        constructor(x, y) {
                             this.x = x;
                             this.y = y;
                         }
-                        toString () {
-                            return '(' + this.x + ', ' + this.y + ')';
+                    }
+
+                    class ColorPoint extends Point {
+                        constructor(x, y, color) {
+                            this.color = color; // ReferenceError
+                            super(x, y);
+                            this.color = color; // 正确
                         }
                     }
-                    var point = new Point(); 使用的时候，也是直接对类使用new命令，跟构造函数的用法完全一致
-                        
-            2. 构造函数的prototype属性，在es6中，类的所有方法都定义在类的prototype属性上面,直接改写prototype
-                class Point{
-                    constructor () {
-                        // ...
-                    }
-                    toString () {
-                        // ...
-                    }
-                    toValue () {
-                        // ...
-                    }
-                }
-                等同于
-                Point.prototype = {
-                    constructor(){},
-                    toString(){},
-                    toValue(){}
-                }
 
-                因为类的方法都定义在prototype对象上，所以可以通过Object.assign(Point.prototype, {})添加多个方法
-                Object.assign(Point.prototype, {
-                    show() {},
-                    say() {}
-                })
-            
-            3. 类内部定义的方法是不可枚举的，用Object.assign()添加的方法可以枚举
-                class Point{
-                    constructor () {
-                        // ...
-                    }
-                    toString () {
-                        // ...
-                    }
-                }
+            5)  super 
 
-                Object.assign(Point.prototype, {
-                    show() {},
-                    say() {}
-                })
-
-                Object.keys(Point.prototype) //['show', 'say']
-
-            4. 类和模块内部，默认为严格模式
-
-            5. class表达式
-                写法：
-                ->
-                    const MyClass = class Me {
-                        getClassName () {
-                            return Me.name
-                        }
-                    };
-                    let inst = new MyClass();
-                    inst.getClassName() // Me
-                    Me.name // ReferenceError: Me is not defined
-
-                    //这个类的名字是MyClass而不是Me，Me只在 Class 的内部代码可用，指代当前类
-
-
-                如果类的内部没用到，可以省略
-                ->
-                    const MyClass = class { /* ... */ };
-
-
-                采用class表达式，可以写出立即执行的Class，该类就只能实例化一次了
-                ->
-                    let person = new class {
-                        constructor(name) {
-                            this.name = name;
-                        }
-                        sayName() {
-                            console.log(this.name);
-                        }
-                    }('Sunday');
-
-                    person.sayName(); //Sunday
-                
-                
-            6. class的静态方法 -> 只能由类本身调用,静态方法会被子类继承
                 -> 
-                    如果在一个方法前，加上static关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为 '静态方法'
+                    ① super() 
+                        作为函数调用,只能在子类的constructor中使用, super() 的this指向当前的子类实例(subClassThis)
 
-                    class Foo {
-                        static classMethod() {
-                            return 'hello';
-                        }
-                    }
-
-                    Foo.classMethod() // 'hello'
-
-                    var foo = new Foo();
-                    foo.classMethod()
-                    // TypeError: foo.classMethod is not a function
-
-            
-            7. new.target属性 -> 只能在类里使用
-                -> 
-                    确定构造函数是怎么被调用的,如果构造函数不是通过new命令调用的，new.target会返回undefined
-
-                    用法:
-                        ->
-                            function Person(name) {
-                                if (new.target === Person) {
-                                    this.name = name;
-                                } else {
-                                    throw new Error('必须使用 new 命令生成实例');
-                                }
-                            }
-
-                            var person = new Person('张三'); // 正确
-                            var notAPerson = Person.call(person, '张三');  // 报错
-
-                            // 确保构造函数只能通过new命令调用
-
-
-                    当一个类被继承时，new.target指向子类
-                    应用:
-                        使某个类不能被实例化，只能用于继承
+                        super() 相当于superClass.prototype.constructor.call(subClassThis)
 
                         ->
-                            class Human{
-                                constructor () {
-                                    if (new.target === Human) {
-                                        throw new Error('本类不能被实例化');
-                                    }
-                                }
-                            }
-
-                            class Male extends Human{
-                                constructor (name, age) {
-                                    super();
-                                    this.name = name;
-                                    this.age = age;
-                                }
-                            }
-
-                            var test = new Human() //报错:本类不能被实例化
-                            var test1 = new Male('Sunday', 18); //正确
-              
-                            
-            8. class 的继承 -> 子类实例的构建，基于父类实例
-            
-                    1)  父子类通过extends实现继承
-                        ->
-                            class Point {}
-                            class ColorPoint extends Point {}      
-                    
-                    2)  子类通过super调用父类的方法,继承的子类一定要在constructor中写上super()
-                        ->
-                            class ColorPoint extends Point {
+                            class A {
                                 constructor() {
-                                    super(); //调用父类的constructor()
+                                    this.x = 1;
                                 }
-                                toString() {
-                                    return super.toString() //调用父类的toString()
-                                }
-                            }    
-
-                    3)  es5和es6继承的差别
-                        -> 
-                            es5: ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面
-                            es6: ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this
-
-                    4)  在子类的构造函数中，只有调用super之后，才可以使用this关键字，否则会报错
-                        这是因为子类实例的构建，基于父类实例，只有super方法才能调用父类实例
-                        ->
-                            class Point {
-                                constructor(x, y) {
-                                    this.x = x;
-                                    this.y = y;
+                                print() {
+                                    console.log(this.x);
                                 }
                             }
 
-                            class ColorPoint extends Point {
-                                constructor(x, y, color) {
-                                    this.color = color; // ReferenceError
-                                    super(x, y);
-                                    this.color = color; // 正确
+                            class B extends A {
+                                constructor() {
+                                    super();
+                                    this.x = 2;
+                                }
+                                m() {
+                                    super.print();
                                 }
                             }
 
-                    5)  super 
+                            let b = new B();
+                            b.m() // 2
 
-                        -> 
-                            ① super() 
-                                作为函数调用,只能在子类的constructor中使用, super() 的this指向当前的子类实例(subClassThis)
+                    ② super.methods()
 
-                                super() 相当于superClass.prototype.constructor.call(subClassThis)
-
-                                ->
-                                    class A {
-                                        constructor() {
-                                            this.x = 1;
-                                        }
-                                        print() {
-                                            console.log(this.x);
-                                        }
-                                    }
-
-                                    class B extends A {
-                                        constructor() {
-                                            super();
-                                            this.x = 2;
-                                        }
-                                        m() {
-                                            super.print();
-                                        }
-                                    }
-
-                                    let b = new B();
-                                    b.m() // 2
-
-                            ② super.methods()
-
-                                作为对象, 在普通方法中调用, super 指向父类的原型对象, 方法的 this 指向子类的实例 subClassThis
-                                    super.toString()相当于 superClass.prototype.toString.call(subClassThis)  //调用父类的toString方法,方法的this指向子类的this
-                                
-                                作为对象, 在静态方法中调用, super 指向父类, 方法的this 指向子类
-                                ->
-                                    class superClass{
-                                        static show() {
-                                            console.log(`static`);
-                                        }
-                                        show() {
-                                            console.log(`instance`);
-                                        }
-                                    }
-                                    class subClass extends superClass{
-                                        static show() {
-                                            super.show();   //在静态方法中调用super，super指向父类，所以调用父类的静态方法show
-                                        }
-                                        show() {
-                                            super.show();   //在普通方法中调用super，super指向父类的原型，所以调用父类的普通方法show
-                                        }
-                                    }
-                                    subClass.show();    //父类调用静态方法show
-                                    var test = new subClass();
-                                    test.show();    //子类实例调用普通方法show
+                        作为对象, 在普通方法中调用, super 指向父类的原型对象, 方法的 this 指向子类的实例 subClassThis
+                            super.toString()相当于 superClass.prototype.toString.call(subClassThis)  //调用父类的toString方法,方法的this指向子类的this
                         
+                        作为对象, 在静态方法中调用, super 指向父类, 方法的this 指向子类
+                        ->
+                            class superClass{
+                                static show() {
+                                    console.log(`static`);
+                                }
+                                show() {
+                                    console.log(`instance`);
+                                }
+                            }
+                            class subClass extends superClass{
+                                static show() {
+                                    super.show();   //在静态方法中调用super，super指向父类，所以调用父类的静态方法show
+                                }
+                                show() {
+                                    super.show();   //在普通方法中调用super，super指向父类的原型，所以调用父类的普通方法show
+                                }
+                            }
+                            subClass.show();    //父类调用静态方法show
+                            var test = new subClass();
+                            test.show();    //子类实例调用普通方法show
+                
 
-            9.  类的prototype属性和__proto__属性 (__proto__属性表示继承)
-                ->
-                    1) 子类的__proto__属性，表示构造函数的继承，总是指向父类
-                    2) 子类prototype属性的__proto__属性，表示方法的继承，总是指向父类的prototype属性
+    9.  类的prototype属性和__proto__属性 (__proto__属性表示继承)
+        ->
+            1) 子类的__proto__属性，表示构造函数的继承，总是指向父类
+            2) 子类prototype属性的__proto__属性，表示方法的继承，总是指向父类的prototype属性
 
-                    class A{}
-                    class B extends A{}
+            class A{}
+            class B extends A{}
 
-                    B.__proto__ === A  //true
-                    B.prototype.__proto__ === A.prototype  //true
+            B.__proto__ === A  //true
+            B.prototype.__proto__ === A.prototype  //true
 
-                    //类的继承实现
-                    //B 的 实例继承 A 的实例
-                    Object.setPrototypeOf(B.prototype, A.prototype);
-                    //B 继承 A 的静态属性
-                    Object.setPrototypeOf(B, A);
+            //类的继承实现
+            //B 的 实例继承 A 的实例
+            Object.setPrototypeOf(B.prototype, A.prototype);
+            //B 继承 A 的静态属性
+            Object.setPrototypeOf(B, A);
 
-                    Object.setProrotypeOf(obj, proto) {
-                        obj.__proto__ = proto;
-                        return obj;
+            Object.setProrotypeOf(obj, proto) {
+                obj.__proto__ = proto;
+                return obj;
+            }
+        
+    -->
+    <!--  
+        Set / Map 数据结构
+
+        1. Set -> es6的数组，结构内的值是唯一的，不允许存在重复的值，具有 iterable 接口
+
+            1)  const s = new Set();
+                [2, 3, 5, 4, 5, 2, 2].forEach(x => s.add(x));
+                for (let i of s) {
+                    console.log(i); // 2 3 5 4
+                }
+
+            2)  Set内部用类似(===)判断两个值是否相等(NaN等于自身，两个对象总是不相等)
+
+            3)  Set的实例属性和方法
+                    
+                    实例属性：
+                        Set.prototype.constructor：构造函数，默认就是Set函数。
+                        Set.prototype.size：返回Set实例的成员总数。
+
+                    实例方法：
+                        add(value)：添加某个值，返回 Set 结构本身。
+                        delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。
+                        has(value)：返回一个布尔值，表示该值是否为Set的成员。
+                        clear()：清除所有成员，没有返回值。
+
+                        // 遍历操作，按插入顺序
+                        keys()：返回键名的遍历器
+                        values()：返回键值的遍历器
+                        entries()：返回键值对的遍历器
+                        forEach((value, key) => {})：使用回调函数遍历每个成员
+
+                            Set 结构的实例默认可遍历，它的默认遍历器生成函数就是它的values方法
+                            ->  let set = new Set(['red', 'green', 'blue']);
+                                for (let x of set) {
+                                    console.log(x); // red green blue
+                                }
+
+                    应用： 
+                        1) 与扩展运算符结合(内部为 for ... of 循环)，进行数组去重
+                            let arr = [3, 5, 2, 2, 5, 5];
+                            let unique = [...new Set(arr)]; // [3, 5, 2]
+            
+            4) WeakSet 
+                -> WeakSet的成员只能是对象, 不能是其他类型的值
+                -> WeakSet中的对象成员都是弱引用
+
+                基本用法:
+                    const ws = new WeakSet(); //参数可以为数组或者类数组
+
+                    const a = [[1, 2], [3, 4]]; //如果参数为一个数组,则数组需要为二维数组以上
+                    const ws = new WeakSet(a);
+                    // WeakSet {[1, 2], [3, 4]}
+
+                    const b = [3, 4]; //参数为一维数组,错误
+                    const ws = new WeakSet(b);
+                    // Uncaught TypeError: Invalid value used in weak set(…)
+
+                方法:
+                    ws.add(value)
+                    ws.delete(value)
+                    ws.has(value)
+
+                WeakSet没有size属性, 所以也没有 forEach 属性
+
+                应用:
+                    用于存储 DOM 节点,不用担心节点从文档移除后,会引起内存泄漏
+
+                
+                const foos = new WeakSet()
+                class Foo {
+                    constructor() {
+                        foos.add(this)  //如果通过 Foo 实例化的实例, 会被加入 foos
+                    }
+                    method () {
+                        if (!foos.has(this)) {  //如果 foos 没有该实例, 抛出错误
+                            throw new TypeError('Foo.prototype.method 只能在Foo的实例上调用！');
+                        }
+                    }
+                }           
+            
+        
+        2. map -> es6的对象, 传统的对象只能用字符串当作键, 但在 map中各种类型的值（包括对象）都可以当作键
+            
+            map底层查找实现 : 桶  -> 邻接链表(next)
+            根据哈希算法,把数据放入不同的桶里
+            当邻接链表过长时,用红黑树的结构存储
+            设有 8个桶,当第 6/7个桶的储存数据超过一定数量时,添加原有桶的一半,重新排列,保证查找效率
+
+
+            1) 基本写法
+                // new Map不传参, 通过 set向 Map添加成员, get获取对应键的值
+                const map = new Map;
+                const obj = {p : 'hello world'};
+                map.set(obj, 'content');
+                map.get(obj);  //'content'
+
+                // Map接受一个数组作为参数, 数组的成员是一个个表示键值对的数组
+                const map = new Map([
+                    ['name', 'xuyede'],
+                    ['age', 18]
+                ]);
+                map.size  //2
+                map.get('name')  //'xuyede'
+                map.has('age')  //true
+
+                当 Map构造函数的参数为数组时,实际上进行了以下操作
+                const items = [
+                    ['name', 'xuyede'],
+                    ['age', 18]
+                ];
+                const map = new Map;
+                items.forEach(
+                    ([key, value]) => map.set(key, value)  //解构赋值
+                )
+
+            2) 读取一个未知键, 返回 undefined   
+                new Map().get('asfddfsasadf')  // undefined
+
+                const map = new Map();
+                map.set(['a'], 555);
+                map.get(['a'])  //undefined,每个数组,对象都是不同引用值的
+
+                如果键为引用值,则每个键都是不同的,即使他们的内容一样
+                    const map = new Map();
+
+                    const k1 = ['a'];
+                    const k2 = ['a'];
+
+                    map
+                    .set(k1, 111)
+                    .set(k2, 222);
+
+                    map.get(k1) // 111
+                    map.get(k2) // 222
+
+                如果键为原始值,则只有在两个值严格相等(===),Map才将其视为一个键
+                    let map = new Map();
+
+                    map.set(-0, 123);  // -0 === +0 -> true
+                    map.get(+0) // 123
+
+                    map.set(true, 1);  //true === 'true' -> false
+                    map.set('true', 2);
+                    map.get(true) // 1
+
+                    map.set(undefined, 3);  //undefined === null -> false
+                    map.set(null, 4);
+                    map.get(undefined) // 3
+
+                    map.set(NaN, 123);  //NaN === NaN -> true 在 es6中,大部分对比都把 NaN等于 NaN
+                    map.get(NaN) // 123
+
+            3) 方法
+                const map = new Map;
+
+                map.size  //返回 Map成员个数
+                map.set(key, value)  //设置键名 key对应的键值为value
+                map.get(key)  //根据键名 key获取对应的键值 value
+                map.has(key)  //返回布尔值,表示某键是否在当前 Map中
+                map.delete(key)  //删除某个键,返回布尔值
+                map.clear()  //清除所有成员
+
+                keys()：返回键名的遍历器
+                values()：返回键值的遍历器      ->返回一个具有 iterator属性的值 
+                entries()：返回所有成员的遍历器
+                forEach()：遍历 Map 的所有成员
+                //Map 的遍历顺序就是插入顺序
+                    for (let item of map.keys()/map.values()/map.entries()) {
+
+                    }
+
+                    // 等同于使用map.entries()
+                    for (let [key, value] of map) {
+                        console.log(key, value);
                     }
                 
-          -->
-          <!--  
-                Set / Map 数据结构
+            4) WeakMap 
+                -> WeakMap只接受对象作为键名( null除外)
+                -> WeakMap的键名所指向的对象,不计入垃圾回收机制
 
-                1. Set -> es6的数组，结构内的值是唯一的，不允许存在重复的值，具有 iterable 接口
+                使用场景: 它的键所对应的对象,能会在将来消失,有助于防止内存泄漏
 
-                    1)  const s = new Set();
-                        [2, 3, 5, 4, 5, 2, 2].forEach(x => s.add(x));
-                        for (let i of s) {
-                            console.log(i); // 2 3 5 4
-                        }
+                const wm = new WeakMap();
+                let key = {};
+                let obj = {foo: 1};
 
-                    2)  Set内部用类似(===)判断两个值是否相等(NaN等于自身，两个对象总是不相等)
+                wm.set(key, obj);
+                obj = null;
+                wm.get(key) //Object{foo : 1}  
+                //只影响键名,不影响键值的正常引用
 
-                    3)  Set的实例属性和方法
-                         
-                            实例属性：
-                                Set.prototype.constructor：构造函数，默认就是Set函数。
-                                Set.prototype.size：返回Set实例的成员总数。
+                方法:
+                get()、set()、has()、delete()
+                
 
-                            实例方法：
-                                add(value)：添加某个值，返回 Set 结构本身。
-                                delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。
-                                has(value)：返回一个布尔值，表示该值是否为Set的成员。
-                                clear()：清除所有成员，没有返回值。
 
-                                // 遍历操作，按插入顺序
-                                keys()：返回键名的遍历器
-                                values()：返回键值的遍历器
-                                entries()：返回键值对的遍历器
-                                forEach((value, key) => {})：使用回调函数遍历每个成员
+    -->
+    <!-- 
+        Iterator迭代器
 
-                                    Set 结构的实例默认可遍历，它的默认遍历器生成函数就是它的values方法
-                                    ->  let set = new Set(['red', 'green', 'blue']);
-                                        for (let x of set) {
-                                            console.log(x); // red green blue
-                                        }
+        for...of -> 找 [Symbol.iterator]接口
+            如果没有,抛出错误
+            如果有,调用 next方法遍历
 
-                            应用： 
-                                1) 与扩展运算符结合(内部为 for ... of 循环)，进行数组去重
-                                    let arr = [3, 5, 2, 2, 5, 5];
-                                    let unique = [...new Set(arr)]; // [3, 5, 2]
-                    
-                    4) WeakSet 
-                        -> WeakSet的成员只能是对象, 不能是其他类型的值
-                        -> WeakSet中的对象成员都是弱引用
+        1.Iterator -> 遍历器 -> 线性处理 -> 指针对象
+            1) 为各种数据结构(Map,Set,Array,OBject)提供一个统一的简便的访问接口
+            2) 使数据结构的成员按顺序排序
+            3) 供 for...of消费
 
-                        基本用法:
-                            const ws = new WeakSet(); //参数可以为数组或者类数组
 
-                            const a = [[1, 2], [3, 4]]; //如果参数为一个数组,则数组需要为二维数组以上
-                            const ws = new WeakSet(a);
-                            // WeakSet {[1, 2], [3, 4]}
+        2.Iterator遍历过程
+            1) 创建一个指针对象,指向当前数据结构的起始位置
+            2) 调用指针对象的 next方法,指向数据结构的第一位成员
+            3) 不断调用 next方法,改变指针的指向
+            4) 每一次调用 next方法,返回数据结构的当前成员的信息,包括 value和 done
+                分别表示当前成员的值和是否完成遍历
 
-                            const b = [3, 4]; //参数为一维数组,错误
-                            const ws = new WeakSet(b);
-                            // Uncaught TypeError: Invalid value used in weak set(…)
-
-                        方法:
-                            ws.add(value)
-                            ws.delete(value)
-                            ws.has(value)
-
-                        WeakSet没有size属性, 所以也没有 forEach 属性
-
-                        应用:
-                            用于存储 DOM 节点,不用担心节点从文档移除后,会引起内存泄漏
-
-                        
-                        const foos = new WeakSet()
-                        class Foo {
-                            constructor() {
-                                foos.add(this)  //如果通过 Foo 实例化的实例, 会被加入 foos
+            模拟Iterator
+                ->
+                    function myIterator (array) {
+                        var arr = [...array],
+                            nowIndex = 0;
+                        return {
+                            next : function () {
+                                return nowIndex < arr.length ?
+                                { value : arr[nowIndex ++] } : 
+                                { done : true }
                             }
-                            method () {
-                                if (!foos.has(this)) {  //如果 foos 没有该实例, 抛出错误
-                                    throw new TypeError('Foo.prototype.method 只能在Foo的实例上调用！');
+                        }
+                    }
+
+
+        3.默认的 Iterator接口部署在数据结构的 Symbol.iterator属性
+            Symbol.iterator接口
+                -> 
+                    const obj = {
+                        [Symbol.iterator] : {
+                            return {
+                                next() {
+                                    return {
+                                        value : 1,
+                                        done : true
+                                    }
                                 }
                             }
-                        }           
-                    
+                        }
+                    }
+
+            原生具备 Iterator接口的数据结构 (Obejct没有)
+                Array
+                Map
+                Set
+                String
+                TypedArray
+                函数的 arguments 对象
+                NodeList 对象
+
+            调用默认的 Iterator接口
+                ->
+                    let arr = ['a', 'b', 'c'];
+                    let iter = arr[Symbol.interator]();
+
+                    iter.next() //{value : 'a', done : false}
+                    ...
+
+
+        4.for...of
+            ->先找有没有 [Symbol.iterator]接口,有再调用next方法,没有报错
+                class RangeIterator{
+                    constructor(obj, start, end) {
+                        this.value = obj;
+                        this.start = start;
+                        this.end = end;
+                    }
+                    [Symbol.iterator]() {
+                        return this;
+                    }
+                    next() {
+                        var value = Object.values(this.value);
+
+                        if (this.start < this.end) {
+                            return {
+                                value : value[this.start ++],
+                                done : false
+                            }
+                        }
+                        return {
+                            value : undefined,
+                            done : true
+                        }
+                    }
+                }
                 
-                2. map -> es6的对象, 传统的对象只能用字符串当作键, 但在 map中各种类型的值（包括对象）都可以当作键
+                for (let value of new RangeIterator ({
+                    'name' : 'xyd', 'age' : 18
+                }, 0, Object.keys(obj).length))) {
+                    console.log(value)
+        __________________________________________________________________________________
+            
+            var $iterator = ITERABLE[Symbol.iterator]();
+            var $result = $iterator.next();
+            while (!$result.done) {
+                var x = $result.value;
+                // ...
+                $result = $iterator.next();
+            }
+        
+        
+        5.默认调用 Iterator接口(即Symbol.iterator方法)
+            1)对数组和 Set结构进行解构赋值时,会默认调用 Symbol.iterator方法
+            2)扩展运算符 (...) 也会调用默认的 Iterator接口
+            3)for...of
+
+
+        6.遍历器对象的 return(), throw() 
+
+
+        7.对于普通对象,因为对象为非线性结构, for...of不能直接使用,必须部署Iterator接口才能用
+
+    -->
+    <!-- 
+        Generator 生成器 -> 返回一个迭代器,迭代器的内容为 yeild定义的状态
+
+        1.基本写法
+            function* helloWorldGenerator() {
+                yield 'hello';
+                yield 'world';
+                return 'ending';
+            }
+
+            var hw = helloWorldGenerator();
+            hw.next()  //{value : 'hello', done : false}
+            ...
+
+        2.生成器函数必须加上 *
+            -> function* myGenerator () {}
+
+        3.yield表达式 -> 只能在 Generator函数里
+            yield表达式后面的表达式，只有当调用 next方法,内部指针指向该语句时才会执行
+
+            function* add() {
+                yield  123 + 456; //只有在指针指向该语句的时候才会执行 123 + 456
+            }
+
+        4.yield* 表达式 
+            -> 在一个 Generator函数里面执行另一个 Generator函数
+                function* foo() {
+                    yield 'a';
+                    yield 'b';
+                }
+                
+                function* bar() {
+                    yield 'x';
+                    yield* foo();
+                    yield 'y';
+                }
+
+                // 等同于
+                function* bar() {
+                    yield 'x';
+                    yield 'a';
+                    yield 'b';
+                    yield 'y';
+                }
+
+                // 等同于
+                function* bar() {
+                    yield 'x';
+                    for (let v of foo()) {
+                        yield v;
+                    } 
+                    yield 'y';
+                }
+
+                for (let v of bar()){
+                    console.log(v);
+                }
+        ____________________________________________________
+            -> 在 Generator函数里遍历具有迭代器的数据结构
+                let arr = [1, 2, [3, 4], 5, [6, [7]]];
+
+                function* show(data) {
+                    if (Array.isArray(data)) {
+                        for (let i = 0; i < data.length; i ++) {
+                            yield* show(data[i]);
+                        }
+                    } else {
+                        yield data;
+                    }
+                }
+
+                let gen = show(arr); // 1 2 3 4 5 6 7
+        ___________________________________________________________
+            -> 中序遍历二叉树
+                // 二叉树结构
+                function Tree(left, node, right) {
+                    this.left = left;
+                    this.node = node;
+                    this.right = right;
+                }
+
+                //生成二叉树迭代器
+                function* iter(t) {
+                    if (t) {
+                        yield* iter(t.left);
+                        yield t.node;
+                        yield* iter(t.right);
+                    }
+                }
+
+                // 生成二叉树
+                function make(arr) {
+                    if (arr.length === 1) {
+                        return new Tree(null, arr[0], null);
+                    } else {
+                        return new Tree(make(arr[0]), arr[1], make(arr[2]));
+                    }
+                }
+
+                // 二叉树的节点
+                let tree = [[[1], 2, [3]], 4, [[5], 6, [7]]];
+
+                //遍历二叉树    
+                for (let value of iter(make(tree))) {
+                    console.log(value)
+                }
+
+
+        5.next方法的返回值
+            yield表达式本身没有返回值，或者说总是返回 undefined
+            next方法可以带一个参数，该参数就会被当作上一个 yield表达式的返回值
+            ->
+                function* showNumber() {
+                    yield 1;
+                    let result = yield 2;
+                    yield result;
+                    return undefined;
+                }
+
+                let g = showNumber();
+                g.next(); //1
+                g.next(); //2
+                g.next('xyd'); //xyd -> 这个参数会作为上一个 yield的返回值,所以 result为 xyd
+            _______________________________________________________________________________
+
+                function* foo(x) {
+                    var y = 2 * (yield (x + 1));
+                    var z = yield (y / 3);
+                    return (x + y + z);
+                }
+
+                var a = foo(5);
+                a.next() //6
+                a.next() //NaN
+                a.next() //NaN
+
+                var b = foo(5);
+                b.next() //6
+                b.next(12) //8
+                b.next(13) //42 
+        
+        
+        6.Generator的 this
+            Generator函数里面没有默认的 this,虽然返回的是一个指针对象,需要显示绑定到原型上
+
+            function* gen() {
+                this.a = 1;
+                yield this.b = 2;
+                yield this.c = 3;
+            }
+
+            function F() {
+                return gen.call(gen.prototype);
+            }
+
+            var f = new F();
+
+            f.next();  // Object {value: 2, done: false}
+            f.next();  // Object {value: 3, done: false}
+            f.next();  // Object {value: undefined, done: true}
+
+            f.a // 1
+            f.b // 2
+            f.c // 3
+
+
+        7.Generator与上下文
+            ->
+            执行产生的上下文环境，一旦遇到 yield命令，就会暂时退出堆栈，但是并不消失，
+            里面的所有变量和对象会冻结在当前状态。等到对它执行 next命令时，这个上下文
+            环境又会重新加入调用栈，冻结的变量和对象恢复执行
+
+
+        8.部署 Iterator接口
+            function* addInterator() {
+                let keys = Object.keys(this);
+
+                for (let key of keys) {
+                    yield [key, this[key]]
+                }
+            }
+
+            let obj = {
+                name: 'xuyede',
+                age: 18
+            }
+
+            obj[Symbol.iterator] = addInterator;
+
+            for (let [key, value] of obj) {
+                console.log(key, value);
+            }
+
+    -->
+    <!--
+            Promise -> 异步编程
+
+            1.特点
+                Promise就是一个对象，里面保存着某个未来才会结束的事件(通常是一个异步操作)的结果
+
+                Promise对象代表一个异步操作,有三种状态: pending(进行中) fulfilled(已成功) rejected(已失败)
+                只有异步操作的结果,可以决定当前是哪一个状态
+
+                一旦状态改变,就不会再变 
+                Promise对象的状态改变,只有两种可能: pending -> resolved, pending -> rejected
+    
+                Promise  -> resolved (回调函数用then) -> rejected (回调函数用catch)
+
+            2.写法
+            ->
+                //Promise接受一个函数参数,该函数的参数为两个状态函数 resolve/reject
+                    const promise  = new Promise( function (resolve, reject) {
+                        // ... some code
+
+                        if ( 异步操作成功 ) {
+                            resolve(value); //将异步操作的结果，作为参数传递出去
+                        } else {    
+                            reject(error); //将异步操作报出的错误，作为参数传递出去
+                        }
+                    })
+
+                //promise使用 then指定 resolved状态, catch指定 rejected状态
+                    promise
+                        .then( value => { //success } )
+                        .catch( value => { //failure} )
+
+                例子:
+                    const show = function () {
+                        return new Promise( (resolve, reject) => {
+                            let num = Math.random() * 100;
+                            num > 50 ?
+                                resolve(num):
+                                reject(num);
+                        })
+                    }
+        
+                    show()
+                        .then( num => console.log('bigger than 50: ' + num))
+                        .catch( num => console.log('less than 50: ' + num));
+            ___________________________________________________________________________
+                    //异步加载图片
+                    const loadImageAsync = function (url) {
+                        return new Promise((resolve, reject) => {
+                            const image = new Image();
+                            image.onload = () => resolve(image)
+                            image.onerror = () => reject(new Error('Could not load image at ' + url));
+                            image.src = url;
+                        })
+                    }
+
+                    loadImageAsync('./lbt/1.jpg')
+                        .then( node => document.getElementsByTagName('div')[0].appendChild(node) )
+                        .catch( meg => { throw meg } )
+            ___________________________________________________________________________
+                    //ajax请求
+                    const getJSON = function (url, method, data) {
+                        return new Promise((resolve, reject) => {
+                            let xhr = window.XMLHttpRequest ?
+                                new window.XMLHttpRequest() :
+                                new ActiveXObject('Microsoft.XMLHttp');
+
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState !== 4) {
+                                    return;
+                                }
+
+                                xhr.status === 200 ? 
+                                    resolve(xhr.responseText) :
+                                    reject(new Error(xhr.statusText));
+                            };
+
+                            method = method.toUpperCase();
+                            if (method === 'GET') {
+                                xhr.open(method, url + '?' + data, true);
+                                xhr.send();
+                            } else if (method === 'POST') {
+                                xhr.open(method, url, true);
+                                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                                xhr.send(data);
+                            }
+                        })
+                    }   
+
+                    getJSON('./data.txt', 'get', '')
+                        .then( json => console.log(json) )
+                        .catch( err => { throw err } )
+
+                            
+            3.一个异步操作的结果是返回另一个异步操作
+
+            ->  //由于 p2的状态函数的参数是 p1,所以 p2的状态由 p1决定
+                const p1 = new Promise(function (resolve, reject) {
+                    // ...
+                });
+
+                const p2 = new Promise(function (resolve, reject) {
+                    // ...
+                    resolve(p1);
+                })
+            _______________________________________________________________
+                const show = function () {
+                    return new Promise((resolve, reject) => {
+                        let num = Math.random() * 100;
+                        num > 50 ?
+                            resolve(num) :
+                            reject(num);
+                    })
+                }
+
+                const depend = function () {
+                    return new Promise((resolve, reject) => {
+                        resolve(show());  //depend函数的状态由 show函数的状态决定,有可能为 rejected有可能为 resolved
+                    })
+                }
+
+                depend()
+                    .then(num => console.log('> 50: ' + num))
+                    .catch(num => console.log('< 50: ' + num));
+              
                     
-                    map底层查找实现 : 桶  -> 邻接链表(next)
-                    根据哈希算法,把数据放入不同的桶里
-                    当邻接链表过长时,用红黑树的结构存储
-                    设有 8个桶,当第 6/7个桶的储存数据超过一定数量时,添加原有桶的一半,重新排列,保证查找效率
+            4.Promise.prototype.then
+                then方法指定正确的回调,返回的是一个新的Promise实例（注意，不是原来那个Promise实例）
+              
+                ->  第二个then方法指定的回调函数，就会等待这个新的Promise对象状态发生变化
+                    如果变为resolved，就调用第一个函数，如果状态变为rejected，就调用第二个函数
+
+                        getJSON("/post/1.json")
+                            .then(
+                                post => getJSON(post.commentURL)
+                            )
+                            .then(
+                                comments => console.log("resolved: ", comments),
+                                err => console.log("rejected: ", err)
+                            );
 
 
-                    1) 基本写法
-                        // new Map不传参, 通过 set向 Map添加成员, get获取对应键的值
-                        const map = new Map;
-                        const obj = {p : 'hello world'};
-                        map.set(obj, 'content');
-                        map.get(obj);  //'content'
+            5.Promise.prototype.catch => .then(null, func)
+                catch方法指定错误的回调,返回一个新的Promise实例
 
-                        // Map接受一个数组作为参数, 数组的成员是一个个表示键值对的数组
-                        const map = new Map([
-                            ['name', 'xuyede'],
-                            ['age', 18]
-                        ]);
-                        map.size  //2
-                        map.get('name')  //'xuyede'
-                        map.has('age')  //true
- 
-                        当 Map构造函数的参数为数组时,实际上进行了以下操作
-                        const items = [
-                            ['name', 'xuyede'],
-                            ['age', 18]
-                        ];
-                        const map = new Map;
-                        items.forEach(
-                            ([key, value]) => map.set(key, value)  //解构赋值
-                        )
+                -> 
+                    getJSON('/posts.json').then(function(posts) {
+                        // ...
+                    }).catch(function(error) {
+                        // 处理 getJSON的 reject和前 N个 then运行时发生的错误
+                        console.log('发生错误！', error);
+                    });
 
-                    2) 读取一个未知键, 返回 undefined   
-                        new Map().get('asfddfsasadf')  // undefined
+                
+                建议: Promise 对象最后面要跟 catch方法，这样可以处理 Promise内部
+                      或者 then/catch发生的错误不然 Promise内部的错误会冒泡到外部
 
-                        const map = new Map();
-                        map.set(['a'], 555);
-                        map.get(['a'])  //undefined,每个数组,对象都是不同引用值的
+            
+            6.Promise.prototype.finaly
+                指定不管 Promise对象最后状态如何，都会执行的操作
+                
 
-                        如果键为引用值,则每个键都是不同的,即使他们的内容一样
-                            const map = new Map();
+            7.Promise.all()
+                用于将多个 Promise 实例，包装成一个新的 Promise 实例
+                Promise.all方法的参数必须具有 Iterator 接口，且返回的每个成员都是 Promise 实例
 
-                            const k1 = ['a'];
-                            const k2 = ['a'];
+            8.Promise.resolve / Promise.reject
+                将现有对象转为 Promise 对象
+                ->
+                    Promise.resolve('foo')
+                    // 等价于
+                    new Promise(resolve => resolve('foo'))
 
-                            map
-                            .set(k1, 111)
-                            .set(k2, 222);
+                Promise.resolve的参数
+                1)参数是一个 Promise实例
+                    ->
+                        原封不动地返回这个 Promise实例
 
-                            map.get(k1) // 111
-                            map.get(k2) // 222
-
-                        如果键为原始值,则只有在两个值严格相等(===),Map才将其视为一个键
-                            let map = new Map();
-
-                            map.set(-0, 123);  // -0 === +0 -> true
-                            map.get(+0) // 123
-
-                            map.set(true, 1);  //true === 'true' -> false
-                            map.set('true', 2);
-                            map.get(true) // 1
-
-                            map.set(undefined, 3);  //undefined === null -> false
-                            map.set(null, 4);
-                            map.get(undefined) // 3
-
-                            map.set(NaN, 123);  //NaN === NaN -> true 在 es6中,大部分对比都把 NaN等于 NaN
-                            map.get(NaN) // 123
-
-                    3) 方法
-                        const map = new Map;
-
-                        map.size  //返回 Map成员个数
-                        map.set(key, value)  //设置键名 key对应的键值为value
-                        map.get(key)  //根据键名 key获取对应的键值 value
-                        map.has(key)  //返回布尔值,表示某键是否在当前 Map中
-                        map.delete(key)  //删除某个键,返回布尔值
-                        map.clear()  //清除所有成员
-
-                        keys()：返回键名的遍历器
-                        values()：返回键值的遍历器      ->返回一个具有 iterator属性的值 
-                        entries()：返回所有成员的遍历器
-                        forEach()：遍历 Map 的所有成员
-                        //Map 的遍历顺序就是插入顺序
-                            for (let item of map.keys()/map.values()/map.entries()) {
-
+                2)参数是一个 thenable对象 -> 具有 then方法的对象
+                    ->  //立即执行 thenable对象的 then方法,返回一个状态
+                        let thenable = {
+                            then(resolve, reject) {
+                                resolve(42);
                             }
+                        };
 
-                            // 等同于使用map.entries()
-                            for (let [key, value] of map) {
-                                console.log(key, value);
-                            }
-                        
-                    4) WeakMap 
-                        -> WeakMap只接受对象作为键名( null除外)
-                        -> WeakMap的键名所指向的对象,不计入垃圾回收机制
+                        let p1 = Promise.resolve(thenable);
+                        p1
+                            .then( value => console.log(value) )
+                            .catch( err => console.log(err) )
 
-                        使用场景: 它的键所对应的对象,能会在将来消失,有助于防止内存泄漏
+                3)参数是一个不具有 then方法的对象或者非对象
+                    ->  返回一个resolved状态的对象, Promise.resolve方法的参数，会同时传给回调函数
+                        const p = Promise.resolve({name : 'xyd'});
 
-                        const wm = new WeakMap();
-                        let key = {};
-                        let obj = {foo: 1};
+                        p.then( value => console.log(value) ); //{name : 'xyd'}
 
-                        wm.set(key, obj);
-                        obj = null;
-                        wm.get(key) //Object{foo : 1}  
-                        //只影响键名,不影响键值的正常引用
-
-                        方法:
-                        get()、set()、has()、delete()
-                        
+                4)参数为空 -> 直接返回一个 resolved状态的对象
+                    -> 
+                        Promise.resolve().then( () => {
+                            // some code...
+                        })
 
 
-           -->
+            9.Promise.try 
+                需求:不知道或者不想区分，函数f是同步函数还是异步操作，但是想用 Promise 来处理它
+                    
+                    1)  //不管 f函数是否为异步,都在本轮事件循环的末尾执行
+                        const f = () => console.log('now');
+                        Promise.resolve().then(f);
+                        console.log('next');
+                        // next
+                        // now
+
+                    2)  //new Promise,臃肿难看
+                        const f = () => console.log('now');
+                        (
+                            () => new Promise(
+                                resolve => resolve(f())
+                            )
+                        )();
+                        console.log('next');
+                        // now
+                        // next
+
+                    3)  //Promise.try()    还没有这个方法
+                        const f = () => console.log('now');
+                        Promise.try(f).then(...).catch(...);
+                        console.log('next');
+            
+            
+
+    -->
+
+
+
+
+             
 </body>
 
 </html>
