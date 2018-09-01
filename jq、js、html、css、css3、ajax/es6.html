@@ -1601,7 +1601,7 @@
 
     -->
     <!--
-            Promise -> 异步编程
+            Promise -> 异步编程 -> 把异步的函数当成同步处理
 
             1.特点
                 Promise就是一个对象，里面保存着某个未来才会结束的事件(通常是一个异步操作)的结果
@@ -1762,9 +1762,30 @@
                 指定不管 Promise对象最后状态如何，都会执行的操作
                 
 
-            7.Promise.all()
-                用于将多个 Promise 实例，包装成一个新的 Promise 实例
-                Promise.all方法的参数必须具有 Iterator 接口，且返回的每个成员都是 Promise 实例
+            7.Promise.all() -> 使多个 promise对象同时进行
+                用于将多个 Promise实例包装成一个新的 Promise实例,并按顺序异步执行 Promise.all()的参数列表内容
+                ->
+                    const getRandom = () => +(Math.random()*1000).toFixed(0);
+
+                    const asyncTask = taskID => new Promise(resolve => {
+                        let timeout = getRandom();
+                        console.log(`taskID=${taskID} start.`);
+                        setTimeout(function() {
+                            console.log(`taskID=${taskID} finished in time=${timeout}.`);
+                            resolve(taskID)
+                        }, timeout);
+                    });
+
+                    Promise.all([asyncTask(1),asyncTask(2),asyncTask(3)])
+                        .then(resultList => {
+                            console.log('results:',resultList);
+                        });
+
+                    Promise.all里的任务列表 [asyncTask(1),asyncTask(2),asyncTask(3)]，是按顺序发起的,
+                    由于它们都是异步的，互相之间并不阻塞，每个任务完成时机是不确定的。尽管如此，所有任
+                    务结束之后，它们的结果仍然是按顺序地映射到 resultList里，这样就能和Promise.all里
+                    的任务列表 [asyncTask(1),asyncTask(2),asyncTask(3)]一一对应起来
+
 
             8.Promise.resolve / Promise.reject
                 将现有对象转为 Promise 对象
@@ -1804,7 +1825,7 @@
                         })
 
 
-            9.Promise.try 
+            9.Promise.try -> 还没有这个方法
                 需求:不知道或者不想区分，函数f是同步函数还是异步操作，但是想用 Promise 来处理它
                     
                     1)  //不管 f函数是否为异步,都在本轮事件循环的末尾执行
@@ -1825,7 +1846,7 @@
                         // now
                         // next
 
-                    3)  //Promise.try()    还没有这个方法
+                    3)  //Promise.try()    
                         const f = () => console.log('now');
                         Promise.try(f).then(...).catch(...);
                         console.log('next');
