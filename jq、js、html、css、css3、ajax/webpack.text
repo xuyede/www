@@ -1,0 +1,171 @@
+
+常见坑 : 
+1)html文件引入出口文件 : script -> src = '/dist/build.js'
+2)引入的静态资源都为 src的文件路径 
+    -> require('../css/main.css');
+       img.src = require('../assets/3.jpg');
+3)不是所有的静态资源都会被打包, 只有入口文件所依赖的资源才会被打包
+
+
+
+1.  package.json 的便捷配置
+
+    "scripts": {
+        "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+        "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    }
+
+
+2.  webpack.config.js 配置
+    
+    常用接口
+        1) entry -> 入口文件
+        2) mode -> 工作环境
+        3) output -> 打包出口
+        4) module -> 处理模块
+        5) plugins -> 插件
+        6) devServer -> 服务器配置
+
+    1)entry -> 文件入口
+        module.exports = {
+            entry : './src/js/main.js',   -> 所有操作的入口
+            ...
+        }
+
+    2)mode -> 工作环境
+        module.exports = {
+            ...
+            mode : 'development',   -> development为开发环境, production为发布环境
+            ...
+        }
+
+    3)output -> 打包的出口
+        module.exports = {
+            ...
+            output : {
+                path : path.resolve(__dirname, './dist'),   -> 出口的目录
+                filename : 'build.js',   ->出口文件名
+                publicPath : '/dist/'   -> 静态资源的统一前缀
+            }
+            ...
+        }
+
+    4)module -> 处理模块
+        module.exports = {
+            ...
+            module : {
+                -> 处理模块的读取和解析规则
+                rules : [
+                    {
+                        test: /\.(png|jpg|gif|svg)$/,   -> 匹配规则
+                        loader: 'file-loader',   -> loader类型
+                        options: {
+                            name: '[name].[ext]?[hash]'   ->loader的描述
+                        }
+                    },
+                    {
+                        test: /\.css/,   -> 匹配规则
+                        use : [miniCss.loader, 'css-loader']   -> 应用规则
+                    }
+                ]
+            }
+            
+            ...
+        }
+
+    5)plugins -> 插件 (一般在production环境下执行)
+        第一种情况: 写在 module.exports里
+            module.exports = {
+                ...
+                plugins : [
+                    new ***,   -> 加载的插件, 通过new操作实现
+                    new ***,
+                    ...
+                ]
+                ...
+            }
+
+        第二种情况: 通过concat合并到module.exports中
+            module.exports = {}
+
+            var htmlWebpackPlugin = require('html-webpack-plugin');
+            var miniCss = require('mini-css-extract-plugin');
+
+            if (process.env.NODE_ENV === 'production') {   -> 大部分的插件都是为了性能的优化,所以等发布环境时再执行
+                module.exports.plugins = (module.exports.plugins || []).concat([  -> 保证不覆盖原有的plugins下,添加新的插件
+                     new htmlWebpackPlugin({   -> 打包html文件
+                        template : './index.html',
+                        filename : 'index.[hash:8].html',
+                        minify : {
+                            collapseWhitespace : true
+                        }
+                    }),
+                    new miniCss({   -> 打包css文件, 注意:如果使用了该插件, 则在module处理模块中应该把 'style-loader' 替换成 miniCss.loader
+                        filename : '[name].[contenthash:8].css'
+                    })
+                ]);
+            }
+
+    6)devServer -> 服务器配置
+        module.exports = {
+            ...
+            devServer : {
+                historyApiFallback : true,
+                inline: true,   -> 代码有变化，浏览器端刷新
+                port : 8000,   -> 配置端口
+                host : '127.0.0.1',   -> 配置域名
+                noInfo: true,
+                open : true,   -> 自动打开浏览器
+                proxy : {
+                    '' : {
+                        target : '',
+                        secure : false   -> 是否接受https
+                    }
+                }
+            }
+            ...
+        }
+
+
+3.压缩js, html, css
+
+    1)压缩js
+        var uglifyjsPlugin = require('uglifyjs-webpack-plugin');
+
+        if (process.env.NODE_ENV === 'production')) {
+            module.exports.optimization = {
+                minimizer: [
+                    new uglifyjsPlugin({
+                        uglifyOptions: {
+                            compress: false   -> 合并
+                        }
+                    })
+                ]
+            };
+        }
+
+    2)压缩html
+        var htmlWebpackPlugin = require('html-webpack-plugin');
+
+        if (process.env.NODE_ENV === 'production') {   -> 大部分的插件都是为了性能的优化,所以等发布环境时再执行
+            module.exports.plugins = (module.exports.plugins || []).concat([  -> 保证不覆盖原有的plugins下,添加新的插件
+                new htmlWebpackPlugin({   -> 打包html文件
+                    template : './index.html',
+                    filename : 'index.[hash:8].html',
+                    minify : {
+                        collapseWhitespace : true
+                    }
+                }),
+            ]);
+        }
+
+    3)压缩css
+        var miniCss = require('mini-css-extract-plugin');
+
+        if (process.env.NODE_ENV === 'production') {   -> 大部分的插件都是为了性能的优化,所以等发布环境时再执行
+            module.exports.plugins = (module.exports.plugins || []).concat([  -> 保证不覆盖原有的plugins下,添加新的插件
+                new miniCss({   -> 打包css文件, 注意:如果使用了该插件, 则在module处理模块中应该把 'style-loader' 替换成 miniCss.loader
+                    filename : '[name].[contenthash:8].css'
+                })
+            ]);
+        }
