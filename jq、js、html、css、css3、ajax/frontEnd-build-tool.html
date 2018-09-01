@@ -255,11 +255,22 @@
                                     3) 重置顺序：一组 Loader 的执行顺序默认是从右到左执行，通过 enforce 选项可以让其中一个 Loader 的执行顺序放到最前或者最后
 
 
+                                不是所有的图片都会被打包, 只有入口文件所依赖的模块的图片才会被 loder打包
                                 module : {
                                     rules : [
                                         {
                                             test : /\.(jpg|png|gif|svg)$/,
                                             use : ['url-loader?limit=8192&name=/[name].[ext]']
+                                            //或者
+                                            use : [
+                                                {
+                                                    loader : 'url-loader',
+                                                    options : {
+                                                        limit : 8192,
+                                                        name : 'img/[name].[ext]'
+                                                    }
+                                                }
+                                            ]
                                         }
                                     ]
                                 }
@@ -288,6 +299,54 @@
 
                                 2) 压缩js
                                     uglifyjs-webpack-plugin
+
+                                    用npm安装uglifyjs-webpack-plugin插件
+                                    将其引入：var uglifyjsPlugin=require('uglifyjs-webpack-plugin')
+                                    optimization的JS压缩与plugins并排写在一起，注意，是并排，而不是像以前一样写在plugins里面
+
+                                    //压缩js
+                                    var uglifyjsPlugin=require('uglifyjs-webpack-plugin')
+
+                                    if (process.env.NODE_ENV === 'production') {
+                                        module.exports.optimization = {
+                                            minimizer: [
+                                                new uglifyjsPlugin({
+                                                    uglifyOptions: {
+                                                        compress: false
+                                                    }
+                                                })
+                                            ]
+                                        }
+                                    }
+
+
+                                3) 打包 html文件
+                                    var HtmlWebpackPlugin = require('html-webpack-plugin');
+                                    if (process.env.NODE_ENV === 'production') {
+                                        module.exports.plugins = (module.exports.plugins || []).concat([
+                                            new HtmlWebpackPlugin({
+                                                title : 'title',
+                                                template : 'url',
+                                                minify : {
+                                                    collapseWhitespace : true
+                                                }
+                                            })
+                                        
+                                        ])
+                                    }   
+
+
+                                4) 打包 css文件
+                                    var miniCssExtractPlugin = require('mini-css-extract-plugin');
+                                    
+                                    if (process.env.NODE_ENV === 'production') {
+                                        module.exports.plugins = (module.exports.plugins || []).concat([
+                                            new miniCssExtractPlugin({
+                                                filename : '[name].[contenthash:8].css'
+                                            })
+                                        ])
+                                    }
+                                    
 
 
                             配置文件webpack.config.js (修改完配置文件后要重新对项目进行打包)
