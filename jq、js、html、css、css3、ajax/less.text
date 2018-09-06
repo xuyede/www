@@ -1,0 +1,124 @@
+给css加点料
+
+-> less
+
+环境:
+    浏览器下:
+        <link rel="stylesheet/less" type="text/css" href="styles.less" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.7.1/less.min.js" ></script>
+    node:
+        npm install -g less
+        lessc styles.less styles.css 
+
+
+注释:
+    使用 // 注释打包会忽略
+    使用 /**/ 注释打包不会忽略
+
+
+1. 样式嵌套写法,与html结构相吻合
+    <div class='container'>
+        <div class='box'></div>
+    </div>
+
+    .container{
+        background-color : plum;
+
+        .box{
+            background-color : red            
+        }
+    }
+
+
+2. 可设置样式变量 -> 块级作用域 -> 延迟加载
+    @color : plum;
+    @square : 200px;
+    @size : 20px;
+
+    .container{
+        @size : 30px;
+
+        width : @square;
+        height : @square;
+        background-color : @color;
+        padding : 20px;
+
+        .box{
+            @size : 40px;
+            
+            width : @square;
+            height : @square;
+            background-color : @color;
+            font-size : @size   //50px -> 等该{}中的代码块全部执行完再赋值
+
+            @size : 50px;
+        }
+    }
+
+
+3. & 关键字 -> 代表上一级的元素
+    .box{
+        width : 100px;
+        height : 100px;
+        background-color : red;
+
+        &:hover{
+            background-color : blue;   -> 给上一级元素即.box加上hover事件
+        }
+    }
+    
+
+4. less混合(类似js函数) -> 把相同样式抽离 -> 可以传参
+    @square : 300px;
+    #tools{
+        .border{
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+    }
+
+    .container{
+        width : @square;
+        height : @square;
+        padding : 20px;
+        #tools > .border;
+
+        .box{
+            width : @square;
+            height : @square;
+            #tools > .border;
+        }
+    }
+________________________________________________
+    @square : 300px;
+    #tools{
+        .border(@size : 5px, @color : plum){   -> 不传参默认值
+            border-top: @size solid @color;
+            border-bottom: @size solid @color;
+        }
+    }
+
+    .container{
+        width : @square;
+        height : @square;
+        padding : 20px;
+        #tools > .border(2px, green);
+
+        .box{
+            width : @square;
+            height : @square;
+            #tools > .border();
+        }
+    }
+
+
+5.引入一个less文件
+    @import 'url';
+
+
+6.less的运算
+    @width : 100px;
+
+    div{
+        width : (@width + 200)   -> 300px
+    }
