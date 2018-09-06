@@ -17,7 +17,7 @@
                                         |
                                init injections&reactivity
                                         |
-                   *Create  <-          |
+                  *Created  <-          |
                                         |           
                                  Has 'el' option?   ——————————————>   no
                                         |                             |  
@@ -72,10 +72,29 @@
                                   | Destroyed |     -> *destroyed
                                   |___________|
 
-                1) 数据绑定，事件绑定
-                2) 渲染DOM节点（用template还是已有的结构？）
-                3) 数据监听
-                4) 销毁事件监听，数据绑定
+
+                钩子函数
+                1) beforeCreate/ created -> 创建完 Vue实例,但还没创建虚拟 DOM
+                    beforeCreate -> 初始化事件,生命周期
+                    created -> 组件实例化完成,开始配置虚拟 DOM,但页面未显示
+
+                    执行完 created后,组件实例化完毕,开始根据 el,template创建虚拟 DOM
+                    注意: 在创建虚拟 DOM过程中,如果没有 el且没有通过 vm.$mount声明挂载点,则生命周期结束
+
+                2) beforeMount/ mounted -> 将虚拟 DOM的内容挂载到挂载点上,并渲染页面
+                    beforeMount -> 虚拟 DOM已经配置完毕,开始根据虚拟 DOM渲染页面
+                    mounted -> 执行该函数,页面渲染完成,并进入 Mounted状态,等待数据的更新
+
+                3)beforeUpdate/ updated -> 数据的更新,先对比虚拟 DOM再渲染页面
+                    beforeUpdate -> 组件更新前,虚拟 Dom的数据更新完毕,但页面未更新
+                    updated -> 组件更新,页面显示最新内容
+
+                    注意: 如果组件更新的内容和之前的一样,则不触发更新函数
+
+                4)beforeDestroy/ destroyed -> 调用 vm.$destroy(), 生命周期结束
+                    beforeDestroy -> 组件销毁前
+                    destroy -> 组件销毁
+            
 
 
             1.数据绑定 : {{ 变量 }}  Object.defineProperty()在底层通过get / set，利用观察者模式对数据进行监听
@@ -118,6 +137,8 @@
                     <input :value = 'variables'
                            @input = 'variables = $event.target.value'
                     >
+
+                    <input v-model.lazy = 'variables' />   -> .lazy把 input事件改为 change事件
 
                 4.元素显示隐藏指令
                     1) 条件渲染元素 v-if / v-self- if / v-self / v-show
@@ -190,6 +211,8 @@
                 4)data : {}  ->  数据定义及初始化
 
                 5)filters : {}  ->  过滤器, 一个函数, 第一个参数默认为要处理的字符串, {{ meg | myFilter }} / v-bind:id = 'fId | Sid'
+
+                6)render : function (createElement) {} -> 渲染,接受一个 createElement方法,把对象渲染成 DOM节点(template底层实现)
 
 
             5.实例属性：
@@ -404,8 +427,17 @@
                         </div> 
 
                     thrid : the data from component is storage in the methods first params name $event($event can also use in the point)
-                    
-            11. using v-model on cpmponent
+              
+            11. parent tramfer a DOM ele to child
+                    in parent
+                        ->  <xyd-component>
+                                <p slot='slot1'>this for child</p>
+                            </xyd-component>
+
+                    in child 
+                        ->  <slot name="slot1"></slot>
+
+            12. using v-model on cpmponent
                 1)normal v-model
                     <input type='text' v-model = 'variables'>
                     //you can use v-on and v-bind to imitate v-model
@@ -445,10 +477,37 @@
                     first : bind the value attr to a value prop in props
                     second : on input, emit its own custom input event with the new value
 
-            
-                    
-
-            
      -->
+    <!-- 
+        vue-cli
+
+            1.install vue-cli
+                -> npm install -g vue-cli
+
+            2.create a vue project
+                -> vue init template projectName
+                   cd projectName
+                   npm install
+                   npm run dev
+
+    -->
+    <!--
+        unifile component
+            1.App.vue
+                depend on three parts
+                1) template -> html
+                2) script -> vueInstance's config 
+                3) style -> css
+
+            2.each unifile-compnent must register in main.js or vue file by import and Vue.component before use it
+                import Announcement from './Announcement.vue';
+                Vue.component('xyd-announcement', Announcement);
+                // then you can use tag of <xyd-announcement> in vue file or main.js
+
+            3.css scoped 
+                default global style
+                use <style scoped> to be a local style
+                
+    -->
 </body>
 </html>
