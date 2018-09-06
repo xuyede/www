@@ -816,6 +816,9 @@
                 constructor (x, y) {
                     this.x = x;
                     this.y = y;
+                    this.showName = function () {
+                        console.log(this.x)
+                    }
                 }
                 toString () {
                     return '(' + this.x + ', ' + this.y + ')';
@@ -823,7 +826,7 @@
             }
             var point = new Point(); 使用的时候，也是直接对类使用new命令，跟构造函数的用法完全一致
                 
-    2. 构造函数的prototype属性，在es6中，类的所有方法都定义在类的prototype属性上面,直接改写prototype
+    2. 构造函数的prototype属性，在es6中，与constructor同级的方法都定义在类的prototype属性上面
         class Point{
             constructor () {
                 // ...
@@ -842,18 +845,21 @@
             toValue(){}
         }
 
-        因为类的方法都定义在prototype对象上，所以可以通过Object.assign(Point.prototype, {})添加多个方法
+        所以可以通过Object.assign(Point.prototype, {})来给类的prototype添加多个方法
         Object.assign(Point.prototype, {
             show() {},
             say() {}
         })
     
-    3. 类内部定义的方法是不可枚举的，用Object.assign()添加的方法可以枚举
+    3. 类内部定义在prototype的方法是不可枚举的，用Object.assign()添加到prototype的方法可以枚举
         class Point{
-            constructor () {
+            constructor() {
                 // ...
             }
-            toString () {
+            showAge() {
+                // ...
+            }
+            showName() {
                 // ...
             }
         }
@@ -863,9 +869,9 @@
             say() {}
         })
 
-        Object.keys(Point.prototype) //['show', 'say']
+        Object.keys(Point.prototype) //['show', 'say'],没有 showName和 showAge
 
-    4. 类和模块内部，默认为严格模式
+    4. 类和模块内部，默认为严格模式 -> 类似先声明在使用,不能重复声明等等等
 
     5. class表达式
         写法：
@@ -881,10 +887,9 @@
 
             //这个类的名字是MyClass而不是Me，Me只在 Class 的内部代码可用，指代当前类
 
-
-        如果类的内部没用到，可以省略
-        ->
-            const MyClass = class { /* ... */ };
+            如果类的内部没用到，可以省略
+            ->
+                const MyClass = class { /* ... */ };
 
 
         采用class表达式，可以写出立即执行的Class，该类就只能实例化一次了
@@ -903,7 +908,8 @@
         
     6. class的静态方法 -> 只能由类本身调用,静态方法会被子类继承
         -> 
-            如果在一个方法前，加上static关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为 '静态方法'
+            如果在一个方法前，加上static关键字，就表示该方法不会被实例对象继承
+            而是直接通过类来调用，这就称为 '静态方法'
 
             class Foo {
                 static classMethod() {
@@ -963,7 +969,7 @@
                     var test1 = new Male('Sunday', 18); //正确
         
                     
-    8. class 的继承 -> 子类实例的构建，基于父类实例
+    8. class 的继承 -> 子类实例的构建，基于父类实例的构建
     
             1)  父子类通过extends实现继承
                 ->
@@ -983,7 +989,7 @@
 
             3)  es5和es6继承的差别
                 -> 
-                    es5: ES5 的继承，实质是先创造子类的实例对象this，然后再将父类的方法添加到this上面
+                    es5: ES5 的继承，实质是先创造子类的实例对象this，然后再将父类原型的方法添加到this上面
                     es6: ES6 的继承机制完全不同，实质是先将父类实例对象的属性和方法，加到this上面（所以必须先调用super方法），然后再用子类的构造函数修改this
 
             4)  在子类的构造函数中，只有调用super之后，才可以使用this关键字，否则会报错
@@ -1041,6 +1047,7 @@
                             super.toString()相当于 superClass.prototype.toString.call(subClassThis)  //调用父类的toString方法,方法的this指向子类的this
                         
                         作为对象, 在静态方法中调用, super 指向父类, 方法的this 指向子类
+
                         ->
                             class superClass{
                                 static show() {
@@ -1058,9 +1065,9 @@
                                     super.show();   //在普通方法中调用super，super指向父类的原型，所以调用父类的普通方法show
                                 }
                             }
-                            subClass.show();    //父类调用静态方法show
+                            subClass.show();    //子类调用静态方法show
                             var test = new subClass();
-                            test.show();    //子类实例调用普通方法show
+                            test.show();    //子类实例对象调用普通方法show
                 
 
     9.  类的prototype属性和__proto__属性 (__proto__属性表示继承)
@@ -1074,16 +1081,16 @@
             B.__proto__ === A  //true
             B.prototype.__proto__ === A.prototype  //true
 
-            //类的继承实现
-            //B 的 实例继承 A 的实例
-            Object.setPrototypeOf(B.prototype, A.prototype);
-            //B 继承 A 的静态属性
-            Object.setPrototypeOf(B, A);
+            类的继承实现
+                //B 的 实例继承 A 的实例
+                Object.setPrototypeOf(B.prototype, A.prototype);
+                //B 继承 A 的静态属性
+                Object.setPrototypeOf(B, A);
 
-            Object.setProrotypeOf(obj, proto) {
-                obj.__proto__ = proto;
-                return obj;
-            }
+                Object.setProrotypeOf(obj, proto) {
+                    obj.__proto__ = proto;
+                    return obj;
+                }
         
     -->
     <!--  
@@ -1424,7 +1431,7 @@
             -> function* myGenerator () {}
 
         3.yield表达式 -> 只能在 Generator函数里
-            yield表达式后面的表达式，只有当调用 next方法,内部指针指向该语句时才会执行
+            yield关键字后面的表达式，只有当调用 next方法,内部指针指向该语句时才会执行并返回一个对象
 
             function* add() {
                 yield  123 + 456; //只有在指针指向该语句的时候才会执行 123 + 456
@@ -1514,7 +1521,7 @@
                 }
 
 
-        5.next方法的返回值
+        5.next方法的参数
             yield表达式本身没有返回值，或者说总是返回 undefined
             next方法可以带一个参数，该参数就会被当作上一个 yield表达式的返回值
             ->
@@ -1599,9 +1606,44 @@
                 console.log(key, value);
             }
 
+        9. Generator的妙用
+            Generator函数执行返回值分两种情况
+                1)如果没调用 next,则做为一个对象看待,可以设置属性
+                2)如果调用 next,则返回一个数据对象(包含 value和 done)  
+
+            ->
+                const s1 = v => v.toUpperCase();
+                const s2 = v => v.split('');
+                const s3 = v => v.reverse();
+                const s4 = v => v.join('');
+                const s5 = v => v + '!!!';
+
+                function* gen(str) {
+                    var v2 = yield s1(str);
+                    var v3 = yield s2(v2);   -> v2为第二次调用 next传进的参数,以此类推
+                    var v4 = yield s3(v3);
+                    var v5 = yield s4(v4);
+                    yield s5(v5);
+                }
+
+                const testExec = iter => {
+                    let _next = iter.next(iter.value);   -> 第一次传参没意义,所以不在乎值
+                    if (!_next.done) {
+                        iter.value = _next.value;   -> iter不调用next时, 作为一个对象
+                        testExec(iter);
+                    } else {
+                        return iter.value;
+                    }
+                    return iter.value;
+                };
+                console.log(testExec(gen('xuyede')));   //EDEYUX!!!
+
+
     -->
+
+    
     <!--
-            Promise -> 异步编程 -> 把异步的函数当成同步处理
+            Promise -> 异步编程 -> 把异步的函数当成同步处理,解决回调地狱(多层回调),把多层变为两层(suc, err)
 
             1.特点
                 Promise就是一个对象，里面保存着某个未来才会结束的事件(通常是一个异步操作)的结果
@@ -1762,7 +1804,11 @@
                 指定不管 Promise对象最后状态如何，都会执行的操作
                 
 
-            7.Promise.all() -> 使多个 promise对象同时进行
+            7.Promise.all() 
+                -> 使多个 promise对象同时进行并等待全部执行完再返回
+                -> 常用于需要多个请求的结果同时拿到再执行下一步
+                -> 等待全部异步执行完成后返回
+
                 用于将多个 Promise实例包装成一个新的 Promise实例,并按顺序异步执行 Promise.all()的参数列表内容
                 ->
                     const getRandom = () => +(Math.random()*1000).toFixed(0);
@@ -1786,9 +1832,13 @@
                     务结束之后，它们的结果仍然是按顺序地映射到 resultList里，这样就能和Promise.all里
                     的任务列表 [asyncTask(1),asyncTask(2),asyncTask(3)]一一对应起来
 
+            8.Promise.race() 
+                -> 使多个 promise对象同时进行,获取执行最快的那么异步操作结果
+                -> 常用于网络测速
+                -> 只要有一个异步操作执行完就返回
 
-            8.Promise.resolve / Promise.reject
-                将现有对象转为 Promise 对象
+            9.Promise.resolve / Promise.reject
+                将现有对象转为 指定状态的 Promise对象
                 ->
                     Promise.resolve('foo')
                     // 等价于
