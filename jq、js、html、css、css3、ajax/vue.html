@@ -11,17 +11,17 @@
             * vue的生命周期
                                     new Vue()
                                         
-                               init Event&Lifecycle
+                               init Event&Lifecycle 
                                         |
              *beforeCreate  <-          |
                                         |
-                               init injections&reactivity
+                            init injections&reactivity
                                         |
                   *Created  <-          |
                                         |           
                                  Has 'el' option?   ——————————————>   no
                                         |                             |  
-                                yes     |                 when vm.$mount(el) is called
+                                   yes  |                 when vm.$mount(el) is called
                                         |                             |
                               Has 'template' option?  <———————————————|                  
                                         |
@@ -74,19 +74,19 @@
 
 
                 钩子函数
-                1) beforeCreate/ created -> 创建完 Vue实例,但还没创建虚拟 DOM
+                1) beforeCreate/ created -> 创建完 Vue实例
                     beforeCreate -> 初始化事件,生命周期
-                    created -> 组件实例化完成,开始配置虚拟 DOM,但页面未显示
+                    created -> 把相应的属性挂到 vue实例上
 
-                    执行完 created后,组件实例化完毕,开始根据 el,template创建虚拟 DOM
-                    注意: 在创建虚拟 DOM过程中,如果没有 el且没有通过 vm.$mount声明挂载点,则生命周期结束
+                    执行完 created后,组件实例化完毕,开始根据 template为模板通过 render编译虚拟 DOM
+                    注意: 如果没有 el且没有通过 vm.$mount声明一个挂载点,则生命周期结束
 
                 2) beforeMount/ mounted -> 将虚拟 DOM的内容挂载到挂载点上,并渲染页面
-                    beforeMount -> 虚拟 DOM已经配置完毕,开始根据虚拟 DOM渲染页面
-                    mounted -> 执行该函数,页面渲染完成,并进入 Mounted状态,等待数据的更新
+                    beforeMount -> 虚拟 DOM已经编译完毕,把 el的数据提升到 Vue实例上
+                    mounted -> 以 el为模板创建 vm.$el,并把虚拟 DOM挂载到 vm.$el上,开始渲染页面,渲染完成后进入 Mounted状态,等待数据的更新
 
-                3)beforeUpdate/ updated -> 数据的更新,先对比虚拟 DOM再渲染页面
-                    beforeUpdate -> 组件更新前,虚拟 Dom的数据更新完毕,但页面未更新
+                3)beforeUpdate/ updated -> 只有在页面中应用的数据更新才会触发这两个函数
+                    beforeUpdate -> 组件更新前,虚拟 Dom的数据更新完毕,准备和旧的虚拟 DOM作比较
                     updated -> 组件更新,页面显示最新内容
 
                     注意: 如果组件更新的内容和之前的一样,则不触发更新函数
@@ -94,12 +94,45 @@
                 4)beforeDestroy/ destroyed -> 调用 vm.$destroy(), 生命周期结束
                     beforeDestroy -> 组件销毁前
                     destroy -> 组件销毁
+
+
+            Vue的特点 :
+                1. 并不直接操作 DOM,通过虚拟 DOM来实现数据的更新以及对页面的渲染
+                2. MVVM模式 (观察者)
+                    ____________________________________________________
+                    | M Model 模型 -> 后端传递的数据                     |
+                    | V View 视图 -> 需要展示的页面                      |
+                    | VM ViewModel 视图模型 -> 连接 view和 model的桥梁   |
+                    |                                                   |
+                    |             ->                  DOM事件监听        |
+                    | Model   (数据绑定)   ViewModel      <->      View  |
+                    |             <-                                    |
+                    |___________________________________________________|    
+
+                    ViewModel的两个方向
+                        1) 将 Model -> View : 数据绑定
+                        2) 将 View -> Model : DOM事件监听 
+
+                    在 Vue中, 虚拟Dom(js对象)和 View为映射关系, Model和虚拟DOM(js对象)为绑定关系
+
+
             
+
+
+
+
+
+
+
+
+
+
+
 
 
             1.数据绑定 : {{ 变量 }}  Object.defineProperty()在底层通过get / set，利用观察者模式对数据进行监听
 
-            2.指令 -> 指令后面接一个js表达式
+            2.指令 -> 指令后面接一个js表达式 (如果为字符串,则表示一个变量)
                 1.绑定事件指令
                     v-on:eventType = 'func'  ->  缩写 @eventType = 'func'
                         v-on:click = 'countIncrease' -> @click = 'countIncrease'
@@ -168,29 +201,56 @@
                             v-for="(value, key) in object" //key为对象的属性名
                             v-for="(value, key, index) in object" //index为参数的索引
 
-                            数组更新检测:
-                                数组、对象为引用值，如果单纯改变数值而不改变引用值的话，vue是不会更新视图的
-
-                                vue把一些数组的方法重写，使得这些方法执行时可以更新视图
-                                    push / pop / shift / unshift / splice / sort / reverse
-
-                                利用索引直接设置一个项时，不能检测数组的变动
-                                    Vue.set(vm.items, indexOfItem, newValue)
-
-                            对象更新检测
-                                Vue 不能检测对象属性的添加或删除(对象的修改可以检测)
-                                    Vue.set(object, key, value)
-                                    vm.$set(object, key, value)
-
-                                    添加多项属性时，用一个新对象做为新载体
-                                    vm.userProfile = Object.assign({}, vm.userProfile, {
-                                        age: 27,
-                                        favoriteColor: 'Vue Green'
-                                    })
-
-
                         -> 遍历的时候给每一项添加一个key值作为唯一的标识,解决模板复用的问题
                             v-for="item in items" :key="item.id"
+
+
+
+
+
+
+
+
+
+
+
+                    ____________________________________________________________________________________
+                    |                                                                                   |
+                    |    Vue的数据监听是依靠 Object.defineProperty()激活 set/ get去动态获取数据的变化      |
+                    |                                                                                   |
+                    |    数组更新检测: (数组没有 set/ get方法,只能改变栈的地址或者使用Vue自己定义的数组方法) |
+                    |       vue把一些数组的方法重写，使得这些方法执行时可以更新视图                         |
+                    |           push / pop / shift / unshift / splice / sort / reverse                  |
+                    |                                                                                   |
+                    |        利用索引直接设置一个项时，不能检测数组的变动                                  |
+                    |            Vue.set(vm.items, indexOfItem, newValue)                               |
+                    |                                                                                   |
+                    |    对象更新检测                                                                    |
+                    |        Vue 不能检测对象属性的添加 /删除 (对象的修改可以检测,用的是 set钩子修改)       |
+                    |            Vue.set(object, key, value)                                            |
+                    |            vm.$set(object, key, value)                                            |
+                    |                                                                                   |
+                    |            添加多项属性时，用一个新对象做为新载体                                    |
+                    |            vm.userProfile = Object.assign({}, vm.userProfile, {                   |
+                    |                age: 27,                                                           |
+                    |                favoriteColor: 'Vue Green'                                         |
+                    |            })                                                                     |
+                    |___________________________________________________________________________________|   
+
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             3.指令修饰符：
                 .stop 取消冒泡
@@ -199,6 +259,7 @@
                 .enter 回车调用
                 .space 空格调用
                 .esc esc调用
+                .lazy input事件->change事件
 
 
             4.属性： get set
@@ -220,24 +281,6 @@
 
                 2) vm.$data -> 存放Vue实例的data对象属性
 
-            6.实例方法:
-                1) vm.$mount(ele) 
-                    如果 Vue 实例在实例化时没有收到 el 选项，则它处于“未挂载”状态，没有关联的 DOM 元素
-                    可以使用vm.$mount(ele)手动挂载一个未挂载的实例
-
-            7.全局方法：
-                1) Vue.component( id, [definition] ) -> 注册/获取全局组件
-                    ->
-                    // 注册组件，传入一个扩展过的构造器
-                    Vue.component('my-component', Vue.extend({ /* ... */ }))
-
-                    // 注册组件，传入一个选项对象 (自动调用 Vue.extend)
-                    Vue.component('my-component', { /* ... */ })
-
-                    // 获取注册的组件 (始终返回构造器)
-                    var MyComponent = Vue.component('my-component')
-
-                2) 
              
             8.Vue component
                 1) Gobal Component
@@ -279,7 +322,7 @@
                             }
                         }
 
-                    2) every component must have a single root element
+                    2) each component must have a single root element
 
 
 
@@ -428,7 +471,7 @@
 
                     thrid : the data from component is storage in the methods first params name $event($event can also use in the point)
               
-            11. parent tramfer a DOM ele to child
+            11. parent tranfer a DOM ele to child
                     in parent
                         ->  <xyd-component>
                                 <p slot='slot1'>this for child</p>
@@ -437,7 +480,50 @@
                     in child 
                         ->  <slot name="slot1"></slot>
 
-            12. using v-model on cpmponent
+            12. child tranfer a template to parent to rander
+                    in child 
+                        ->  <slot v-for="list in lists" :list="list"></slot>  //data will tranfer by v-bind
+
+                    in parent
+                        ->  <xyd-slot>
+                                <li slot-scope="prop">{{prop.list.title}}</li>  //accecpt data by slot-scope
+                            </xyd-slot>
+
+                            tag <li> will rander depend on <slot>'s order
+
+            13. dynamic component
+                    -> you can use tag of <component> to change the component dynamic, like this
+                        <div id="app">
+                            <keep-alive>
+                                <compnent :is="witchComp"></compnent>
+                            </keep-alive>
+                            <button @click="nextOpt">next</button>
+                        </div>
+                        //define component
+                        const xydInput = {
+                            template : `<input type="text"/>`
+                        }
+
+                        const xydPassword = {
+                            template : `<input type="password"/>`
+                        }
+                        
+                        new Vue({
+                            el : '#app',
+                            data : {
+                                witchComp = 'xydInput'
+                            },
+                            components : {
+                                xydInput, xydPassword
+                            },
+                            methods : {
+                                nextOpt() {
+                                    this.witchComp = this.witchComp === 'xydInput' ? 'xydPassword' : 'xydInput';
+                                }
+                            }
+                        })
+            
+            14. using v-model on component
                 1)normal v-model
                     <input type='text' v-model = 'variables'>
                     //you can use v-on and v-bind to imitate v-model
@@ -507,7 +593,246 @@
             3.css scoped 
                 default global style
                 use <style scoped> to be a local style
-                
     -->
+    <!--
+        vue-router
+
+            1.npm install vue-router -D
+
+            2.base write
+                ->main.js
+                    import Vue from 'vue'
+                    import VueRouter from 'vue-router'
+                    import Home from './components/Home.vue'
+                    import App from './App.vue'
+                    import HelloWorld from './components/HelloWorld.vue'
+
+                    // module programming, must reference Vue.use(VueRouter)
+                    Vue.use(VueRouter)
+
+                    //config router
+                    const routes = [
+                        //the path and the corressponding component
+                        {path : '/', component : Home},
+                        {path : '/helloworld', component : HelloWorld}
+                        {path : '*', redirect : '/'}   -> link to '/' when you enter a error route
+                    ]
+                    //instance a Vuerouter
+                    const router = new VueRouter({ routes })
+
+                    new Vue({
+                        router
+                        template : `<App/>`
+                        components : { App }
+                    }).$mount(#app)
+                
+                ->App.vue
+                <template>
+                    <div id="app">
+                        //set the router url
+                        <rounter-link to = "/">HOME</rounter-link>
+                        <rounter-link to = "/helloworld">HelloWorld</rounter-link>
+
+                        //show the root router
+                        <rounter-view></rounter-view>
+                    </div>
+                </template>
+
+            3.about <router-link>
+                -> <router-link> default tag <a>, you can set tag( <router-link tag='div'> ) to change it
+
+                -> dynamic bind attr 'to'
+                    <router-link :to = "homeLink"></router-lin>
+                    data : {
+                        homeLink : '/'
+                    }
+
+            4.named routes
+                u can set a name for routes like
+                ->  const routes = [
+                        {path : '/', name : 'aboutLink', component : About}   // this routes named aboutLink,then u can use it as a path
+                    ]
+
+                    <router-link :to = "{name : 'aboutLink'}">About</router-link>
+                    // or
+                    <router-link :to = "aboutLinkMeg">About</router-link>
+                    
+                    data() {
+                        return {
+                            aboutLinkMeg : {name : 'aboutLink'}
+                        }
+                    }
+
+            5.dynamic route matching 
+                u can set a dynamic route and adapt to special path like
+                ->  const routes = [
+                        {path : '/about/:classes', name : 'aboutLink', component : About}
+                    ]
+
+                    <router-link :to = "aboutLinkMeg">About</router-link>   // will redirect to /about/xuyede
+                    // or
+                    data() {
+                        return {
+                            aboutLinkMeg : {name : 'aboutLink', params : {classed : 'xuyede'}}
+                        }
+                    }
+
+                    you can also get the classes by $route.params.classes in the assign module
+
+            6.programmatic routes (operate the history stack)
+                1) this.$router.push() -> push a new entry into the history stack
+                    ->
+                        this.$router.push('/menu')
+                        this.$router.push({name : 'aboutLink', params : {}})
+                        this.$router.push({path : '/login'})
+
+                2) this.$router.replace() -> change a entry of history stack
+                    ->  
+                        the only difference with push is that it navigates without pushing a new history entry
+                        it replaces the current entry
+
+                3) this.$router.go() -> go to a assign history stack
+                    -> 
+                        this.$router.go(-1) -> go back a history
+
+            7.Nested routes( set attr of children )
+                u can use attr of children to set a second routes
+                ->  const routes = [
+                        { 
+                            path : '/about', 
+                            name : 'aboutLink', 
+                            component : About,
+                            resirect : '/abou/contact',  // default path
+                            children : [
+                                {
+                                    path : '/about/conact',
+                                    name : 'contactLink',
+                                    component : Contact
+                                },
+                                {
+                                    path : '/about/history',
+                                    name : 'historyLink',
+                                    component : History
+                                }
+                            ]
+                        },
+                        {
+                            path : '/admin',
+                            name : 'adminLink',
+                            component : Admin
+                        }
+                    ]
+                
+            8.global Guards -> beforeEach()
+                const router = new VueRouter({})
+
+                router.beforeEach( (to, from, next) => {
+                    //to -> the target router path
+                    //from -> the origin router path
+                    //next -> resolve this hook, Make sure to always call the next function
+
+                    console.log(to.path) 
+                    next()  //make sure call the next to resolve th hook
+                })
+
+            9.Per-Route Guard -> beforeEnter
+                //operate like global guard
+                const router = new VueRouter({
+                    routes: [
+                        {
+                            path: '/foo',
+                            component: Foo,
+                            beforeEnter: (to, from, next) => {
+                                // ...
+                                next(); 
+                            }
+                        }
+                    ]
+                })
+
+            10.In-Component Guards
+                // two key function
+                
+                1) beforeRouterEnter(to, from, next) -> it run before the component render, so you can not use 'this' directly
+                    export default {
+                        data() {
+                            return {
+                                name : 'xuyede'
+                            }
+                        },
+                        beforeRouteEnter (to, from, next) {
+                            // ...
+                            next( vm => alert(vm.name))   //use callback to get the instance of this component
+                        }
+                    }
+
+                2) beforeRouterLeave(to, from, next) > it run before the route skip to other route, use 'this' normal
+                    export default {
+                        data() {
+                            return {
+                                name : 'xuyede'
+                            }
+                        },
+                        beforeRouteLeave (to, from, next) {
+                            // ...
+                            alert(this.name)
+                            if (confirm( this.name + 'are u ready to exit?') === true) {
+                                next();
+                            } else {
+                                next(false)
+                            }
+                        }
+                    }
+
+            11.scroll behavior
+                // oprate in router instance
+                const router = new VueRouter({
+                    routes,
+                    mode : 'history',
+                    scrollBehavior(to, from, savedPosition) {
+                        // return { x : 0, y : 0 }
+                        // return { selector : '' } -> tag-selector
+                        if (savedPosition) {
+                            return savedPosition   // history position
+                        } else{
+                            return {
+                                x : 0,
+                                y : 0
+                            }
+                        }
+                    }
+                })
+
+
+            12.reuse about <router-view>
+                u can set an attr of name to <router-view> like
+                -> 
+                //App.vue
+                <router-view name = "history"></router-view>
+                //routes.js
+                {
+                    path: '/', name: 'homeLink', components: {
+                        default : Home,   // default path
+                        history : History,   // <router-view> name history 
+                        contact : Contact   // <router-view> name contact
+                    }
+                },
+
+            
+
+
+        vue-resource
+
+            1. npm install vue-resource --save-dev
+
+            2.
+            -> import VueResource from 'vue-resource'
+
+               normal use in the created() 
+
+               created() {
+                   this.$http.get().then( data => {} )
+               }
+    -->     
 </body>
 </html>
