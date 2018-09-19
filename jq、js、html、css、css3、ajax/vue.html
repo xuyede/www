@@ -73,17 +73,18 @@
                                   |___________|
 
 
-                钩子函数
+                钩子函数 -> vue实例在某个时间点会自动执行的函数
+                
                 1) beforeCreate/ created -> 创建完 Vue实例
-                    beforeCreate -> 初始化事件,生命周期
-                    created -> 把相应的属性挂到 vue实例上
+                    beforeCreate -> 初始化事件,生命周期后执行
+                    created -> 把相应的属性,依赖挂到 vue实例上后执行
 
                     执行完 created后,组件实例化完毕,开始根据 template为模板通过 render编译虚拟 DOM
                     注意: 如果没有 el且没有通过 vm.$mount声明一个挂载点,则生命周期结束
 
                 2) beforeMount/ mounted -> 将虚拟 DOM的内容挂载到挂载点上,并渲染页面
-                    beforeMount -> 虚拟 DOM已经编译完毕,把 el的数据提升到 Vue实例上
-                    mounted -> 以 el为模板创建 vm.$el,并把虚拟 DOM挂载到 vm.$el上,开始渲染页面,渲染完成后进入 Mounted状态,等待数据的更新
+                    beforeMount -> 虚拟 DOM已经编译完毕,把挂载点(el的内容)提升到 Vue实例上后执行,也页面尚未渲染
+                    mounted -> 创建 vm.$el,替代 el挂载点,并把虚拟 DOM挂载到 vm.$el上,开始渲染页面,渲染完成后进入 Mounted状态,等待数据的更新
 
                 3)beforeUpdate/ updated -> 只有在页面中应用的数据更新才会触发这两个函数
                     beforeUpdate -> 组件更新前,虚拟 Dom的数据更新完毕,准备和旧的虚拟 DOM作比较
@@ -92,8 +93,8 @@
                     注意: 如果组件更新的内容和之前的一样,则不触发更新函数
 
                 4)beforeDestroy/ destroyed -> 调用 vm.$destroy(), 生命周期结束
-                    beforeDestroy -> 组件销毁前
-                    destroy -> 组件销毁
+                    beforeDestroy -> 调用 vm.$destroy 后执行
+                    destroy -> vue实例完全被销毁后执行
 
 
             Vue的特点 :
@@ -262,7 +263,7 @@
                 .lazy input事件->change事件
 
 
-            4.属性： get set
+            4.属性： get set 
                 1)methods : {}  ->  方法，定义的函数如果放进该属性中，则会实时更新，每当有事件触发时都是执行，不管作用的数据是否在函数里
                     
                 2)computed : {}  -> 计算属性，基于函数和属性的依赖进行缓存的，计算属性只有在它的相关依赖属性发生改变时才会重新求值, （根据已有属性派生出的新属性，计算属性由已有属性决定, 可以缓存数据）
@@ -492,6 +493,11 @@
                             tag <li> will rander depend on <slot>'s order
 
             13. dynamic component
+                    -> special tag <table>
+                        <table>
+                            <tr is="my-row"></tr>
+                        </table>
+
                     -> you can use tag of <component> to change the component dynamic, like this
                         <div id="app">
                             <keep-alive>
@@ -723,7 +729,7 @@
                         }
                     ]
                 
-            8.global Guards -> beforeEach()
+            8.global Guards -> beforeEach
                 const router = new VueRouter({})
 
                 router.beforeEach( (to, from, next) => {
