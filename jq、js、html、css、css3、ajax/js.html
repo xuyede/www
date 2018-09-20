@@ -911,6 +911,7 @@
                             //console.log(this); --> Func
                             return self.apply(this instanceof temp ? self : target, arg.concat(_arg));
                         };
+                        
                     temp.prototype = this.prototype;
                     Func.prototype = new temp();
                     return Func;
@@ -1169,6 +1170,8 @@
                     sort(function(a, b){
                         return Math.random() - 0.5; //打乱顺序
                     })
+
+                    
           
             数组的方法(不改变原数组,要用一个变量去装)    
                 --> concat  arr.concat(arr1) 拼接数组
