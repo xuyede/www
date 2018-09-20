@@ -1,0 +1,211 @@
+    1. 设计模式 : 是一套反复使用,多数人知晓,经过分类,代码设计经验的总结   -> 必杀技!!!
+
+        1) 分三大类 : 
+            创建型模式 : 单例模式, 抽象工厂模式, 建造者模式, 工厂模式, 原型模式
+            结构型模式 : 适配器模式, 桥接模式. 装饰模式, 组合模式. 外观模式, 享元模式, 代理模式
+            行为型模式 : 模板方法模式, 命令模式, 迭代器模式, 观察者模式, 中介者模式, 备忘录模式
+                        解释器模式, 状态模式, 策略模式, 职责链模式, 访问者模式
+
+        2) 设计模式的原则
+            1) 单一职责原则 (Single Responsibility Principle)
+                ->  一个方法只做一件事
+
+            2) 里氏代换原则 (Liskov Substitution Principle)
+                ->  child能访问parent的东西
+
+            3) 依赖倒置原则 (Dependence Inversion Principle)
+                ->  只依赖接口,不依赖方法
+
+            4) 接口分离原则 (Interface Segregation Principle)
+                ->  把大的接口拆分成小的接口
+
+            5) 迪米特法则 (Law of Demeter)
+                ->  接口的参数越少越好
+
+            6) 开闭原则 (Open Close peinciple)
+                ->  面向扩展开放,面向修改关闭
+
+
+    2. UML -> processon
+
+
+    
+    3. 设计模式
+
+    1)  单例模式 ->  确保只有一个实例,并提供全局访问
+
+        判断是否已经实例过了,如果实例过了,直接返回之前的实例对象
+
+            const Singleton = function (name) {
+                this.name = name;
+            }
+
+            Singleton.getInstance = function (name) {
+                if (!this.instance) {
+                    this.instance = new Singleton(name)
+                }
+                return this.instance
+            }
+
+            const xyd = Singleton.getInstance('xuyede')
+            const gsm = Singleton.getInstance('guosimin')
+
+            console.log(xyd === gsm)   // true, gsm实例获得的是第一次实例化的对象
+
+
+
+    2)  代理模式 -> 为一个对象提供一个替代对象或占位符,以便控制对原对象的访问
+
+        例子: 送花给喜欢的人 -> 委托花店送,并监听在她心情好的时候送
+
+            class Flowers{
+                constructor(flowerName) {
+                    this.flower = flowerName
+                }
+            }
+
+            const xyd = {
+                sendFlower() {
+                    flowerStore.sendFlower()   // 激活代理后,全权交给代理
+                }
+            }  
+
+            const flowerStore = {
+                sendFlower() {
+                    gsm.haveGoodMood( () => {
+                        const flower = new Flowers('rose')   // 代理 -> 监听,满足条件时触发事件
+                        gsm.recevieFlower(flower.flower) 
+                    })
+                }
+            }      
+
+            const gsm = {
+                recevieFlower(flower) {
+                    console.log('gsm get from flowerStore: ' + flower)
+                },
+                haveGoodMood(fn) {
+                    setTimeout(() => {
+                        fn();
+                    }, 3000);
+                }
+            }
+
+            xyd.sendFlower()
+
+    3)  策略模式 -> 定义一系列算法,封装起来,并且使这些算法可以互相替换
+
+        例子 : 表单的检验
+
+        <form>
+            <p>account :
+                <input type="text" data-rule="isEmpty account" data-errMeg="account error" class="xyd-account" />
+                <span></span>
+            </p>
+            <p>password :
+                <input type="password" data-rule="isEmpty password" data-errMeg="password error" class="xyd-password" />
+                <span></span>
+            </p>
+            <p>phone :
+                <input type="text" data-rule="phone" data-errMeg="phone error" class="xyd-phone" />
+                <span></span>
+            </p>
+        </form>
+
+
+        const __RULES__ = {   // 检验的规则封装起来
+            isEmpty(val) {
+                return val != ''
+            },
+            account(val) {
+                return val.length > 6
+            },
+            password(val) {
+                return val.length > 8
+            },
+            phone(val) {
+                return /^1[3|5|8][0-9]{9}$/g.test(val)
+            }
+        }
+
+        const __DEFAULT__ = {
+            errMeg: 'error'
+        }
+
+        function start() {
+            const aInp = Array.from(document.getElementsByTagName('input'))
+            loopInp(aInp)
+        }
+
+        function loopInp(aInp) {   // 遍历每个需要验证的输入框
+            aInp.forEach(oInp => {
+                const rules = oInp.getAttribute('data-rule').split(' ')   // 获取设定的规则
+                oInp.onchange = function () {
+                    const result = []
+                    if (rules.length === 1) {
+                        loopRule(result, rules[0], oInp)   // 遍历已有规则,是否匹配
+                    } else {
+                        rules.forEach(rule => {
+                            loopRule(result, rule, oInp)
+                        })
+                    }
+                    isMatch(result, oInp)   // 检测是否全部规则都符合
+                }
+            })
+        }
+
+        function loopRule(result, rule, dom) {
+            for (let key in __RULES__) {
+                if (rule === key) {
+                    result.push(__RULES__[key](dom.value))
+                }
+            }
+        }
+
+        function isMatch(result, dom) {
+            result.indexOf(false) !== -1 ?
+                (dom.nextElementSibling.innerHTML = dom.getAttribute('data-errMeg') || __DEFAULT__.errMeg, dom.classList.remove('success'), dom.classList.add('error')) :
+                (dom.nextElementSibling.innerHTML = '', dom.classList.remove('error'), dom.classList.add('success'))
+        }
+
+        start()
+    
+    4.工厂模式
+        -> 
+        function carFactory() {}
+
+        carFactory.BWM = function() {
+            this.name = 'BWM'
+        }
+        carFactory.Audi = function() {
+            this.name = 'Audi'
+        }
+
+        carFactory.prototype.drive = function() {
+            console.log('已经为' + this.name + '添加自动驾驶功能')
+        }
+
+        carFactory.create = function (carClass) {
+            if (typeof carFactory[carClass] !== 'function') {
+                console.log('没有该生产线');
+                return;
+            } 
+            if (typeof carFactory[carClass].prototype.drive !== 'function') {
+                Object.setPrototypeOf(carFactory[carClass].prototype, new carFactory)
+            }
+            
+            return new carFactory[carClass];
+        }
+
+        const car = carFactory.create('BWM')
+        const car1 = carFactory.create('Audi')
+        
+        console.log(car.drive())
+        console.log(car1.drive())
+
+    
+    5.迭代器模式 -> 提供一种方法,将对象的内部展示出来,并且不暴露内部的结构
+
+        
+
+
+            
