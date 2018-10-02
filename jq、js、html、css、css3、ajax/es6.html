@@ -10,7 +10,7 @@
 
 <body> 
     <!-- 
-        变量声明
+        变量声明 (let / const 识别块级作用域的能力)
         1. let  变量声明
 
             -> 变量声明不提升
@@ -512,6 +512,20 @@
 
                             setTimeout(() => console.log('s1: ', timer.s1), 3100);  //3
                             setTimeout(() => console.log('s2: ', timer.s2), 3100);  //0
+                    
+                    箭头函数的 this问题
+                    let show = () => {
+                        console.log(this)
+                    }
+
+                    let obj = { show }
+
+                    obj.show()   // window,箭头函数的this指向上一个不是箭头函数环境
+
+                    obj.otherShow = show.bind(obj)
+                    obj.otherShow()   // window,箭头函数绑定 this和 biand一样,只能绑定一次
+
+                    let aa = new obj.otherShow()   // 报错,箭头函数没有this,不能当构造函数
 
     --> 
     <!--
@@ -1882,8 +1896,22 @@
                             // some code...
                         })
 
+            9. 异步和同步的 Promise
+                -> 异步执行多个Promise对象 ( Promise.all() )
+                    let pros = [{}, {}, {}]
+                    Promise.all(pros)
+                        .then(datas => console.log(datas))   // 按all的参数顺序输出
 
-            9.Promise.try -> 还没有这个方法
+                -> 同步执行多个Peomise对象 ( reduce ) 
+                    let pros = [{}, {}, {}]   // pros为Promise对象
+                    pros.reduce( (baton, curVal) => {
+                        baton
+                            .then( () => curVal)
+                            .then( data => console.log(data) )
+                    }, Promise.resolve())
+                
+
+            10.Promise.try -> 还没有这个方法
                 需求:不知道或者不想区分，函数f是同步函数还是异步操作，但是想用 Promise 来处理它
                     
                     1)  //不管 f函数是否为异步,都在本轮事件循环的末尾执行
@@ -1908,14 +1936,54 @@
                         const f = () => console.log('now');
                         Promise.try(f).then(...).catch(...);
                         console.log('next');
-            
-            
+    -->
+    <!--
+        fetch 取代ajax获取数据  // 返回一个 Promise对象,用 then操作
+
+        语法: Promise<Response> fetch(url[, init])
+
+        参数:
+            url 必填: 数据请求的地址
+            init 选填: 请求的配置
+            -> 
+                let fetchConfig = {
+                    method : 'POST',   //请求方式
+                    headers : {
+                        'Content-Type' : 'application/x-www-form-urlencoded',   // 请求头信息,GET不用 | "application/x-www-form-urlencoded"
+                    },
+                    body : 'name=xyd&age=18',   // 请求信息, GET/ HEAD不能包含 body信息
+                    credentials: 'include',   // 跨域请求时带不带cookie
+                }
+                fetch('test.json', fetchConfig)
+
+
+        ->
+            获取本地文本文件 (fakeText.txt)
+            fetch('./fakeText.txt')
+                .then(response => response.text())
+                .then(text => console.log(text))
+                .catch(err => console.log(err))   // catch只有域名错误才能捕捉
+
+            获取本地JSON文件 (fakeJSON.json)
+            fetch('./fakeJSON.json')
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(err => console.log(err))
+
+            获取接口文件 (https://api.github.com/users)
+            fetch(' https://api.github.com/users')
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(err => console.log(err))
+
+        -> 封装fetch简单的增删改查操作
+
 
     -->
-
-
-
-
+    <!--
+        模块导出 : export 
+        模块导入 : import (改名用 as)
+    -->
              
 </body>
 

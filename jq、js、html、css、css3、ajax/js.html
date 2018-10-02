@@ -1959,6 +1959,7 @@
                         5){X,Y} {3, 5} 从右往左的数量匹配，可以大不要小    -->{3, 5}? 从左往右的数量匹配，可以小不要大
                         6)^ 以什么开头
                         7)$ 以什么结尾      ^asd$ -->代表自己asd
+                        8) ^和 $的一些应用  -> /(^| )abc( |&)/ 匹配 'abc' 或者 '  abc   '前后 n个空格(n可以为 0)
                     7.方法
                         reg.test(str)   --> 检验是否符合匹配规则 true|false
                         reg.exec(str)  
@@ -2026,6 +2027,9 @@
                             密码
                             /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?.]).*$/g
                             一个大写，一个小写，一个数字，一个符号，至少5位
+
+                        9)  /in\s+(\w+)/.exec('in xyd')
+                            console.log(RegExp.$1)   // xyd
 
         */
         /*
@@ -2493,7 +2497,27 @@
                 事件流被分为三个阶段(1~ 5)捕获过程、(5~ 6)事件执行过程、(6~ 10)冒泡过程
         
         */
+        /*
+            callee 和 caller
+            
+            arguments.callee   // 一个 arguments的属性,指向 arguments所在的函数
+            ->
+                function test() {
+                    console.log(arguments.callee)   // function test
+                }
         
+
+            Function.caller   // 一个函数的属性, 指向一个函数调用时在哪个函数里
+            ->
+                function test1() {
+                    test2()
+                }
+
+                function test2() {
+                    console.log(test2.caller)   // function test1
+                }
+                test1()
+        */
     </script>
 
 

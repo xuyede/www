@@ -79,20 +79,20 @@
                     beforeCreate -> 初始化事件,生命周期后执行
                     created -> 把相应的属性,依赖挂到 vue实例上后执行
 
-                    执行完 created后,组件实例化完毕,开始根据 template为模板通过 render编译虚拟 DOM
+                    执行完 created后,开始根据基于 vue原生指令模板的 Dom,通过 render编译虚拟 DOM(虚拟 DOM是一个JS对象)
                     注意: 如果没有 el且没有通过 vm.$mount声明一个挂载点,则生命周期结束
 
                 2) beforeMount/ mounted -> 将虚拟 DOM的内容挂载到挂载点上,并渲染页面
-                    beforeMount -> 虚拟 DOM已经编译完毕,把挂载点(el的内容)提升到 Vue实例上后执行,也页面尚未渲染
-                    mounted -> 创建 vm.$el,替代 el挂载点,并把虚拟 DOM挂载到 vm.$el上,开始渲染页面,渲染完成后进入 Mounted状态,等待数据的更新
+                    beforeMount -> 虚拟 DOM已经编译完毕,把挂载点(el的内容)提升到 Vue实例上,但页面尚未渲染
+                    mounted -> 开始渲染页面,根据虚拟 DOM生成真的的 DOM并替换掉 el挂载点的内容,渲染完成后进入 Mounted状态,等待数据的更新
 
-                3)beforeUpdate/ updated -> 只有在页面中应用的数据更新才会触发这两个函数
+                3) beforeUpdate/ updated -> 只有在页面中应用的数据更新才会触发这两个函数
                     beforeUpdate -> 组件更新前,虚拟 Dom的数据更新完毕,准备和旧的虚拟 DOM作比较
                     updated -> 组件更新,页面显示最新内容
 
                     注意: 如果组件更新的内容和之前的一样,则不触发更新函数
 
-                4)beforeDestroy/ destroyed -> 调用 vm.$destroy(), 生命周期结束
+                4) beforeDestroy/ destroyed -> 调用 vm.$destroy(), 生命周期结束
                     beforeDestroy -> 调用 vm.$destroy 后执行
                     destroy -> vue实例完全被销毁后执行
 
@@ -261,6 +261,7 @@
                 .space 空格调用
                 .esc esc调用
                 .lazy input事件->change事件
+                .natice 监听组件根元素的原生事件。
 
 
             4.属性： get set 
@@ -420,7 +421,7 @@
                 
                 4)props is the One-Way Data Flow
                     when the parent attr updates, it will flow down to the
-                    child, but not the other way around.
+                    child, but not the other way around, so do not modify props's value direct
                     
             10. $emit -> set into component -> child to parent
                 1)basic writing
@@ -472,22 +473,24 @@
 
                     thrid : the data from component is storage in the methods first params name $event($event can also use in the point)
               
-            11. parent tranfer a DOM ele to child
+            11. parent tranfer a DOM ele to child (slot)
                     in parent
                         ->  <xyd-component>
                                 <p slot='slot1'>this for child</p>
                             </xyd-component>
 
-                    in child 
-                        ->  <slot name="slot1"></slot>
+                    in child  
+                        ->  <slot name="slot1"> default data </slot>
 
-            12. child tranfer a template to parent to rander
+            12. child tranfer a template to parent to rander (scope slot)
                     in child 
                         ->  <slot v-for="list in lists" :list="list"></slot>  //data will tranfer by v-bind
 
                     in parent
                         ->  <xyd-slot>
-                                <li slot-scope="prop">{{prop.list.title}}</li>  //accecpt data by slot-scope
+                                <template slot-scope="prop">
+                                    <li>{{prop.list.title}}</li>  //accecpt data by slot-scope
+                                </template>
                             </xyd-slot>
 
                             tag <li> will rander depend on <slot>'s order
@@ -528,6 +531,9 @@
                                 }
                             }
                         })
+
+                    -> v-once
+                        // just rander once and save at memory
             
             14. using v-model on component
                 1)normal v-model
@@ -569,7 +575,145 @@
                     first : bind the value attr to a value prop in props
                     second : on input, emit its own custom input event with the new value
 
-     -->
+
+            15. Non-parent-child component tranfer data 
+                1) use vuex
+
+                2) Release subscription ($emit and $on)
+                    Vue.prototype.bus = new Vue()   // middle stage
+                        
+                    tranfer data -> 
+                        this.bus.$emit(selfEvent, data)
+
+                    accept data ->
+                        mounted() {
+                            this.bus.$on(selfEvent, data => { ... })
+                        }
+
+    -->
+    <!--
+        vue-animate
+           
+            transition / transition-group (list loop)
+            1. -enter/-leave  -enter-active/-leave-active  -enter-to/-leave-to  
+                    firstFrame            secondFrame                  end
+
+                    fade-enter         delete fade-enter    delete fade-enter-active
+                fade-enter-active        fade-enter-to        delete fade-enter-to
+
+                    fade-leave         delete fade-leave    delete fade-leave-active
+                fade-leave-active        fade-leave-to        delete fade-leave-to
+
+            2. enter and leave
+                enter: none -> block
+                leave: block -> none
+
+            3. basic writes
+                <transition name="fade"></transition>
+                <style>
+                    .fade-enter, 
+                    .fade-leave-to{
+                        opacity : 0;
+                    }
+                    .fade-enter-active,
+                    .fade-leave-active{
+                        transition : all .5s ease-in-out
+                    }
+                    .fade-enter-to,
+                    .fade-leave{
+                        opacity : 1
+                    }
+                </style>
+
+            animate
+            4. animation in tag of transition (only config the block element)
+                set -enter-active or -leave-active in the  attr of animation
+
+                ->
+                    .fade-leave-active{
+                        transform-origin: left center;
+                        animation: bounce-in 1s reverse;
+                    }
+
+            5. custom transition class
+                ->  
+                    <transition
+                        :duration="1000" -> set the animate and transition time
+                        name="fade"
+                        appear
+                        enter-active-class="animated fadeIn"
+                        leave-active-class="animated fadeOut"
+                        appear-active-class="animated swing"                        
+                    ></transition>
+
+
+                    *use animateCss
+                        -> 
+                             <transition
+                                :duration="1000" -> set the animate and transition time
+                                name="fade"
+                                appear
+                                enter-active-class="animated fadeIn"
+                                leave-active-class="animated fadeOut"
+                                appear-active-class="animated swing"                        
+                            ></transition>
+
+                    *use velocityJs (use some Vue event func)
+                        -> 
+                            <transition 
+                                name="fade"
+                                @before-enter="handleBeforeEnter"
+                                @enter="handleEnter"
+                                @after-enter="handleAfterEnter"
+                                @before-leave="handleBeforeLeave"
+                                @leave="handleLeave"
+                                @after-leave="handleAfterLeave"
+                            >
+                                <div v-show="isShow" class="rect"></div>
+                            </transition>
+
+                            methods : {
+                                handleBeforeEnter(elem) {
+                                    console.log('显示动画即将开始')
+                                    elem.style.opacity = 0
+                                },
+                                handleEnter(elem, done) {
+                                    console.log('显示动画正在执行')
+                                    Velocity(elem, {
+                                        opacity: 1,
+                                        backgroundColor: '#333',
+                                        translateX : 200,
+                                        rotateZ : ['180deg', '360deg']
+                                    }, {
+                                        duration : 2000,
+                                        complete : done
+                                    })
+                                },
+                                handleAfterEnter() {
+                                    console.log('显示动画执行完毕')
+                                },
+                                handleBeforeLeave() {
+                                    console.log('离开动画即将执行')
+                                },
+                                handleLeave(elem, done) {
+                                    Velocity(elem, {
+                                        opacity: 0,
+                                        translateX: 0,
+                                        rotateZ : ['360deg', '180deg']
+                                    }, {
+                                        duration : 1000,
+                                        complete : done
+                                    })
+                                    console.log('离开动画正在执行')
+                                },
+                                handleAfterLeave() {
+                                    console.log('离开动画执行完成')
+                                }
+                            }
+                            
+                    *appear + appear-active-class -> show the animate in first done load 
+
+    -->
     <!-- 
         vue-cli
 
@@ -639,7 +783,7 @@
                         <rounter-link to = "/">HOME</rounter-link>
                         <rounter-link to = "/helloworld">HelloWorld</rounter-link>
 
-                        //show the root router
+                        //show the current router item
                         <rounter-view></rounter-view>
                     </div>
                 </template>
@@ -822,23 +966,41 @@
                         history : History,   // <router-view> name history 
                         contact : Contact   // <router-view> name contact
                     }
-                },
+                }
 
-            
+        -->   
 
 
-        vue-resource
+        <!--
+             vue-resource
 
-            1. npm install vue-resource --save-dev
+                1. npm install vue-resource --save-dev
 
-            2.
-            -> import VueResource from 'vue-resource'
+                2.
+                -> import VueResource from 'vue-resource'
 
-               normal use in the created() 
+                // normal use in the created() 
+                created() {
+                    this.$http.get().then( data => {} )
+                }
 
-               created() {
-                   this.$http.get().then( data => {} )
-               }
-    -->     
+        -->      
+        <!--
+
+            fetch craoss 
+            ->
+                proxyTable: {
+                '/api': {
+                    target: 'http://your_website',
+                    changeOrigin: true,
+                    pathRewrite: {                //需要rewrite重写的, 如果在服务器端做了处理则可以不要这段
+                        '^/api': ''
+                        }
+                    }
+                }
+
+
+        -->
+         
 </body>
 </html>

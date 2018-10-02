@@ -63,9 +63,13 @@
             -> descriptor 属性描述符
                 {
                     value : prop要修改的值,
-                    enumerable : prop是否可枚举(true/false),
-                    configurable : prop是否可删除(true/false),  -> 这三个默认为false
                     writable : prop是否可更改值(true/false),
+
+
+                    enumerable : prop是否可枚举(true/false),
+                    configurable : prop是否可配置(true/false),  -> 这三个默认为false
+                    
+
                     get() {
                         return 
                     },
@@ -123,7 +127,7 @@
                     JSON.stringify()：只串行化对象自身的可枚举的属性
                     Object.assign()： 忽略enumerable为false的属性，只拷贝对象自身的可枚举的属性
 
-        13. Object.setPrototypeOf() -> 用来设置一个对象的prototype对象，返回参数对象本身
+        13. Object.setPrototypeOf(obj, prop) -> 用来设置一个对象的prototype对象，返回参数对象本身
             ->
                 let proto = {};
                 let obj = { x: 10 };
@@ -136,7 +140,7 @@
                 obj.y // 20
                 obj.z // 40
 
-        14. Object.getPrototypeOf() -> 用于读取一个对象的原型对象
+        14. Object.getPrototypeOf(obj) -> 用于读取一个对象的原型对象
             ->
                 function Rectangle() {
                     // ...
