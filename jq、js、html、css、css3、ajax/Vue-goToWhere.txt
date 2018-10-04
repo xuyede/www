@@ -1,0 +1,108 @@
+vue模仿去哪儿网小项目
+
+每新增一个功能都要创建一个新的分支 (内容和 master的一致))
+    1) 把分支添加到本地
+        git pull
+    2) 对分支进行正常的操作 ( 编写 -> git add . -> git commit -m '备注' -> git push)
+    3) 把分支的内容合并到主分支上
+        git merge 远程仓库/分支名 -> git merge origin/index-swiper
+    4) 提交主分支的内容
+        git push
+
+
+项目初始化
+    1. 在主文件( main.js )中引入 reset.css 初始化整个项目的样式
+    2. 在主文件( main.js )中引入 border.css 解决移动端一像素问题
+    3. 添加 minimum-scale=1.0,maximum-scale=1.0,user-scalable=no 禁止页面缩放
+    4. 在主文件( main.js )中引入 fastclick模块 解决移动端300毫秒点击延迟问题 ( FastClick.attach( document.body ) )
+        ->   
+            双击缩放时,浏览器捕获第一次单击后,会先等待一段时间,如果在这段时间区间里用户未进行下一次点击,
+            则浏览器会做单击事件的处理,如果这段时间里用户进行了第二次单击操作,则浏览器会做双击事件处理,
+            这段时间就是上面提到的300毫秒延迟
+    5. 使用 rem作为大小单位(以 html的 font-size为基准)
+    6. 尽量使用 flex布局,样式用stylus/ less/ sass 编写
+
+
+项目的开发
+    1. 使用 iconfont图标库
+        1) 主文件( main.js )中引入 iconfont.css
+        2) 引入对应的 eot/svg/ttf/woff 文件
+        3) 用法 : <div class="iconfont">&#xe624;</div>   // 内容为64位编码,去iconfont项目中查看
+
+    2. 使用轮播图插件( vue-awesome-swiper)
+        1) 下载 : npm install vue-awesome-swiper --save
+
+        2) 启动 : 两种用法( global / component)
+            -> global -> main.js
+            import Vue from 'vue'
+            import VueAwesomeSwiper from 'vue-awesome-swiper'
+            import 'swiper/dist/css/swiper.css'
+            Vue.use(VueAwesomeSwiper, /* { default global options } */)
+
+            -> component -> 具体的组件内使用
+            import 'swiper/dist/css/swiper.css'
+            import { swiper, swiperSlide } from 'vue-awesome-swiper'
+            export default {
+                components: {
+                    swiper,
+                    swiperSlide
+                }
+            }
+
+        3) 模板/配置 :
+            模板 ->
+                <div class="swiper-wrapper">
+                    <swiper :options="swiperOption" ref="mySwiper" @someSwiperEvent="callback">
+                        <swiper-slide>I'm Slide 1</swiper-slide>
+                        <swiper-slide>I'm Slide 2</swiper-slide>
+                        <swiper-slide>I'm Slide 3</swiper-slide>
+
+                        <div class="swiper-pagination"  slot="pagination"></div>   // 轮播提示小点
+                        <div class="swiper-button-prev" slot="button-prev"></div>   // 左按钮
+                        <div class="swiper-button-next" slot="button-next"></div>   // 右按钮
+                        <div class="swiper-scrollbar"   slot="scrollbar"></div>   // 轮播进度
+                    </swiper>
+                </div>
+
+            配置 ->
+                export default {
+                    name: 'Swiper',
+                    data() {
+                        return {
+                            swiperOption: {
+                                // some swiper options/callbacks
+                                // 所有的参数同 swiper 官方 api 参数 
+                                // ...
+                                loop : true,
+                                autoplay : true,
+                                pagination : '.swiper-pagination'
+                            }
+                        }
+                    },
+                    computed: {
+                        swiper() {
+                            return this.$refs.mySwiper.swiper
+                        }
+                    },
+                    mounted() {
+                        // current swiper instance
+                        // 然后你就可以使用当前上下文内的swiper对象去做你想做的事了
+                        console.log('this is current swiper instance object', this.swiper)
+                        this.swiper.slideTo(3, 1000, false)
+                    }
+                }
+
+        4.样式使用 ( >>> ) 穿透改变 vue-awesome-swiper组件里的样式
+            ->
+                .swiper-box >>> .swiper-pagination-bullet-active   // 改变小点的颜色
+                    background-color #f0f0f0
+                .swiper-box
+                    overflow hidden   
+                    width 100%          
+                    height 0                // 占位
+                    padding-bottom 26.66%   
+                    background: #eee
+
+                    .swiper-img
+                        width 100%
+                    

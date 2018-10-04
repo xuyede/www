@@ -8,35 +8,38 @@
 </head>
 <body>
     <!-- 
-
-        git config --global user.name
-        git config --global user.email
-
-        mkdir ***
-
-        git init
-        git clone url
+        初始化 git:
+            git config --global user.name
+            git config --global user.email
+            git init
+            git clone origin
+            git status   // 查看状态
  
-        添加、修改、删除
+        提交到本地仓库
+            git add .
+            git commit -m '说明'
 
-        git add .
-        git commit -m '说明'
+        添加远程仓库地址
+            git remote add origin 'url'   // origin就代表远程仓库地址
+            git remote
+            git remote remove ***
+        
+        推送本地分支到远程仓库
+            git push --set-upstream origin 分支名   
 
-        git remote add origin 'url'
-        git push -u origin branch
-        git pull origin master
+        获取远程仓库某个分支的更新 (拉去远程仓库的新分支到本地仓库)
+            git pull <远程库名> <远程分支名>:<本地分支名>
+                -> git pull origin online:online  
+                -> git pull origin online   // 如果是要与本地当前分支merge，则冒号后面的<本地分支名>可以不写
 
-        git branch
-        git branch **
-        git checkout ***
-        git checkout -b ***
-        git branch -d ***
+        本地分支
+            git branch   // 查看本地已有分支
+            git checkout ***   // 切换到某个分支
+            git checkout -b 分支名   // 创建一个新的本地分支
+            git branch -d ***   //
 
-        git remote
-        git remote -v
-        git remote remove ***
-
-        git merge
+        分支合并
+            git merge <远程分支名>:<本地分支名>
 
 
         时间简史与git
