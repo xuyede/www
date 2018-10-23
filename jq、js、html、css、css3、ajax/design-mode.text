@@ -1,12 +1,13 @@
     1. 设计模式 : 是一套反复使用,多数人知晓,经过分类,代码设计经验的总结   -> 必杀技!!!
 
         1) 分三大类 : 
-            创建型模式 : 单例模式, 抽象工厂模式, 建造者模式, 工厂模式, 原型模式
-            结构型模式 : 适配器模式, 桥接模式. 装饰模式, 组合模式. 外观模式, 享元模式, 代理模式
-            行为型模式 : 模板方法模式, 命令模式, 迭代器模式, 观察者模式, 中介者模式, 备忘录模式
+            创建型模式(创建对象) : 单例模式, 抽象工厂模式, 建造者模式, 工厂模式, 原型模式
+            结构型模式(设计对象的结构和关系) : 适配器模式, 桥接模式. 装饰模式, 组合模式. 外观模式, 享元模式, 代理模式
+            行为型模式(设计对象的行为) : 模板方法模式, 命令模式, 迭代器模式, 观察者模式, 中介者模式, 备忘录模式
                         解释器模式, 状态模式, 策略模式, 职责链模式, 访问者模式
 
-        2) 设计模式的原则
+        2) 设计模式的原则 -> 优先降低代码的复杂程度,尽量减少代码耦合度
+
             1) 单一职责原则 (Single Responsibility Principle)
                 ->  一个方法只做一件事
 
@@ -14,7 +15,7 @@
                 ->  child能访问parent的东西
 
             3) 依赖倒置原则 (Dependence Inversion Principle)
-                ->  只依赖接口,不依赖方法
+                ->  只依赖接口,不依赖方法(通过一个中间状态管理功能间的运作)
 
             4) 接口分离原则 (Interface Segregation Principle)
                 ->  把大的接口拆分成小的接口
@@ -24,6 +25,12 @@
 
             6) 开闭原则 (Open Close peinciple)
                 ->  面向扩展开放,面向修改关闭
+
+        3) 开发时的流程
+            优先降低复杂度,尽量减少耦合度
+            -> 利用单一职责原则, 开闭原则, 里氏代换原则降低复杂度
+            -> 通过迪米特法则减少耦合
+            -> 通过依赖倒置原则消除可以没有的耦合
 
 
     2. UML -> processon
@@ -36,6 +43,17 @@
 
         判断是否已经实例过了,如果实例过了,直接返回之前的实例对象
 
+            var Test = (function () {
+                var instance
+                return function () {
+                    if (typeof instance === 'object') {
+                        return instance
+                    }
+                    instance = this
+                }
+            }())
+
+--------------------------------------------------------------------------------------------------
             const Singleton = function (name) {
                 this.name = name;
             }
@@ -51,46 +69,149 @@
             const gsm = Singleton.getInstance('guosimin')
 
             console.log(xyd === gsm)   // true, gsm实例获得的是第一次实例化的对象
+-------------------------------------------------------------------------------------------------
+            const single = function () {
+                let singleRes = (function () {
+                    let instance
+                    return function () {
+                        if (typeof instance === 'object') {
+                            return instance
+                        }
+                        instance = this
+                    }
+                } ())
+                return singleRes
+            }
+
+            var Food = single()
+            var food1 = new Food
+            var food2 = new Food
+            console.log(food1 === food2)   // true
 
 
 
     2)  代理模式 -> 为一个对象提供一个替代对象或占位符,以便控制对原对象的访问
 
+        虚拟代理 - 图片加载，文件上传
+        保护代理 - 登陆后才能看全，前端检验
+
         例子: 送花给喜欢的人 -> 委托花店送,并监听在她心情好的时候送
-
-            class Flowers{
-                constructor(flowerName) {
-                    this.flower = flowerName
+      
+            var xyd = {
+                sendFlower(target) {
+                    var flower = '菊花'
+                    target.receiveFlower(flower)
                 }
             }
 
-            const xyd = {
-                sendFlower() {
-                    flowerStore.sendFlower()   // 激活代理后,全权交给代理
-                }
-            }  
-
-            const flowerStore = {
-                sendFlower() {
-                    gsm.haveGoodMood( () => {
-                        const flower = new Flowers('rose')   // 代理 -> 监听,满足条件时触发事件
-                        gsm.recevieFlower(flower.flower) 
+            var proxy = {
+                proxyFlower(target) {
+                    this.listenMood(target, function () {
+                        xyd.sendFlower(target)
                     })
-                }
-            }      
-
-            const gsm = {
-                recevieFlower(flower) {
-                    console.log('gsm get from flowerStore: ' + flower)
                 },
-                haveGoodMood(fn) {
-                    setTimeout(() => {
-                        fn();
-                    }, 3000);
+                listenMood(target, sendFlower) {
+                    var timer = setInterval( () => {
+                        target.nowMood()
+                        if (target.mood) {
+                            sendFlower()
+                            clearInterval(timer)
+                        }
+                    }, 100)
                 }
             }
 
-            xyd.sendFlower()
+            var gsm = {
+                mood : null,
+                receiveFlower(flower) {
+                    this.mood ? console.log(`收到${flower}`) : console.log('心情不好, 拒绝')
+                },
+                nowMood() {
+                    this.changeMood()
+                    setInterval( () => {
+                        this.changeMood()
+                    }, 400)
+                },
+                changeMood() {
+                    this.mood = Math.random() > 0.5
+                }
+            }
+            
+            proxy.proxyFlower(gsm)
+---------------------------------------------------------------------------------------------------
+            
+            例子 : 预加载 + 懒加载图片 (如果是多个div需要用到懒加载,使用数组处理)
+                    目标容器先加载缓冲图片,再换成目标图片
+            var MyImg = function (id) {
+                var oImg = new Image
+                this.setSrc = function (src) {
+                    oImg.src = src
+                }
+                document.getElementById(id).appendChild(oImg)
+            }
+
+            var imgProxy = (function () {
+                var newImg = new Image
+                var oMyImg = new MyImg('img')
+                
+                newImg.onload = function () {  
+                    oMyImg.setSrc(newImg.src)   
+                }
+                
+                return function (temp, src) {
+                    oMyImg.setSrc(temp)   // 图片的预加载
+                    newImg.src = src   // 图片的懒加载
+                }
+            }())
+
+            imgProxy('./3.jpg' ,'http://img4.imgtn.bdimg.com/it/u=3655061121,1858460693&fm=26&gp=0.jpg')
+-----------------------------------------------------------------------------------------------------------
+
+            例子 : 合并处理事件,延迟到需要的时候再处理
+            <div id="app">xuyede</div>
+            <button type="bg">backColor</button>
+            <button type="op">opacity</button>
+            <button type="fw">fontWeight</button>
+            <button type="fs">fontSize</button>
+            <button type="cl">color</button>
+
+            var oDiv = document.getElementById('app')
+            var aBtn = document.getElementsByTagName('button')
+            function styleProxy (proxyTarget) {
+                var cache = [],
+                    timer = null
+                return function () {
+                    clearTimeout(timer)
+                    var type = this.getAttribute('type')
+                    cache.push(type)
+                    timer = setTimeout(() => {
+                        proxyTarget(oDiv, cache)
+                        cache = []
+                    }, 500)
+                }
+            }
+            var newChangeStyle = styleProxy(changeStyle)
+            for (var i = 0, len = aBtn.length; i < len; i++) {
+                aBtn[i].onclick = newChangeStyle
+            }
+            function changeStyle (dom, type) {
+                var RULES = {
+                    bg : ['backgroundColor', 'red'],
+                    op : ['opacity', .3],
+                    fw : ['fontWeight', 'bolder'],
+                    fs : ['fontSize', '30px'],
+                    cl : ['color', 'green']
+                }
+                if (type.constructor === Array) {
+                    type.forEach(ele => {
+                        dom.style[RULES[ele][0]] = RULES[ele][1]
+                    })
+                } else {
+                    dom.style[RULES[type][0]] = RULES[type][1]
+                }
+            }
+
+
 
     3)  策略模式 -> 定义一系列算法,封装起来,并且使这些算法可以互相替换
 
@@ -131,25 +252,52 @@
             errMeg: 'error'
         }
 
+        var _extends = Object.assign ||
+			function (target) {  // {} RULES method
+				for (var i = 1, len = arguments.length; i < len; i ++) {
+					// RULES method
+					var source = arguments[i]
+					for (var key in source) {
+						if (source.hasOwnProperty(key)) {
+							target[key] = source[key]
+						}
+					}
+				}
+			}
+
+        function deBounce(handle, delay) {
+			var timer = null
+			return function () {
+				clearTimeout(timer)
+
+				timer = setTimeout(() => {
+					handle.apply(this, arguments)
+				}, delay);
+			}
+		}
+
         function start() {
             const aInp = Array.from(document.getElementsByTagName('input'))
             loopInp(aInp)
         }
 
+        function dealInp(oInp) {
+            const rules = oInp.getAttribute('data-rule').split(' ')   // 获取设定的规则
+            const result = []
+
+            if (rules.length === 1) {
+                loopRule(result, rules[0], oInp)   // 遍历已有规则,是否匹配
+            } else {
+                rules.forEach(rule => {
+                    loopRule(result, rule, oInp)
+                })
+            }
+            isMatch(result, oInp)   // 检测是否全部规则都符合
+        }
+
         function loopInp(aInp) {   // 遍历每个需要验证的输入框
             aInp.forEach(oInp => {
-                const rules = oInp.getAttribute('data-rule').split(' ')   // 获取设定的规则
-                oInp.onchange = function () {
-                    const result = []
-                    if (rules.length === 1) {
-                        loopRule(result, rules[0], oInp)   // 遍历已有规则,是否匹配
-                    } else {
-                        rules.forEach(rule => {
-                            loopRule(result, rule, oInp)
-                        })
-                    }
-                    isMatch(result, oInp)   // 检测是否全部规则都符合
-                }
+                oInp.onchange = deBounce(dealInp.bind(null, oInp), 800)
             })
         }
 
@@ -169,41 +317,138 @@
 
         start()
     
-    4.工厂模式
+
+
+    4.工厂方法模式 -> 定义创建对象的接口,让工厂子类去真正地实例化(管理创建对象)
         -> 
-        function carFactory() {}
+        var tool = {
+            inherit : (function () {
+                var temp = function () {} 
 
-        carFactory.BWM = function() {
-            this.name = 'BWM'
-        }
-        carFactory.Audi = function() {
-            this.name = 'Audi'
-        }
+                return function (origin, target) {
+                    temp.prototype = target.prototype
+                    origin.prototype = new temp
+                    origin.prototype.constructor = origin
+                    origin.prototype.uber = target
+                }
+            }()),
 
-        carFactory.prototype.drive = function() {
-            console.log('已经为' + this.name + '添加自动驾驶功能')
-        }
+            single : function(origin) {
+                var singleResult = (function () {
+                    var instance = null
+                    return function () {
+                        if (instance != null) {
+                            return instance
+                        }
+                        origin && origin.apply(this, arguments)
+                        instance = this
+                    }
+                }())
+                origin && this.inherit(singleResult, origin)
+                return singleResult
+            },
 
-        carFactory.create = function (carClass) {
-            if (typeof carFactory[carClass] !== 'function') {
-                console.log('没有该生产线');
-                return;
-            } 
-            if (typeof carFactory[carClass].prototype.drive !== 'function') {
-                Object.setPrototypeOf(carFactory[carClass].prototype, new carFactory)
+            extends : function (origin) {
+                var result = function () {
+                    origin && origin.apply(this, arguments)
+                }   
+                origin && this.inherit(result, origin)
+                return result
             }
             
-            return new carFactory[carClass];
         }
 
-        const car = carFactory.create('BWM')
-        const car1 = carFactory.create('Audi')
-        
-        console.log(car.drive())
-        console.log(car1.drive())
+        //基类
+        function Square(width, height, x, y) {
+            this.width = width
+            this.height = height
+            this.x = x
+            this.y = y
+        }
+        // 工厂
+        function Factory() {}
+
+        //获取Factory原型
+        tool.inherit(Square, Factory)
+
+        // 子类
+        var Food = tool.single(Square)
+        var Stone = tool.extends(Square)
+        var Floor = tool.extends(Square)
+
+        // 工厂入口
+        Factory.create = function (type) {
+            //type 调用那个生产线
+            if (typeof Factory.prototype[type] != 'function') {
+                return 
+            }
+
+            if (Object.getPrototypeOf(Factory.prototype[type].prototype) != Factory.prototype) {
+                Object.setPrototypeOf(Factory.prototype[type].prototype, new Factory)
+            }
+
+            return new Factory.prototype[type](...[].slice.call(arguments, 1))       
+        }
+
+        //生产线
+        Factory.prototype.Floor = function() {
+            var floor = new Food(...Array.from(arguments))
+            return floor
+        }
+        Factory.prototype.Stone = function() {
+            var stone = new Food(...Array.from(arguments))
+            return stone
+        }
+        Factory.prototype.Food = function() {
+            var food = new Food(...Array.from(arguments))
+            return food
+        }
+
+        var food1 = Factory.create('Food', 1,2,3,4)
+    
+
+
+    5.装饰者模式 -> 可以在程序运行时,在不改变元对象的基础上,动态添加方法(可以给不同对象各自添加不同方法)
+        ->  主要3部分
+                decorators(定义所有的装饰方法)  
+                decorate(收集需要的装饰描述,放到缓存池中)
+                update(根据缓冲池的修饰,更新对象)
+
+        //装饰方法
+        Factory.prototype.decorators = {
+            addWidth(dom) {
+                dom.style.width = dom.offsetWidth + 100 + 'px'
+            },
+            addHeight(dom) {
+                dom.style.height = dom.offsetHeight + 100 + 'px'
+            },
+            changeColor(dom) {
+                dom.style.backgroundColor = 'plum'
+            }
+        }
+
+        //装饰缓冲池
+        Factory.prototype.decorate = function (type) {
+            !this.cache && (this.cache = [])
+            this.cache.push(type)
+        }
+
+        //装饰缓冲更新
+        Factory.prototype.update = function () {
+            this.cache.forEach( decorate => {
+                this.decorators[decorate](this.viewContent)   // this.viewContent为一个dom元素
+            })
+            this.cache = []
+        }
 
     
-    5.迭代器模式 -> 提供一种方法,将对象的内部展示出来,并且不暴露内部的结构
+
+    6. 观察者模式(发布订阅模式:异步) -> 定义对象间一对多的依赖关系,当一个对象发生改变时,所有依赖的对象都将得到通知
+        -> 
+            发布者管理一个订阅列表 instanceList, 存放订阅的实例
+            发布者提供一个方法 register, 供订阅者把自己放进发布者的订阅列表
+            订阅者提供一个方法 listen, 供发布者传递发布的信息
+            发布者遍历订阅列表,执行每个实例的 listen, 把信息发送给对应的订阅实例
 
         
 

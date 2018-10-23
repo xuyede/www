@@ -7,6 +7,7 @@
 3)不是所有的静态资源都会被打包, 只有入口文件所依赖的资源才会被打包
 4)webpack-dev-server -> 文件打包到内存并执行  webpack -> 打包到目录
 
+npm init -y
 
 
 1.  package.json 的便捷配置

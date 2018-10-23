@@ -317,7 +317,37 @@
             5.  transform-origin: a b;  a,b可以为center/top/left/... 50%/100%/... px...
                 -> 中心点默认为元素的x,y轴的50%
 
+            // 导航栏下划线
+	        <div class="test">xuyede</div>
 
+            .test{
+                position: relative;
+                display: inline-block;
+                margin-top: 100px;
+                margin-left : 100px;
+                padding-bottom : 10px;
+                transition: transform .5s;
+            }
+            .test::before{
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #333;
+                transform: scaleX(0);
+                transition: transform .5s;
+                transform-origin: 100% 0;
+            }
+            .test:hover::before{
+                transform: scaleX(1);
+                transform-origin: 0 0;
+            }
+            .test:hover{
+                color:pink;
+                transform: translateX(3px)
+            }
 
 
             空间动画

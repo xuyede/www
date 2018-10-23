@@ -852,7 +852,7 @@
                             path : '/about', 
                             name : 'aboutLink', 
                             component : About,
-                            resirect : '/abou/contact',  // default path
+                            redirect : '/abou/contact',  // default path
                             children : [
                                 {
                                     path : '/about/conact',
@@ -994,12 +994,60 @@
                     target: 'http://your_website',
                     changeOrigin: true,
                     pathRewrite: {                //需要rewrite重写的, 如果在服务器端做了处理则可以不要这段
-                        '^/api': ''
+                        '^/api': ''   // 你的路径
                         }
                     }
                 }
 
 
+        -->
+        <!--
+            vuex
+                -> 主要应用于Vue.js中管理数据状态的一个库,通过创建一个集中的数据存储,供程序中所有组件访问
+
+                1. npm install vuex --save
+                2. // store.js
+                    import Vue from 'vue'
+                    import Vuex from 'vuex'
+
+                    Vue.use(Vuex)   // 模块化要通过Vue.use激活
+
+                    export const store = new Vuex.Store({
+                        state : {
+                            // 数据
+                            user : {
+                                name : 'xyd',
+                                age : 18
+                            }
+                        }
+                    })
+                3. //main.js
+                    import {store} from 'store'
+
+                    new Vue({
+                        ...
+                        store,
+                        ...
+                    })
+                4. //component
+                    export default {
+                        computed : {
+                            getData() {
+                                return this.$store.state.user   // 获取store的user数据
+                            }
+                        }
+                    }
+
+
+            核心概念
+                1. 储存数据 
+                    state
+                2. 获取数据
+                    getters
+                3. 修改数据(同步)
+                    mutation(this.$store.commit) 
+                4. 修改数据(异步)
+                    action(this.$store.dispatch)
         -->
          
 </body>

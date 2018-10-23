@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>xuyede</title>
+    <style> 
+        span, input{
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        // // 工厂方法模式 (继承)
+        // var tool = {
+        //     inherit : (function () {
+        //         var temp = function () {} 
+
+        //         return function (origin, target) {
+        //             temp.prototype = target.prototype
+        //             origin.prototype = new temp
+        //             origin.prototype.constructor = origin
+        //             origin.prototype.uber = target
+        //         }
+        //     }()),
+
+        //     single : function(origin) {
+        //         var singleResult = (function () {
+        //             var instance = null
+        //             return function () {
+        //                 if (instance != null) {
+        //                     return instance
+        //                 }
+        //                 origin && origin.apply(this, arguments)
+        //                 instance = this
+        //             }
+        //         }())
+        //         origin && this.inherit(singleResult, origin)
+        //         return singleResult
+        //     },
+
+        //     extends : function (origin) {
+        //         var result = function () {
+        //             origin.apply(this, arguments)
+        //         }   
+        //         this.inherit(result, origin)
+        //         return result
+        //     }
+        // }
+        // // 工厂
+        // function Factory() {}
+
+        // //基类
+        // function Square(width, height, x, y, viewContent) {
+        //     this.width = width
+        //     this.height = height
+        //     this.x = x
+        //     this.y = y
+        //     this.viewContent = viewContent || document.createElement('div')
+        // }
+        
+        // tool.inherit(Square, Factory)
+
+        // // 子类
+        // var Food = tool.single(Square)
+        // var Stone = tool.extends(Square)
+        // var Floor = tool.extends(Square)
+
+        // // 工厂入口
+        // Factory.create = function (type) {
+        //     //type 调用那个生产线
+        //     if (typeof Factory.prototype[type] != 'function') {
+        //         return 
+        //     }
+
+        //     if (Object.getPrototypeOf(Factory.prototype[type].prototype) != Factory.prototype) {
+        //         Object.setPrototypeOf(Factory.prototype[type].prototype, new Factory)
+        //     }
+
+        //     return new Factory.prototype[type](...[].slice.call(arguments, 1))       
+        // }
+
+        // //装饰方法
+        // Factory.prototype.decorators = {
+        //     addWidth(dom) {
+        //         dom.style.width = dom.offsetWidth + 100 + 'px'
+        //     },
+        //     addHeight(dom) {
+        //         dom.style.height = dom.offsetHeight + 100 + 'px'
+        //     },
+        //     changeColor(dom) {
+        //         dom.style.backgroundColor = 'plum'
+        //     }
+        // }
+
+        // //装饰缓冲池
+        // Factory.prototype.decorate = function (type) {
+        //     !this.cache && (this.cache = [])
+        //     this.cache.push(type)
+        // }
+
+        // //装饰缓冲更新
+        // Factory.prototype.update = function () {
+        //     console.log(this.cache)
+        //     this.cache.forEach( decorate => {
+        //         this.decorators[decorate](this.viewContent)
+        //     })
+        //     this.cache = []
+        // }
+
+        // //生产线
+        // Factory.prototype.Floor = function() {
+        //     var floor = new Floor(...Array.from(arguments))
+        //     return floor
+        // }
+        // Factory.prototype.Stone = function() {
+        //     var stone = new Stone(...Array.from(arguments))
+        //     return stone
+        // }
+        // Factory.prototype.Food = function() {
+        //     var food = new Food(...Array.from(arguments))
+        //     return food
+        // }
+
+        // var food1 = Factory.create('Floor', 100, 100, 3,4)
+        // var food2 = Factory.create('Floor', 200, 200, 3,4)
+        // food1.viewContent.style.width = food1.width + 'px'
+        // food1.viewContent.style.height = food1.height + 'px'
+        // food1.viewContent.style.backgroundColor = 'red'
+        // food2.viewContent.style.width = food2.width + 'px'
+        // food2.viewContent.style.height = food2.height + 'px'
+        // food2.viewContent.style.backgroundColor = 'blue'
+        // document.body.appendChild(food1.viewContent)
+        // document.body.appendChild(food2.viewContent)
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 策略模式 (表单验证)
+        // var RULES = {
+        //     isNotEmpty(dom) {
+        //         return dom.value.length !== 0
+        //     },
+        //     account(dom) {
+        //         return dom.value.length > 3
+        //     },
+        //     password(dom) {
+        //         return dom.value.length > 7
+        //     }
+        // }
+
+        // function isMatch(result, dom) {
+        //     result.includes(false) ? 
+        //         dom.nextElementSibling.innerHTML = dom.dataset.errmeg :
+        //         dom.nextElementSibling.innerHTML = dom.dataset.succmeg
+        // }
+
+        // function loopRule(oInp) {
+        //     var rules = oInp.dataset.rule.split(' ')
+        //     var result = []
+        //     rules.forEach(rule => {
+        //         result.push( RULES[rule](oInp) )
+        //     })
+
+        //     isMatch(result, oInp)
+        // }
+
+        // function loopInp(aInp) {
+        //     aInp.forEach(oInp => {
+        //         oInp.onchange = function () {
+        //             loopRule(oInp)
+        //         }
+        //     })
+        // }
+
+        // function submitValidate(aInp) {
+        //     submit.onclick = function () {
+        //         aInp.forEach(oInp => {
+        //             loopRule(oInp)
+        //         })
+        //     }
+        // }
+
+        // function validate() {
+        //     var aInp = Array.from(document.getElementsByTagName('input'))
+        //     submitValidate(aInp)
+        //     loopInp(aInp)
+        // }
+
+        // validate()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //代理模式 (缓冲处理事件)
+        // var aBtn = Array.from(document.getElementsByTagName('button'))
+        // var _RULE = {
+        //     bg : ['backgroundColor', 'red'],
+        //     fw : ['fontWeight', 'bolder'],
+        //     fs : ['fontSize', '30px'],
+        //     cl : ['color', 'blue'],
+        //     op : ['opacity', 0.2]
+        // }
+
+        // function dealRule(dom, rule) {
+        //     if (rule.constructor === Array) {
+        //         rule.forEach(item => {
+        //             dom.style[_RULE[item][0]] = _RULE[item][1]
+        //         })
+        //     } else {
+        //         dom.style[_RULE[rule][0]] = _RULE[rule][1]
+        //     }
+        // } 
+
+        // function proxyStyle(dealRule) {
+        //     var cache = []
+        //         timer = null
+            
+        //     return function () {
+        //         clearTimeout(timer)
+        //         var rule = this.dataset.rule
+        //         cache.push(rule)
+        //         timer = setTimeout( () => {
+        //             dealRule(document.getElementById('demo'), cache)
+        //             cache = []
+        //         }, 500)
+        //     }
+        // }
+
+        // var proxyChangeStyle = proxyStyle(dealRule)
+
+        // function listenBtn() {
+        //     aBtn.forEach(oBtn => {
+        //         oBtn.onclick = proxyChangeStyle
+        //     })
+        // }
+        
+        // listenBtn()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 代理模式(图片预加载 + 懒加载)
+        // function NewImg() {
+        //     var oImg = new Image
+        //     this.setSrc = function (src) {
+        //         oImg.src = src
+        //     }
+        //     document.body.appendChild(oImg)
+        // }
+
+        // var ProxyImg = (function() {
+        //     var oNewImg = new Image
+        //     var oTargetImg = new NewImg
+
+        //     oNewImg.onload = function () {
+        //         oTargetImg.setSrc(this.src)
+        //     }
+
+        //     return function (tempSrc, targetSrc) {
+        //         oTargetImg.setSrc(tempSrc)
+        //         oNewImg.src = targetSrc
+        //     }
+        // }())
+
+        // ProxyImg('./2.jpg', './3.jpg')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //代理模式 (送花) 
+        // class Flower{
+        //     constructor(flower) {
+        //         this.flowerName = flower
+        //     }
+        // }
+        // var xyd = {
+        //     sendFlower(target) {    
+        //         var flower = new Flower('sun flower').flowerName
+        //         target.recevieFlower(flower)
+        //     }
+        // }
+        // var flowerProxy = {
+        //     timer : null,
+        //     proxy(target) {
+        //         this.listenMood(target, function(){
+        //             xyd.sendFlower(target)
+        //         })
+        //     },
+        //     listenMood(target, callback) {
+        //         this.timer = setInterval( () => {    
+        //             target.createMood()
+        //             if (target.mood) {
+        //                 callback()
+        //                 clearInterval(this.timer)
+        //             }   
+        //         }, 300)
+        //     }
+        // }
+        // var gsm = {
+        //     mood : null,
+        //     recevieFlower(flower) {
+        //         this.mood ? console.log(`我收到了${flower}`) : console.log('我心情不好, 你的花我不要了')
+        //     },
+        //     changeMood() {
+        //         this.mood = Math.random() > 0.5 // true or false
+        //     },
+        //     createMood() {
+        //         this.changeMood()
+        //         setInterval( () => {
+        //             this.changeMood()
+        //         }, 200)
+        //     }
+        // }
+        // flowerProxy.proxy(gsm)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // 单例模式
+        // var Food = function(width, height, x, y) {
+        //     this.width = width
+        //     this.height = height
+        //     this.x = x
+        //     this.y = y
+        // }
+        // Food.single = function () {
+        //     if(Object.prototype.toString.call(this.instance) != '[object Undefined]') {
+        //         return this.instance
+        //     }
+        //     this.instance = new Food(...arguments)
+        //     return this.instance
+        // }
+        // var food1 = Food.single(1, 1, 1, 1)
+        // var food2 = Food.single(10, 10, 10, 10)
+        // console.log(food1 === food2)
+        
+
+    </script>
+</body>
+
+</html>

@@ -121,7 +121,7 @@ var org = {
         }, []);
         return newArr;
     },
-    //继承(圣杯模式)
+    //继承原型链(圣杯模式)
     inherit: (function () {
         'use strict';
         var temp = function () { };
@@ -132,6 +132,31 @@ var org = {
             origin.prototype.uber = iTarget;
         };
     }()),
+    //继承全部,包括原型和origin内容
+    extend: function (origin) {
+        'use strict'
+        var result = function () {
+            origin.apply(this, arguments)
+        }
+        this.inherit(result, origin)
+        return result
+    },
+    //单例继承
+    singleInherit : function (origin) {
+        'use strict'
+        var singleResult = (function () {
+            var instance = null
+            return function () {
+                if (instance != null) {
+                    return instance
+                }
+                instance = this
+                origin && origin.apply(this, arguments)
+            }
+        }())
+        origin && this.inherit(singleResult, origin)
+        return singleResult
+    },
     //深度克隆
     deepClone: function (origin, iTarget) {
         'use strict';
@@ -208,7 +233,7 @@ var org = {
         }
         return aResult;
     },
-    //缓冲运动框架
+    //缓冲运动框架 (dom, {style}, callback)
     startMove: function (elem, obj, func) {
         'use strict';
         var self = this;
@@ -343,5 +368,77 @@ var org = {
         }
         callback('undefined');
         return this;
+    },
+    //对象合并, 参数 => Object.assign
+    _extends : Object.assign ||
+        function (target) {  // {} RULES method
+            for (var i = 1, len = arguments.length; i < len; i ++) {
+                // RULES method
+                var source = arguments[i]
+                for (var key in source) {
+                    if (source.hasOwnProperty(key)) {
+                        target[key] = source[key]
+                    }
+                }
+            }
+        },
+    // fetch(get)
+    fetchGet : function(url) {
+        return new Promise((resolve, reject) => {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => resolve(data))
+                .catch(err => reject(err))
+        })
+    },
+    // fetch(post)
+    fetchPost = function(url, data){
+        return new Promise((resolve, reject) => {
+            let fetchConfig = {
+                method : 'POST',
+                headers : {
+                    'Content-type' : 'application/json'
+                },
+                body : JSON.stringify(data)
+            }
+
+            fetch(url, fetchConfig)
+                .then(response => response.json())
+                .then(data => resolve(data))
+                .catch(err => reject(err))
+        })
+    },
+    // fetch(put)
+    fetchPut = function (url, data) {
+        return new Promise((resolve, reject) => {
+            let fetchConfig = {
+                method : 'PUT',
+                headers : {
+                    'Content-type' : 'application/json'
+                },
+                body : JSON.stringify(data)
+            }
+
+            fetch(url, fetchConfig)
+                .then(response => response.json())
+                .then(data => resolve(data))
+                .catch(err => reject(err))
+        })
+    },
+    // fetch(delete)
+    fetchDelete = function(url) {
+        return new Promise((resolve, reject) => {
+            let fetchConfig = {
+                method : 'DELETE',
+                headers : {
+                    'Content-type' : 'application/json'
+                }
+            }
+
+            fetch(url, fetchConfig)
+                .then(response => response.json())
+                .then(data => resolve('delete success'))
+                .catch(err => reject(err))
+        })
     }
 };

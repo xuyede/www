@@ -9,6 +9,7 @@ vue模仿去哪儿网小项目
     4) 提交主分支的内容
         git push
 
+静态资源放到 static中,例如 json文件
 
 项目初始化
     1. 在主文件( main.js )中引入 reset.css 初始化整个项目的样式
@@ -92,7 +93,7 @@ vue模仿去哪儿网小项目
                     }
                 }
 
-        4.样式使用 ( >>> ) 穿透改变 vue-awesome-swiper组件里的样式
+        4) 样式使用 ( >>> ) 穿透改变 vue-awesome-swiper组件里的样式
             ->
                 .swiper-box >>> .swiper-pagination-bullet-active   // 改变小点的颜色
                     background-color #f0f0f0
@@ -105,4 +106,45 @@ vue模仿去哪儿网小项目
 
                     .swiper-img
                         width 100%
+
+        5) vue-awesome-swiper根据动态数据渲染
+            -> imgList为动态获取的数据,当ingList有数据时再渲染
+
+                <swiper v-if="imgList.length > 1" :options="swiperOption" ref="mySwiper">
+                    <!-- slides -->
+                    <swiper-slide v-for="img in imgList" :key="img.id">
+                        <img class="swiper-img" :src="img.imgUrl">
+                    </swiper-slide>
+                    
+                    <!-- Optional controls -->
+                    <div class="swiper-pagination"  slot="pagination"></div>
+                </swiper>
+
+                props : {
+                    imgList : {  
+                        type : Array,
+                        required : true
+                    }
+                }
+
+    3. 使用fetch动态获取数据,并通过 v-bind传递数据给子组件,渲染数据的时候使用 v-if判断数据是否拿到
+        -> 使用路径代理,把本地路径换成域名路径
+            proxyTable: {
+                '/api': {
+                    target: 'http://localhost:8080',
+                    // changeOrigin: true,
+                    pathRewrite: {
+                    '^/api': '/static/mock'
+                    }
+                }
+            }
+
+            fetch('/api/homeData.json')
+                .then(response => response.json())
+                .then(data => {
+                    ...
+                })
+                .catch(err => console.log(err))
+
+        
                     
