@@ -450,6 +450,91 @@
             订阅者提供一个方法 listen, 供发布者传递发布的信息
             发布者遍历订阅列表,执行每个实例的 listen, 把信息发送给对应的订阅实例
 
+        人名币转换:
+            function RMB () {
+                this.instanceList = []   // 管理一个订阅列表
+                this.init()
+                this.bindEvent()
+            }
+
+            RMB.prototype.bindEvent = function () {
+                this.oInp.onchange = () => {
+                    this.instanceList.forEach(instance => {
+                        instance.listen(this.oInp.value)   // 遍历订阅列表, 发布任务给每个订阅者
+                    })
+                }
+            }
+
+            RMB.prototype.register = function (instance) {
+                this.instanceList.push(instance)
+            }
+
+            RMB.prototype.init = function () {
+                this.oP = document.createElement('p')
+                this.oInp = document.createElement('input')
+                this.oP.innerHTML = '人名币 : ' 
+                this.oP.appendChild(this.oInp)
+                document.body.appendChild(this.oP)
+            }
+
+            function ForeignCurrency (target, name, rate) {
+                this.rate = rate
+                this.name = name
+                this.init()
+                target.register(this)   // 把自己放到发布者的订阅列表中
+            }
+
+            ForeignCurrency.prototype.listen = function (value) {   // 接收发布者的信息
+                this.oInp.value = value / this.rate
+            }
+
+            ForeignCurrency.prototype.init = function () {
+                this.oP = document.createElement('p')
+                this.oInp = document.createElement('input')
+                this.oP.innerHTML = `${this.name} : ` 
+                this.oInp.setAttribute('disabled', 'disabled')
+                this.oP.appendChild(this.oInp)
+                document.body.appendChild(this.oP)
+            }
+
+            var rmb = new RMB
+            new ForeignCurrency(rmb, '美元', 6.8)
+            new ForeignCurrency(rmb, '欧元', 7.9)
+            new ForeignCurrency(rmb, '日元', .06)
+--------------------------------------------------------------------------------------------------------
+        事件处理:
+            function Event() {}
+
+            Event.prototype.on = function (type, handle) {
+                !this.cache && (this.cache = {})   // 管理一个事件列表
+                if (!this.cache[type]) {
+                    this.cache[type] = []
+                }
+                this.cache[type].push(handle)
+            }
+
+            Event.prototype.emmit = function (type) {
+                this.cache[type] && 
+                this.cache[type].length != 0 && 
+                this.cache[type].forEach(handle => {   // 遍历事件列表,执行列表的每个事件函数
+                    handle.call(this)   
+                })
+            }
+
+            Event.prototype.remove = function (type, handle = undefined) {
+                if (handle) {
+                    this.cache[type] = this.cache[type].filter(item => {
+                        return item != handle
+                    })
+                } else {
+                    this.cache[type] = []
+                }
+            }
+
+            Event.prototype.empty = function () {
+                this.cache = {}
+            }
+
         
 
 

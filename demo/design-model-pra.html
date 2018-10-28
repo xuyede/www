@@ -14,132 +14,196 @@
 
 <body>
     <script>
-        // // 工厂方法模式 (继承)
-        // var tool = {
-        //     inherit : (function () {
-        //         var temp = function () {} 
+        // 工厂方法模式 (继承)
+        var tool = {
+            inherit : (function () {
+                var temp = function () {} 
 
-        //         return function (origin, target) {
-        //             temp.prototype = target.prototype
-        //             origin.prototype = new temp
-        //             origin.prototype.constructor = origin
-        //             origin.prototype.uber = target
-        //         }
-        //     }()),
+                return function (origin, target) {
+                    temp.prototype = target.prototype
+                    origin.prototype = new temp
+                    origin.prototype.constructor = origin
+                    origin.prototype.uber = target
+                }
+            }()),
 
-        //     single : function(origin) {
-        //         var singleResult = (function () {
-        //             var instance = null
-        //             return function () {
-        //                 if (instance != null) {
-        //                     return instance
-        //                 }
-        //                 origin && origin.apply(this, arguments)
-        //                 instance = this
-        //             }
-        //         }())
-        //         origin && this.inherit(singleResult, origin)
-        //         return singleResult
-        //     },
+            single : function(origin) {
+                var singleResult = (function () {
+                    var instance = null
+                    return function () {
+                        if (instance != null) {
+                            return instance
+                        }
+                        origin && origin.apply(this, arguments)
+                        instance = this
+                    }
+                }())
+                origin && this.inherit(singleResult, origin)
+                return singleResult
+            },
 
-        //     extends : function (origin) {
-        //         var result = function () {
-        //             origin.apply(this, arguments)
-        //         }   
-        //         this.inherit(result, origin)
-        //         return result
-        //     }
-        // }
-        // // 工厂
-        // function Factory() {}
+            extends : function (origin) {
+                var result = function () {
+                    origin.apply(this, arguments)
+                }   
+                this.inherit(result, origin)
+                return result
+            }
+        }
 
-        // //基类
-        // function Square(width, height, x, y, viewContent) {
-        //     this.width = width
-        //     this.height = height
-        //     this.x = x
-        //     this.y = y
-        //     this.viewContent = viewContent || document.createElement('div')
-        // }
+        function Event() {}
+
+        Event.prototype.on = function (type, handle) {
+            !this.cache && (this.cache = {})
+            if (!this.cache[type]) {
+                this.cache[type] = []
+            }
+            this.cache[type].push(handle)
+        }
+
+        Event.prototype.emmit = function (type) {
+            this.cache[type] && 
+            this.cache[type].length != 0 && 
+            this.cache[type].forEach(handle => {
+                handle.call(this)
+            })
+        }
+
+        Event.prototype.remove = function (type, handle = undefined) {
+            if (handle) {
+                this.cache[type] = this.cache[type].filter(item => {
+                    return item != handle
+                })
+            } else {
+                this.cache[type] = []
+            }
+        }
+
+        Event.prototype.empty = function () {
+            this.cache = {}
+        }
+
+        // 工厂
+        function Factory() {}
+
+        //基类
+        function Square(width, height, x, y, viewContent) {
+            this.width = width
+            this.height = height
+            this.x = x
+            this.y = y
+            this.viewContent = viewContent || document.createElement('div')
+        }
+
+        tool.inherit(Factory, Event)
+        tool.inherit(Square, Factory)
+
+        Square.prototype.die = function () {
+            console.log('boomb !!!')
+        }
+
+        // 子类
+        var Food = tool.single(Square)
+        var Stone = tool.extends(Square)
+        var Floor = tool.extends(Square)
+
+        // 工厂入口
+        Factory.create = function (type) {
+            //type 调用那个生产线
+            if (typeof Factory.prototype[type] != 'function') {
+                return 
+            }
+
+            if (Object.getPrototypeOf(Factory.prototype[type].prototype) != Factory.prototype) {
+                Object.setPrototypeOf(Factory.prototype[type].prototype, new Factory)
+            }
+
+            return new Factory.prototype[type](...[].slice.call(arguments, 1))       
+        }
+
+        //装饰方法
+        Factory.prototype.decorators = {
+            addWidth(dom) {
+                dom.style.width = dom.offsetWidth + 100 + 'px'
+            },
+            addHeight(dom) {
+                dom.style.height = dom.offsetHeight + 100 + 'px'
+            },
+            changeColor(dom) {
+                dom.style.backgroundColor = 'plum'
+            }
+        }
+
+        //装饰缓冲池
+        Factory.prototype.decorate = function (type) {
+            !this.cache && (this.cache = [])
+            this.cache.push(type)
+        }
+
+        //装饰缓冲更新
+        Factory.prototype.update = function () {
+            console.log(this.cache)
+            this.cache.forEach( decorate => {
+                this.decorators[decorate](this.viewContent)
+            })
+            this.cache = []
+        }
+
+        //生产线
+        Factory.prototype.Floor = function() {
+            var floor = new Floor(...Array.from(arguments))
+            return floor
+        }
+        Factory.prototype.Stone = function() {
+            var stone = new Stone(...Array.from(arguments))
+            return stone
+        }
+        Factory.prototype.Food = function() {
+            var food = new Food(...Array.from(arguments))
+            return food
+        }
+
+        // 事件处理
+        /*
+            on emmit remove enpty once
+        */
+
         
-        // tool.inherit(Square, Factory)
 
-        // // 子类
-        // var Food = tool.single(Square)
-        // var Stone = tool.extends(Square)
-        // var Floor = tool.extends(Square)
+        var oE = new Event
+        function test1() {
+            console.log('1111')
+        }
+        oE.on('over', test1)
+        function test2() {
+            console.log('2222')
+        }
+        oE.on('over', test2)
 
-        // // 工厂入口
-        // Factory.create = function (type) {
-        //     //type 调用那个生产线
-        //     if (typeof Factory.prototype[type] != 'function') {
-        //         return 
-        //     }
+        oE.on('xyd', function () {
+            console.log('xyd')
+        })
 
-        //     if (Object.getPrototypeOf(Factory.prototype[type].prototype) != Factory.prototype) {
-        //         Object.setPrototypeOf(Factory.prototype[type].prototype, new Factory)
-        //     }
-
-        //     return new Factory.prototype[type](...[].slice.call(arguments, 1))       
-        // }
-
-        // //装饰方法
-        // Factory.prototype.decorators = {
-        //     addWidth(dom) {
-        //         dom.style.width = dom.offsetWidth + 100 + 'px'
-        //     },
-        //     addHeight(dom) {
-        //         dom.style.height = dom.offsetHeight + 100 + 'px'
-        //     },
-        //     changeColor(dom) {
-        //         dom.style.backgroundColor = 'plum'
-        //     }
-        // }
-
-        // //装饰缓冲池
-        // Factory.prototype.decorate = function (type) {
-        //     !this.cache && (this.cache = [])
-        //     this.cache.push(type)
-        // }
-
-        // //装饰缓冲更新
-        // Factory.prototype.update = function () {
-        //     console.log(this.cache)
-        //     this.cache.forEach( decorate => {
-        //         this.decorators[decorate](this.viewContent)
-        //     })
-        //     this.cache = []
-        // }
-
-        // //生产线
-        // Factory.prototype.Floor = function() {
-        //     var floor = new Floor(...Array.from(arguments))
-        //     return floor
-        // }
-        // Factory.prototype.Stone = function() {
-        //     var stone = new Stone(...Array.from(arguments))
-        //     return stone
-        // }
-        // Factory.prototype.Food = function() {
-        //     var food = new Food(...Array.from(arguments))
-        //     return food
-        // }
-
-        // var food1 = Factory.create('Floor', 100, 100, 3,4)
-        // var food2 = Factory.create('Floor', 200, 200, 3,4)
-        // food1.viewContent.style.width = food1.width + 'px'
-        // food1.viewContent.style.height = food1.height + 'px'
-        // food1.viewContent.style.backgroundColor = 'red'
-        // food2.viewContent.style.width = food2.width + 'px'
-        // food2.viewContent.style.height = food2.height + 'px'
-        // food2.viewContent.style.backgroundColor = 'blue'
-        // document.body.appendChild(food1.viewContent)
-        // document.body.appendChild(food2.viewContent)
+        var food1 = Factory.create('Floor', 100, 100, 3,4)
+        var food2 = Factory.create('Floor', 200, 200, 3,4)
+        food1.viewContent.style.width = food1.width + 'px'
+        food1.viewContent.style.height = food1.height + 'px'
+        food1.viewContent.style.backgroundColor = 'red'
+        food2.viewContent.style.width = food2.width + 'px'
+        food2.viewContent.style.height = food2.height + 'px'
+        food2.viewContent.style.backgroundColor = 'blue'
+        document.body.appendChild(food1.viewContent)
+        document.body.appendChild(food2.viewContent)
 
         
 
+        food1.on('over', function () {
+            this.die()
+        })
 
-
+        food1.viewContent.onclick = function () {
+            food1.emmit('over')
+        }
 
 
 

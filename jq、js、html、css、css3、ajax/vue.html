@@ -816,18 +816,21 @@
             5.dynamic route matching 
                 u can set a dynamic route and adapt to special path like
                 ->  const routes = [
-                        {path : '/about/:classes', name : 'aboutLink', component : About}
+                        {path : '/about/:id', name : 'aboutLink', component : About}
                     ]
 
                     <router-link :to = "aboutLinkMeg">About</router-link>   // will redirect to /about/xuyede
                     // or
                     data() {
                         return {
-                            aboutLinkMeg : {name : 'aboutLink', params : {classed : 'xuyede'}}
+                            aboutLinkMeg : {name : 'aboutLink', params : {id : 529500}}
                         }
                     }
 
-                    you can also get the classes by $route.params.classes in the assign module
+                    you can also get the id by $route.params.id in the assign module
+
+
+                    * url -> /about/529500 
 
             6.programmatic routes (operate the history stack)
                 1) this.$router.push() -> push a new entry into the history stack
@@ -968,6 +971,12 @@
                     }
                 }
 
+            
+            13.Lazy loading router
+                
+                import food from './component/food.vue'
+                   -> 
+                let food = () => import('./component/food.vue')
         -->   
 
 

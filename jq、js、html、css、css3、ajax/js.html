@@ -1964,7 +1964,8 @@
                         reg.test(str)   --> 检验是否符合匹配规则 true|false
                         reg.exec(str)  
                             --> 放回一个数组，[满足匹配的str否则为undefined， 第一个子表达式， 第二个子表达式， ...]  如果子表达式不符合，则为undefined
-
+                            --> 您可以通过反复调用 exec() 方法来遍历字符串中的所有匹配文本。当 exec() 再也找不到匹配的文本时，它将返回 null
+                        
                         str.replace() -> 返回字符串
 
                     8.边角
@@ -2030,6 +2031,21 @@
 
                         9)  /in\s+(\w+)/.exec('in xyd')
                             console.log(RegExp.$1)   // xyd
+
+                            function decodeString (str) {
+                                var reg = /(\d+)\[(\w+)((\d+)\[(\w+)\])*\]/g
+                                var arr
+                                var result = ''
+                                while ((arr = reg.exec(str)) != null) {
+                                    var temp = arr[2]
+                                    temp += arr[3] ? decodeString(arr[3]) : ''
+                                    result += temp.repeat(arr[1])
+                                }
+                                return result
+                            }
+                            // console.log(decodeString('5[ab]'))
+                            console.log(decodeString('5[ab]'))
+                            // decodeString('3[a2[c]]')
 
         */
         /*
@@ -2518,6 +2534,40 @@
                 }
                 test1()
         */
+       /*
+            求并集 左边拿大的, 右边拿小的
+            function getIntersection (...args) {
+                // args => [ [1, 4], [3, 5] ]
+                args.forEach( arr => arr.sort())
+                
+                var min = args[0][0],
+                    max = args[0][1]
+
+                if (typeof min != 'number' || typeof max != 'number') {
+                    return null
+                }
+
+                for (var i = 1, len = args.length; i < len; i++) {
+                    var target = args[i]
+
+                    if (typeof target[0] != 'number' || typeof target[1] != 'number') {
+                        return null
+                    }
+
+                    min = target[0] > min ? target[0] : min
+                    max = target[1] > max ? max : target[1]
+
+                    if (min > max) {
+                        return null
+                    }
+                }
+
+                return [min, max]   
+            }
+            console.log(getIntersection([5,2], [4,9], [3,6]))
+       
+       
+       */
     </script>
 
 
