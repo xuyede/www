@@ -14,12 +14,13 @@ SquareFactory.create = function (type, color, column, row, width = SQUAREWIDTH, 
 }
 
 SquareFactory.prototype.init = function (square, color, message) {
-    square.viewContent.style.position = 'absolute'
-    square.viewContent.style.left = square.x * SQUAREWIDTH + 'px'
-    square.viewContent.style.top = square.y * SQUAREWIDTH + 'px'
-    square.viewContent.style.width = square.width + 'px'
-    square.viewContent.style.height = square.height + 'px'
-    square.viewContent.style.backgroundColor = color
+    var  squareStyle = square.viewContent.style
+    squareStyle.position = 'absolute'
+    squareStyle.left = square.x * SQUAREWIDTH + 'px'
+    squareStyle.top = square.y * SQUAREWIDTH + 'px'
+    squareStyle.width = square.width + 'px'
+    squareStyle.height = square.height + 'px'
+    squareStyle.backgroundColor = color
     square.touch = function () {
         return message
     }
