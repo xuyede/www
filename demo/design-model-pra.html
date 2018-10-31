@@ -366,6 +366,42 @@
         // ProxyImg('./2.jpg', './3.jpg')
 
 
+        // 多个元素的图片懒加载
+		// var MyImg = function (ele) {
+		// 	var oImg = new Image
+		// 	this.setSrc = function (src) {
+		// 		oImg.src = src
+		// 	}
+		// 	document.getElementById(ele).appendChild(oImg)
+		// }
+
+		// var eles = ['demo1', 'demo2', 'demo3']
+
+		// var imgProxy = (function (eles) {
+		// 	var newImg = new Image
+		// 	var aImg = eles.map(ele => {
+		// 		return new MyImg(ele)
+		// 	})
+		// 	newImg.onload = function () {
+		// 		aImg.forEach(ele => {
+		// 			ele.setSrc(newImg.src)
+		// 		})
+		// 	}
+		// 	return function (temp, target) {
+
+		// 		aImg.forEach(ele => {
+		// 			ele.setSrc(temp)
+		// 		})
+		// 		newImg.src = target
+		// 	}
+		// }(eles))
+
+		// imgProxy(
+		// 	'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539607757612&di=d71362867638f194b4d299c90c6a92fe&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fpic%2F9%2Fd4%2F55461315482.jpg',
+		// 	'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1539607758097&di=884c67eef2b4a4c865ede8c2fea7ba70&imgtype=0&src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20161011%2Fcd60da65ca874ae6b68b8d6486a70f1c_th.jpg'
+		// )
+
+
 
 
 

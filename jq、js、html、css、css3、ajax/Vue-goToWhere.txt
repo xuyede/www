@@ -146,5 +146,71 @@ vue模仿去哪儿网小项目
                 })
                 .catch(err => console.log(err))
 
-        
+    4. 使用
+        -> 非父子组件传递数据
+            Vue.prototype.bus = new Vue()   // middle stage
+                        
+            tranfer data -> 
+                this.bus.$emit(selfEvent, data)
+
+            accept data ->
+                mounted() {
+                    this.bus.$on(selfEvent, data => { ... })
+                }
+
+    5. 使用ref存储dom元素
+        通过 this.$refs[name][0] 获取dom元素
+
+    6. 使用better-scroll实现页面的滑动 (样式添加overflow: hidden)
+        -> 
+            this.scroll = new BScroll(this.$refs.wrapper ,{
+                scrollY : true,
+                scrollX : false,
+                click : true   // 移动端点击
+            })   
+
+            <div ref="wrapper">   // 确保三层结构
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    ...
+                </ul>
+            </div>
+
+        -> 实现字母城市联动
+            this.scroll.scrollToElement(element)   // 滑动到指定的dom元素
+
+    7. 使用vuex保存数据
+        逻辑分离:
+            store/index.js 里面的数据分开 -> state.js / mutations.js / actions.js / ...
+
+        api: 
+            import { mapState , mapGetters , mapMutations , mapActions } from 'vuex'
+
+            mapState / mapGetters / mapMutations / mapActions
+                 (computed)                (methods)
+                
+            computed : {
+                ...mapState(['city'])
+                ...mapState({
+                    currentCity : 'city'   // 直接this.currentCity 使用,把 this.$store.state.city 映射到 currentCity 上
+                })
+            }
+            methods : {
+                handleCityClick (city) {
+                    this.change(city)( === this.$store.commit('changeCity', city) )
+                }, 
+                ...mapMutations({
+                    change : 'changeCity'   // 把 this.$store.mutations.changeCity 映射到 change 上  
+                })
+            }
+
+
+    8. 使用localStorage存储数据
+        使用localStorage时要使用try,catch包裹避免错误
+        try {
+
+        } catch (e) {}
+
                     
