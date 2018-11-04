@@ -76,7 +76,12 @@ vue模仿去哪儿网小项目
                                 // ...
                                 loop : true,
                                 autoplay : true,
-                                pagination : '.swiper-pagination'
+                                pagination : {
+                                    el: '.swiper-pagination',
+                                    type : '
+                                },
+                                observeParents : true,   // 当数据改变时更新自身
+                                observer : true
                             }
                         }
                     },
@@ -212,5 +217,9 @@ vue模仿去哪儿网小项目
         try {
 
         } catch (e) {}
+        
 
+    9. 使用 keep-alive 组件
+        -> 把该标签里面的东西存储到内存中,下一次渲染时不开启新的生命周期,直接到内存中获取
+        -> 激活 activated / deactivated 生命周期函数,渲染时执行
                     

@@ -183,6 +183,7 @@
             客户端存储
 
             1.storage (同源策略) 可以存5MB左右数据  只在浏览器保存，不参与服务器的通信  ie8以后的版本
+                使用时加上 (try catch) 兼容低版本浏览器
                 -> 只能存储字符串形式数据(存取对象用JSON.stringify/JSON.parse)
                     
                 1)  localStorage    永久，除非手动删除

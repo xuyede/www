@@ -96,6 +96,8 @@
                     beforeDestroy -> 调用 vm.$destroy 后执行
                     destroy -> vue实例完全被销毁后执行
 
+                5) activated / deactivated -> keep-alive 组件激活/停用时调用
+
 
             Vue的特点 :
                 1. 并不直接操作 DOM,通过虚拟 DOM来实现数据的更新以及对页面的渲染
@@ -538,6 +540,11 @@
 
                     -> v-once
                         // just rander once and save at memory
+
+                    -> <keep-alive></keep-alive>
+                        把该标签里面的东西存储到内存中,下一次渲染时不开启新的生命周期,直接到内存中获取
+                        获得新的生命周期函数
+                            activated / deactivated
             
             14. using v-model on component
                 1)normal v-model
@@ -1034,7 +1041,7 @@
                 1. 储存数据 
                     state (this.$store.state)
                 2. 读取数据
-                    getters 
+                    getters (相当于vue中的computed)
                 3. 修改数据(同步)
                     mutation
                     ->  
@@ -1070,7 +1077,7 @@
                         }
 
 
-
+                用法
                 1. npm install vuex --save
 
                 2. // store.js
@@ -1107,6 +1114,31 @@
                         }
                     }
 
+
+                优化
+                逻辑分离:
+                    store/index.js 里面的数据分开 -> state.js / mutations.js / actions.js / ...
+
+                简便api: 
+                    import { mapState , mapGetters , mapMutations , mapActions } from 'vuex'
+
+                    mapState / mapGetters / mapMutations / mapActions
+                        (computed)                (methods)
+                        
+                    computed : {
+                        ...mapState(['city'])
+                        ...mapState({
+                            currentCity : 'city'   // 直接this.currentCity 使用,把 this.$store.state.city 映射到 currentCity 上
+                        })
+                    }
+                    methods : {
+                        handleCityClick (city) {
+                            this.change(city)( === this.$store.commit('changeCity', city) )
+                        }, 
+                        ...mapMutations({
+                            change : 'changeCity'   // 把 this.$store.mutations.changeCity 映射到 change 上  
+                        })
+                    }
 
             
         -->
