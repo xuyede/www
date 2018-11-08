@@ -289,6 +289,8 @@
 
                 2) vm.$data -> 存放Vue实例的data对象属性
 
+                3) this.$nextTick 是一个异步函数，为了确保 DOM 已经渲染
+
              
             8.Vue component
                 1) Gobal Component
@@ -359,6 +361,28 @@
                         <div id="app">
                             <xyd-counter></xyd-counter>
                         </div>
+
+                3) 递归组件
+                    -> 在组件中使用该组件进行渲染
+                        必须设置 name 属性
+                        ->
+                            export default {
+                                name : 'DetailList',
+                                props : {
+                                    listData : {
+                                        type : Array,
+                                        required : true
+                                    }
+                                }
+                            };
+
+                        使用 name 属性的值作为组件的名称
+                        ->
+                            <div v-if="item.children">
+                                <detail-list :listData="item.children" class="children-list"></detail-list>
+                            </div>
+
+
 
             9. props -> set into child component -> parent to child
                 1)  basic writing
@@ -724,6 +748,33 @@
                             
                     *appear + appear-active-class -> show the animate in first done load 
 
+            6. 简单的过渡组件
+                -> fadeAnimate.vue
+                    <template>
+                        <transition>
+                            <slot></slot>
+                        </transition>
+                    </template>
+
+                    <script>
+                    export default {
+                        name : 'FadeAnimate'
+                    };
+                    </script>
+
+                    <style scoped lang='stylus'>
+                        .v-enter, .v-leave-to
+                            opacity 0
+                        .v-enter-active, .v-leave-active
+                            transition opacity .5s
+                    </style>
+                
+                -> components : { fadeAnimate }
+                    <fade-animete>
+                        <div> ... </div>
+                    </fade-animete>
+            
+
     -->
     <!-- 
         vue-cli
@@ -983,7 +1034,7 @@
                 }
 
             
-            13.Lazy loading router
+            13.Lazy loading router (异步组件)
                 
                 import food from './component/food.vue'
                    -> 
@@ -1009,10 +1060,10 @@
 
             fetch craoss 
             ->
-                proxyTable: {
+                proxyTable: { 
                 '/api': {
                     target: 'http://your_website',
-                    changeOrigin: true,
+                    changeOrigin: true,   // 是否跨域
                     pathRewrite: {                //需要rewrite重写的, 如果在服务器端做了处理则可以不要这段
                         '^/api': ''   // 你的路径
                         }

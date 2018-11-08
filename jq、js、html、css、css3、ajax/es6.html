@@ -1981,6 +1981,26 @@
 
     -->
     <!--
+        axios
+        配置
+            ->  
+            axios.defaults.headers.common['token'] = 'aisjhduiahi1j283jnm'
+            axios.defaults.headers.post['Content-type'] = 'application/json'
+
+        基本用法
+            ->
+            axios.post(url, {
+                username : 'hello',
+                password : '123456'
+            })
+                .then(data => console.log(data))
+
+            axios.get(url)
+                .then(data => console.log(data))
+            
+
+    -->
+    <!--
         模块导出 : export 
         模块导入 : import (改名用 as)
     -->

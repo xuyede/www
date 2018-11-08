@@ -132,6 +132,19 @@ vue模仿去哪儿网小项目
                     }
                 }
 
+                data () {
+                    return {
+                        swiperOption : {
+                            pagination: {
+                                el: '.swiper-pagination',
+                                type : 'fraction'
+                            },
+                            observeParents : true,   // 父级数据改变时重新加载
+                            observer : true
+                        }
+                    }
+                }
+
     3. 使用fetch动态获取数据,并通过 v-bind传递数据给子组件,渲染数据的时候使用 v-if判断数据是否拿到
         -> 使用路径代理,把本地路径换成域名路径
             proxyTable: {
@@ -222,4 +235,81 @@ vue模仿去哪儿网小项目
     9. 使用 keep-alive 组件
         -> 把该标签里面的东西存储到内存中,下一次渲染时不开启新的生命周期,直接到内存中获取
         -> 激活 activated / deactivated 生命周期函数,渲染时执行
-                    
+
+    10. 使用递归组件
+        -> 在组件中使用该组件进行渲染
+            必须设置 name 属性
+            ->
+                export default {
+                    name : 'DetailList',
+                    props : {
+                        listData : {
+                            type : Array,
+                            required : true
+                        }
+                    }
+                };
+
+            使用 name 属性的值作为组件的名称
+            ->
+                <div v-if="item.children">
+                    <detail-list :listData="item.children" class="children-list"></detail-list>
+                </div>
+
+    11. 使用过渡组件
+        -> fadeAnimate.vue
+            <template>
+                <transition>
+                    <slot></slot>
+                </transition>
+            </template>
+
+            <script>
+            export default {
+                name : 'FadeAnimate'
+            };
+            </script>
+
+            <style scoped lang='stylus'>
+                .v-enter, .v-leave-to
+                    opacity 0
+                .v-enter-active, .v-leave-active
+                    transition opacity .5s
+            </style>
+        
+        -> components : { fadeAnimate }
+            <fade-animete>
+                <div> ... </div>
+            </fade-animete>
+
+    12. 接口联调
+        -> 删除本地静态数据
+        -> 修改配置文件
+                // Paths
+                assetsSubDirectory: 'static',
+                assetsPublicPath: '/',
+                proxyTable: {
+                    '/api': {
+                        target: 'http://localhost:80',   // 数据存放的服务器接口
+                        // changeOrigin: true,
+                    }
+                },
+
+    13. 真机测试
+        -> 使用内网IP运行 (ipconfig) 
+        -> 修改 webpack-dev-server 配置 ( 添加 --host 0.0.0.0 : 0.0.0.0指的是本机上的所有IPV4地址 )
+            webpack-dev-server --host 0.0.0.0 --inline --progress --config build/webpack.dev.conf.js
+
+        -> 同一内网,手机访问 IPV4:8080 测试项目
+
+    14. 打包上线
+        -> npm run build : 把生成的 dist 目录里的文件放到服务器的根目录
+        -> 如果需要修改路径可修改 config/index.js 里面的 build 的 assetsPublicPath: '/'
+
+    14. 小坑
+        -> 移动端获取滚动高度用 document.documentElement.scrollTop || document.body.scrollTop
+        -> 全局事件要在退出组件时解绑
+        -> 向下兼容: npm install babel-polyfill --save
+        -> 使用异步组件优化性能 (打包后js文件在1MB以上)
+            
+            
