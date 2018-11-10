@@ -9,8 +9,6 @@ vue模仿去哪儿网小项目
     4) 提交主分支的内容
         git push
 
-静态资源放到 static中,例如 json文件
-
 项目初始化
     1. 在主文件( main.js )中引入 reset.css 初始化整个项目的样式
     2. 在主文件( main.js )中引入 border.css 解决移动端一像素问题
@@ -308,6 +306,7 @@ vue模仿去哪儿网小项目
 
     14. 小坑
         -> 移动端获取滚动高度用 document.documentElement.scrollTop || document.body.scrollTop
+        -> 静态资源放到 static中,例如 json文件
         -> 全局事件要在退出组件时解绑
         -> 向下兼容: npm install babel-polyfill --save
         -> 使用异步组件优化性能 (打包后js文件在1MB以上)
